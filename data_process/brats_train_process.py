@@ -143,9 +143,9 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
     maxX = 0
     maxY = 0
     maxZ = 0
-    maxXCropped = 0
-    maxYCropped = 0
-    maxZCropped = 0
+    # maxXCropped = 0
+    # maxYCropped = 0
+    # maxZCropped = 0
     i = 0
     for train_test in ['test', 'train', 'validation']:
         for folder in file_list[train_test]:
@@ -162,12 +162,12 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             maxX = max(maxX, img_dat.shape[0])
             maxY = max(maxY, img_dat.shape[1])
             maxZ = max(maxZ, img_dat.shape[2])
-            img_dat_cropped = crop_volume_allDim(img_dat)
-            maxXCropped = max(maxXCropped, img_dat_cropped.shape[0])
-            maxYCropped = max(maxYCropped, img_dat_cropped.shape[1])
-            maxZCropped = max(maxZCropped, img_dat_cropped.shape[2])
+            # img_dat_cropped = crop_volume_allDim(img_dat)
+            # maxXCropped = max(maxXCropped, img_dat_cropped.shape[0])
+            # maxYCropped = max(maxYCropped, img_dat_cropped.shape[1])
+            # maxZCropped = max(maxZCropped, img_dat_cropped.shape[2])
     print("Max x: {}, y: {}, z: {}".format(maxX, maxY, maxZ))
-    print("Max cropped x: {}, y: {}, z: {}".format(maxXCropped, maxYCropped, maxZCropped))
+    # print("Max cropped x: {}, y: {}, z: {}".format(maxXCropped, maxYCropped, maxZCropped))
 
     for train_test in ['train', 'test', 'validation']:
 
@@ -186,11 +186,11 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             img_c2, _, _ = utils.load_nii(baseFilePath + "_t1ce.nii.gz")
             img_c3, _, _ = utils.load_nii(baseFilePath + "_t2.nii.gz")
             img_c4, _, _ = utils.load_nii(baseFilePath + "_flair.nii.gz")
-            mask_dat, _, _ = utils.load_nii(baseFilePath + "_seg.nii.gz")
+            mask, _, _ = utils.load_nii(baseFilePath + "_seg.nii.gz")
 
-            img_dat = np.stack((img_c1, img_c2, img_c3, img_c4), 3)
+            img = np.stack((img_c1, img_c2, img_c3, img_c4), 3)
 
-            img, mask = crop_volume_allDim(img_dat.copy(), mask_dat.copy())
+            # img, mask = crop_volume_allDim(img_dat.copy(), mask_dat.copy())
 
             pixel_size = (img_header.structarr['pixdim'][1],
                           img_header.structarr['pixdim'][2],
