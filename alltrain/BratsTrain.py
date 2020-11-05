@@ -7,7 +7,7 @@ from bratsDataset import *
 
 from torch.utils.data import DataLoader
 
-class BratsTrain(Train):
+class BTrain(Train):
 
     def __init__(self, expconfig):
         super(BratsTrain, self).__init__()
