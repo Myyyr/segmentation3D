@@ -32,7 +32,7 @@ class BTrain(Train):
 
     def train(self):
         expcf = self.expconfig
-        expconfig.optimizer.zero_grad()
+        expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
         total_time = 0.0
 
