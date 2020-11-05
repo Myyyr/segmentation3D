@@ -25,8 +25,8 @@ class BTrain(Train):
 
         trainDataset = BratsDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
         validDataset = BratsDataset(expconfig, mode="valid", randomCrop=None, hasMasks=True, returnOffsets=False)
-        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=4, batch_size=train_opts.batchSize, shuffle=True)
-        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=4, batch_size=train_opts.batchSize, shuffle=False)
+        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=True)
+        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=False)
 
 
 
