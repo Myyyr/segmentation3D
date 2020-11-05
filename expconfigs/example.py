@@ -38,6 +38,7 @@ class ExpConfig():
         self.max_intensity_shift = 0.1
 
         # Training
+        self.train_original_classes = False
         self.epoch = 1
         def loss(outputs, labels):
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
