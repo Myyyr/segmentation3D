@@ -12,7 +12,7 @@ def main(config):
 
 		excfg = cfg.ExpConfig()
 
-		train = BratsTrain.BTrain(excfg)
+		train = BratsTrain(excfg)
 
 		train.train()
 
