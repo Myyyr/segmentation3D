@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 class BTrain(Train):
 
     def __init__(self, expconfig):
-        super(BratsTrain, self).__init__()
+        super(BTrain, self).__init__()
         self.expconfig = expconfig
 
         self.device = torch.device("cuda")
