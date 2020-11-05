@@ -8,7 +8,7 @@ import alltrain.bratsUtils as bratsUtils
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.name = "Example"
+        self.experiment_name = "Example"
         self.id = 0
 
         # System
