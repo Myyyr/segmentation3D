@@ -20,10 +20,10 @@ class ResidualInner(nn.Module):
         return x
 
 def makeReversibleSequence(channels):
-    innerChannels = channels // 2
-    groups = 2#CHANNELS[0] // 2
-    fBlock = ResidualInner(innerChannels, groups)
-    gBlock = ResidualInner(innerChannels, groups)
+    innerchannels = channels // 2
+    groups = 2#channels[0] // 2
+    fBlock = ResidualInner(innerchannels, groups)
+    gBlock = ResidualInner(innerchannels, groups)
     #gBlock = nn.Sequential()
     return rv.ReversibleBlock(fBlock, gBlock)
 
@@ -33,18 +33,18 @@ def makeReversibleComponent(channels, blockCount):
         modules.append(makeReversibleSequence(channels))
     return rv.ReversibleSequence(nn.ModuleList(modules))
 
-def getChannelsAtIndex(index):
+def getchannelsAtIndex(index):
     if index < 0: index = 0
-    if index >= len(CHANNELS): index = len(CHANNELS) - 1
-    return CHANNELS[index]
+    if index >= len(channels): index = len(channels) - 1
+    return channels[index]
 
 class EncoderModule(nn.Module):
-    def __init__(self, inChannels, outChannels, depth, downsample=True):
+    def __init__(self, inchannels, outchannels, depth, downsample=True):
         super(EncoderModule, self).__init__()
         self.downsample = downsample
         if downsample:
-            self.conv = nn.Conv3d(inChannels, outChannels, 1)
-        self.reversibleBlocks = makeReversibleComponent(outChannels, depth)
+            self.conv = nn.Conv3d(inchannels, outchannels, 1)
+        self.reversibleBlocks = makeReversibleComponent(outchannels, depth)
 
     def forward(self, x):
         if self.downsample:
@@ -54,12 +54,12 @@ class EncoderModule(nn.Module):
         return x
 
 class DecoderModule(nn.Module):
-    def __init__(self, inChannels, outChannels, depth, upsample=True):
+    def __init__(self, inchannels, outchannels, depth, upsample=True):
         super(DecoderModule, self).__init__()
-        self.reversibleBlocks = makeReversibleComponent(inChannels, depth)
+        self.reversibleBlocks = makeReversibleComponent(inchannels, depth)
         self.upsample = upsample
         if self.upsample:
-            self.conv = nn.Conv3d(inChannels, outChannels, 1)
+            self.conv = nn.Conv3d(inchannels, outchannels, 1)
 
     def forward(self, x):
         x = self.reversibleBlocks(x)
@@ -81,13 +81,13 @@ class RevUnet3D(nn.Module):
         #create encoder levels
         encoderModules = []
         for i in range(self.levels):
-            encoderModules.append(EncoderModule(getChannelsAtIndex(i - 1), getChannelsAtIndex(i), depth, i != 0))
+            encoderModules.append(EncoderModule(getchannelsAtIndex(i - 1), getchannelsAtIndex(i), depth, i != 0))
         self.encoders = nn.ModuleList(encoderModules)
 
         #create decoder levels
         decoderModules = []
         for i in range(self.levels):
-            decoderModules.append(DecoderModule(getChannelsAtIndex(self.levels - i - 1), getChannelsAtIndex(self.levels - i - 2), depth, i != (self.levels -1)))
+            decoderModules.append(DecoderModule(getchannelsAtIndex(self.levels - i - 1), getchannelsAtIndex(self.levels - i - 2), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
 
