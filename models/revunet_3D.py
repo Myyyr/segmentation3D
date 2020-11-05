@@ -33,7 +33,7 @@ def makeReversibleComponent(channels, blockCount):
         modules.append(makeReversibleSequence(channels))
     return rv.ReversibleSequence(nn.ModuleList(modules))
 
-def getchannelsAtIndex(index):
+def getchannelsAtIndex(index, channels):
     if index < 0: index = 0
     if index >= len(channels): index = len(channels) - 1
     return channels[index]
@@ -81,13 +81,13 @@ class RevUnet3D(nn.Module):
         #create encoder levels
         encoderModules = []
         for i in range(self.levels):
-            encoderModules.append(EncoderModule(getchannelsAtIndex(i - 1), getchannelsAtIndex(i), depth, i != 0))
+            encoderModules.append(EncoderModule(getchannelsAtIndex(i - 1, channels), getchannelsAtIndex(i, channels), depth, i != 0))
         self.encoders = nn.ModuleList(encoderModules)
 
         #create decoder levels
         decoderModules = []
         for i in range(self.levels):
-            decoderModules.append(DecoderModule(getchannelsAtIndex(self.levels - i - 1), getchannelsAtIndex(self.levels - i - 2), depth, i != (self.levels -1)))
+            decoderModules.append(DecoderModule(getchannelsAtIndex(self.levels - i - 1, channels), getchannelsAtIndex(self.levels - i - 2, channels), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
 
