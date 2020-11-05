@@ -1,1 +1,1 @@
-from .examples import *
+from .expconfigs.examples import *
