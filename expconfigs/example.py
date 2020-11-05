@@ -12,8 +12,8 @@ class ExpConfig():
         self.id = 0
 
         # System
-        self.checkpointsBasePathSave = "path"
-        self.datapath = ""
+        self.checkpointsBasePath = "./models/checkpoints"
+        self.datapath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_240_240_155_res_1.0_1.0_1.0.hdf5"
 
         # GPU
         self.gpu = '0'
