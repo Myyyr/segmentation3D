@@ -1,4 +1,4 @@
-import alltrain.BratsTrain as BratsTrain
+import alltrain
 import  argparse
 
 
@@ -12,7 +12,7 @@ def main(config):
 
 		excfg = cfg.ExpConfig()
 
-		train = BratsTrain(excfg)
+		train = alltrain.BTrain(excfg)
 
 		train.train()
 
