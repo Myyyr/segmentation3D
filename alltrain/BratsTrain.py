@@ -1,8 +1,7 @@
-from Train import *
+from alltrain.Train import *
 import  torch
 from torch.utils.tensorboard import SummaryWriter
 import time
-from tqdm import tqdm
 import alltrain.bratsUtils
 from bratsDataset import *
 
