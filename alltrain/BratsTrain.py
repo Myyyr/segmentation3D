@@ -23,8 +23,8 @@ class BTrain(Train):
         self.bestMeanDiceEpoch = 0
         self.meanDice = 0
 
-        trainDataset = BratsDataset(expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
-        validDataset = BratsDataset(expConfig, mode="valid", randomCrop=None, hasMasks=True, returnOffsets=False)
+        trainDataset = BratsDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
+        validDataset = BratsDataset(expconfig, mode="valid", randomCrop=None, hasMasks=True, returnOffsets=False)
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=4, batch_size=train_opts.batchSize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=4, batch_size=train_opts.batchSize, shuffle=False)
 
