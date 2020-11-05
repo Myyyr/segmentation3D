@@ -43,7 +43,7 @@ class ExpConfig():
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
         self.batchsize = None
-        self.optimizer = optim.SGD(params,
+        self.optimizer = optim.SGD(self.net.parameters(),
                               lr= 0.01, #to do
                               momentum=0.9,
                               nesterov=True,
