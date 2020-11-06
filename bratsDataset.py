@@ -88,8 +88,8 @@ class BratsDataset(torch.utils.data.Dataset):
         #     image = image[x:x+self.randomCrop[0], y:y+self.randomCrop[1], z:z+self.randomCrop[2], :]
         #     if self.hasMasks: labels = labels[x:x + self.randomCrop[0], y:y + self.randomCrop[1], z:z + self.randomCrop[2], :]
 
-        # image = np.transpose(image, (3, 0, 1, 2))  # bring into NCWH format
-        # if self.hasMasks: labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
+        image = np.transpose(image, (3, 0, 1, 2))  # bring into NCWH format
+        if self.hasMasks: labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]

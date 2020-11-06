@@ -95,6 +95,7 @@ class RevUnet3D(nn.Module):
 
     def forward(self, x):
         # tibo_in_shape = x.shape[-3:]
+        # print("x.shape :",x.shape)
         x = self.firstConv(x)
         #x = self.dropout(x)
 
