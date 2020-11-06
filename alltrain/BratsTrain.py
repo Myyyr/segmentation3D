@@ -122,7 +122,7 @@ class BTrain(Train):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = expcf.net(inputs)
 
-                if expcf.TRAIN_ORIGINAL_CLASSES:
+                if expcf.train_original_classes:
                     outputsOriginal5 = outputs
                     outputs = torch.argmax(outputs, 1)
                     #hist, _ = np.histogram(outputs.cpu().numpy(), 5, (0, 4))
