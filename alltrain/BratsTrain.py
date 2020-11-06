@@ -4,7 +4,10 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 import alltrain.bratsUtils
 from bratsDataset import *
-from tqdm import tqdm
+
+from tqdm.notebook import tqdm
+import tqdm as tq
+
 from torch.utils.data import DataLoader
 
 class BTrain(Train):
@@ -43,7 +46,7 @@ class BTrain(Train):
 
             total_loss = 0
 
-            for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))):
+            for i, data in enumerate(tqdm(self.trainDataLoader, total = int(len(self.trainDataLoader))) ):
 
                 
 
