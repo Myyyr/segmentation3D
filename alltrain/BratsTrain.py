@@ -4,8 +4,7 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 import alltrain.bratsUtils
 from bratsDataset import *
-from tqdm.notebook import tqdm
-
+from tqdm import tqdm
 from torch.utils.data import DataLoader
 
 class BTrain(Train):
