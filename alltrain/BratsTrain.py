@@ -119,9 +119,9 @@ class BTrain(Train):
             for i, data in enumerate(self.valDataLoader):
                 inputs, _, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = expConfig.net(inputs)
+                outputs = expconfig.net(inputs)
 
-                if expConfig.TRAIN_ORIGINAL_CLASSES:
+                if expconfig.TRAIN_ORIGINAL_CLASSES:
                     outputsOriginal5 = outputs
                     outputs = torch.argmax(outputs, 1)
                     #hist, _ = np.histogram(outputs.cpu().numpy(), 5, (0, 4))
