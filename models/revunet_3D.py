@@ -69,12 +69,12 @@ class DecoderModule(nn.Module):
         return x
 
 class RevUnet3D(nn.Module):
-    def __init__(self, channels):
+    def __init__(self, inchannels ,channels):
         super(RevUnet3D, self).__init__()
         depth = 1
         self.levels = 5
 
-        self.firstConv = nn.Conv3d(1, channels[0], 3, padding=1, bias=False)
+        self.firstConv = nn.Conv3d(inchannels, channels[0], 3, padding=1, bias=False)
         #self.dropout = nn.Dropout3d(0.2, True)
         self.lastConv = nn.Conv3d(channels[0], 2, 1, bias=True)
 
@@ -91,7 +91,7 @@ class RevUnet3D(nn.Module):
         self.decoders = nn.ModuleList(decoderModules)
 
 
-        self.interpolation = nn.Upsample(size = (512,512,256), mode = "trilinear")
+        # self.interpolation = nn.Upsample(size = (512,512,256), mode = "trilinear")
 
     def forward(self, x):
         # tibo_in_shape = x.shape[-3:]
