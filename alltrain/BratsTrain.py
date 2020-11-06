@@ -45,6 +45,8 @@ class BTrain(Train):
 
             for i, data in enumerate(self.trainDataLoader):
 
+                print(i, '|' , self.bestMeanDice, '|', self.convert_bytes(torch.cuda.max_memory_allocated()))
+
                 #load data
                 inputs, pid, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
@@ -90,7 +92,13 @@ class BTrain(Train):
 
         self.tb.close()
 
+    def convert_bytes(self, size):
+        for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+            if size < 1024.0:
+                return "%3.2f %s" % (size, x)
+            size /= 1024.0
 
+        return size
 
 
     def validate(self, epoch):
