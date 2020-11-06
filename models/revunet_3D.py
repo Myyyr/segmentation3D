@@ -69,9 +69,13 @@ class DecoderModule(nn.Module):
         for i in range(1,4):
             print("#" ,x.shape[-i],shape[-i])
             if x.shape[-i] != shape[-i]:
+
+                tup = (0,0,0,0,0,0)
                 n_tmp = abs(x.shape[-i] - shape[-i])
-                print("##", n_tmp)
+                tup[-i*2] = n_tmp
+                
                 x = F.pad(x, (0,0,0,0,n_tmp,  0 ), 'constant')
+                print("##", n_tmp, x.shape)
         return x
 
 class RevUnet3D(nn.Module):
