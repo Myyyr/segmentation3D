@@ -100,15 +100,18 @@ class RevUnet3D(nn.Module):
         #x = self.dropout(x)
 
         inputStack = []
+        print("level :", -1, " x.shape :",x.shape)
         for i in range(self.levels):
-            print("level :", i, " x.shape :",x.shape)
+            
             x = self.encoders[i](x)
+            print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 inputStack.append(x)
 
         for i in range(self.levels):
-            print("level :", i, " x.shape :",x.shape)
+            
             x = self.decoders[i](x)
+            print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 x = x + inputStack.pop()
 
