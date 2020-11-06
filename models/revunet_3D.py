@@ -110,7 +110,7 @@ class RevUnet3D(nn.Module):
         #x = self.dropout(x)
 
         inputStack = []
-        shapes = []
+        shapes = [x.shape]
         print("level :", -1, " x.shape :",x.shape)
         for i in range(self.levels):
             
