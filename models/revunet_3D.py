@@ -72,7 +72,7 @@ class DecoderModule(nn.Module):
 
                 tup = [0,0,0,0,0,0]
                 n_tmp = abs(x.shape[-i] - shape[-i])
-                tup[-i*2] = n_tmp
+                tup[i*2] = n_tmp
 
                 x = F.pad(x, tuple(tup), 'constant')
                 print("##", n_tmp, x.shape)
