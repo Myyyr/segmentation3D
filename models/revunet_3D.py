@@ -67,7 +67,7 @@ class DecoderModule(nn.Module):
             x = self.conv(x)
             x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
         for i in range(1,4):
-            print("#" ,x.shape[-i],shape[-i])
+            print("#" ,x.shape,shape)
             if x.shape[-i] != shape[-i]:
 
                 tup = [0,0,0,0,0,0]
