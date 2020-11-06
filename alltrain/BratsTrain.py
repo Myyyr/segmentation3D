@@ -4,6 +4,7 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 import alltrain.bratsUtils
 from bratsDataset import *
+from tqdm.notebook import tqdm
 
 from torch.utils.data import DataLoader
 
@@ -43,9 +44,9 @@ class BTrain(Train):
 
             total_loss = 0
 
-            for i, data in enumerate(self.trainDataLoader):
+            for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))):
 
-                print(i, '|' , self.bestMeanDice, '|', self.convert_bytes(torch.cuda.max_memory_allocated()))
+                
 
                 #load data
                 inputs, pid, labels = data
@@ -61,6 +62,9 @@ class BTrain(Train):
                 #update params
                 expcf.optimizer.step()
                 expcf.optimizer.zero_grad()
+
+
+                print("epoch: {}, loss: {}, total_loss: {}, mem: {}".format(i, loss.item(), total_loss/(i+1), self.convert_bytes(torch.cuda.max_memory_allocated())))
 
             epochTime = time.time() - startTime
             total_time += epochTime
@@ -80,7 +84,7 @@ class BTrain(Train):
             self.tb.add_scalar("validTime", validTime, epoch)
             self.tb.add_scalar("totalTime", total_time, epoch)
 
-            self.tb.add_scalar("train_loss", total_loss, epoch)
+            self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
 
             self.tb.add_scalar("bestMeanDice", self.bestMeanDice, epoch)
             self.tb.add_scalar("bestMeanDiceEpoch", self.bestMeanDiceEpoch, epoch)
