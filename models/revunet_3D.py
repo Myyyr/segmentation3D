@@ -79,14 +79,14 @@ class DecoderModule(nn.Module):
         return x
 
 class RevUnet3D(nn.Module):
-    def __init__(self, inchannels ,channels):
+    def __init__(self, inchannels ,channels, out_size):
         super(RevUnet3D, self).__init__()
         depth = 1
         self.levels = 5
 
         self.firstConv = nn.Conv3d(inchannels, channels[0], 3, padding=1, bias=False)
         #self.dropout = nn.Dropout3d(0.2, True)
-        self.lastConv = nn.Conv3d(channels[0], 2, 1, bias=True)
+        self.lastConv = nn.Conv3d(channels[0], out_size, 1, bias=True)
 
         #create encoder levels
         encoderModules = []

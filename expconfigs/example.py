@@ -22,7 +22,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x/16) for x in self.channels]
-        self.net = RevUnet3D(4, self.channels)
+        self.net = RevUnet3D(4, self.channels, 3)
 
         # Data
         self.nn_augmentation = False
