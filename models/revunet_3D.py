@@ -67,6 +67,7 @@ class DecoderModule(nn.Module):
             x = self.conv(x)
             x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
         for i in range(1,4):
+            print("#" ,x.shape[-i],shape[-i])
             if x.shape[-i] != shape[-i]:
                 x = F.pad(x, (0,0,0,0,0, abs(x.shape[-i] - shape[-i])), 'constant')
         return x
