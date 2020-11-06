@@ -39,11 +39,11 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 10
+        self.epoch = 300
         def loss(outputs, labels):
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
-        self.batchsize = 4
+        self.batchsize = 8
         self.optimizer = optim.SGD(self.net.parameters(),
                               lr= 0.01, #to do
                               momentum=0.9,

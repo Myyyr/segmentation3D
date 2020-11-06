@@ -65,7 +65,7 @@ class BTrain(Train):
                 expcf.optimizer.zero_grad()
 
 
-            print("epoch: {}, total_loss: {}, mem: {}".format(i, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
+            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
 
             epochTime = time.time() - startTime
             total_time += epochTime
@@ -90,6 +90,8 @@ class BTrain(Train):
             self.tb.add_scalar("bestMeanDice", self.bestMeanDice, epoch)
             self.tb.add_scalar("bestMeanDiceEpoch", self.bestMeanDiceEpoch, epoch)
             self.tb.add_scalar("meanDice", self.meanDice, epoch)
+
+            print("epoch: {}, bestMeanDice: {}, meanDice: {}".format(epoch, self.bestMeanDice, self.meanDice))
 
 
             
@@ -117,7 +119,7 @@ class BTrain(Train):
             specWT, specTC, specET = [], [], []
             hdWT, hdTC, hdET = [], [], []
 
-            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.trainDataLoader))):#enumerate(self.valDataLoader):
+            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 inputs, _, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = expcf.net(inputs)
