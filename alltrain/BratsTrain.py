@@ -2,7 +2,7 @@ from alltrain.Train import *
 import  torch
 from torch.utils.tensorboard import SummaryWriter
 import time
-import alltrain.bratsUtils
+import alltrain.bratsUtils as bratsUtils
 from bratsDataset import *
 
 from tqdm import tqdm
@@ -117,7 +117,7 @@ class BTrain(Train):
             specWT, specTC, specET = [], [], []
             hdWT, hdTC, hdET = [], [], []
 
-            for i, data in enumerate(self.valDataLoader):
+            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.trainDataLoader))):#enumerate(self.valDataLoader):
                 inputs, _, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = expcf.net(inputs)
