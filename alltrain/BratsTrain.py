@@ -66,7 +66,7 @@ class BTrain(Train):
                 expcf.optimizer.zero_grad()
 
 
-                print("epoch: {}, loss: {}, total_loss: {}, mem: {}".format(i, loss.item(), total_loss/(i+1), self.convert_bytes(torch.cuda.max_memory_allocated())))
+            print("epoch: {}, total_loss: {}, mem: {}".format(i, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
 
             epochTime = time.time() - startTime
             total_time += epochTime
