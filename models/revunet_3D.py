@@ -67,7 +67,7 @@ class DecoderModule(nn.Module):
             x = self.conv(x)
             x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
         for i in range(1,4):
-            print("#" ,x.shape,shape)
+            # print("#" ,x.shape,shape)
             if x.shape[-i] != shape[-i]:
 
                 tup = [0,0,0,0,0,0]
@@ -75,7 +75,7 @@ class DecoderModule(nn.Module):
                 tup[i*2 -1] = n_tmp
 
                 x = F.pad(x, tuple(tup), 'constant')
-                print("##", n_tmp, x.shape)
+                # print("##", n_tmp, x.shape)
         return x
 
 class RevUnet3D(nn.Module):
@@ -111,19 +111,19 @@ class RevUnet3D(nn.Module):
 
         inputStack = []
         shapes = [x.shape]
-        print("level :", -1, " x.shape :",x.shape)
+        # print("level :", -1, " x.shape :",x.shape)
         for i in range(self.levels):
             
             x = self.encoders[i](x)
             shapes.append(x.shape)
-            print("level :", i, " x.shape :",x.shape)
+            # print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 inputStack.append(x)
 
         for i in range(self.levels):
             
             x = self.decoders[i](x, shapes[-(i+2)])
-            print("level :", i, " x.shape :",x.shape)
+            # print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 x = x + inputStack.pop()
 
