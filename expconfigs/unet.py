@@ -22,7 +22,7 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x/8) for x in self.channels]
+        self.channels = [int(x/4) for x in self.channels]
         self.net = unet_3D(self.channels, n_classes=3, in_channels=4, interpolation = (240, 240, 155)) #self.channels, 3, interpolation = (240,240,155))
 
         # Data
@@ -44,7 +44,7 @@ class ExpConfig():
         def loss(outputs, labels):
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
-        self.batchsize = 4
+        self.batchsize = 2
         self.optimizer = optim.SGD(self.net.parameters(),
                               lr= 0.01, #to do
                               momentum=0.9,
