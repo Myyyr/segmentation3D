@@ -79,7 +79,7 @@ class DecoderModule(nn.Module):
         return x
 
 class RevUnet3D(nn.Module):
-    def __init__(self, inchannels ,channels, out_size):
+    def __init__(self, inchannels ,channels, out_size, interpolation = None):
         super(RevUnet3D, self).__init__()
         depth = 1
         self.levels = 5
@@ -100,8 +100,9 @@ class RevUnet3D(nn.Module):
             decoderModules.append(DecoderModule(getchannelsAtIndex(self.levels - i - 1, channels), getchannelsAtIndex(self.levels - i - 2, channels), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
-
-        # self.interpolation = nn.Upsample(size = (512,512,256), mode = "trilinear")
+        self.interpolation = interpolation
+        if self.interpolation != None:
+            self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
 
     def forward(self, x):
         # tibo_in_shape = x.shape[-3:]
@@ -130,7 +131,8 @@ class RevUnet3D(nn.Module):
         x = self.lastConv(x)
 
         # if tibo_in_shape != [512,512,256]:
-            # x = self.interpolation(x)
+        if self.interpolation != None:
+            x = self.interpolation(x)
         #x = torch.sigmoid(x)
         return x
 

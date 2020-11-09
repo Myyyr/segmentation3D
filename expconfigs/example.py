@@ -13,8 +13,8 @@ class ExpConfig():
 
         # System
         self.checkpointsBasePath = "./models/checkpoints"
-        self.datapath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_240_240_155_res_1.0_1.0_1.0.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_160_192_155_res_1.0_1.0_1.0.hdf5"
+        self.labelpath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_240_240_155_res_1.0_1.0_1.0.hdf5"
+        self.datapath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_160_192_155_res_1.0_1.0_1.0.hdf5"
         
         # GPU
         self.gpu = '0'
