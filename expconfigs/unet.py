@@ -40,11 +40,11 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 300
+        self.epoch = 1000
         def loss(outputs, labels):
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
-        self.batchsize = 8
+        self.batchsize = 4
         self.optimizer = optim.SGD(self.net.parameters(),
                               lr= 0.01, #to do
                               momentum=0.9,
@@ -52,7 +52,7 @@ class ExpConfig():
                               weight_decay=1e-5) #todo
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1")
+        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000")
 
 
         

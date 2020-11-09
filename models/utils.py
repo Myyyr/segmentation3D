@@ -16,6 +16,19 @@ def get_scheduler(optimizer, opt):
             return lr_l
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
+
+    if opt == "lambdarule_e1000":
+        def lambda_rule(epoch):
+            #print(epoch)
+            if epoch < 300:
+                lr_l = 0.01
+            elif 300 <= epoch < 650:
+                lr_l = 0.002
+            else:
+                lr_l = 0.0004
+            return lr_l
+        scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
+
     return scheduler
 
 
