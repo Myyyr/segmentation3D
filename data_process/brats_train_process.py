@@ -311,7 +311,7 @@ if __name__ == '__main__':
     input_folder = "/local/SSD_DEEPLEARNING/brats/train/HGG"
     preprocessing_folder = "/local/SSD_DEEPLEARNING/brats/processed"
     # target_size = (240, 240, 155) # ORIGINAL SIZE
-    target_size = (160, 192, 160)
+    target_size = (160, 192, 155)
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 4, (1.0, 1.0, 1.0), force_overwrite=True)
 
