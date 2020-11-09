@@ -132,9 +132,10 @@ class RevUnet3D(nn.Module):
 
         # if tibo_in_shape != [512,512,256]:
         if self.interpolation != None:
-            x = self.interpolation(x)
+            xi = self.interpolation(x)
+            return xi, x
         #x = torch.sigmoid(x)
-        return x
+        return x, None
 
     @staticmethod
     def apply_argmax_softmax(pred):

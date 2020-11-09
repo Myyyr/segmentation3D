@@ -45,18 +45,25 @@ class BratsDataset(torch.utils.data.Dataset):
         image = self.file["images_" + self.mode][index, ...]
         if self.hasMasks: 
             labels = self.labelFile["masks_" + self.mode][index, ...]
+        if self.hasMasks: 
+            smalllabels = self.file["masks_" + self.mode][index, ...]
 
         #Prepare data depeinding on soft/hard augmentation scheme
         if not self.nnAugmentation:
             if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
-                if self.hasMasks: labels = self._toEvaluationOneHot(labels)
+                if self.hasMasks: 
+                    labels = self._toEvaluationOneHot(labels)
+                    smalllabels = self._toEvaluationOneHot(smalllabels)
                 defaultLabelValues = np.zeros(3, dtype=np.float32)
             else:
-                if self.hasMasks: labels = self._toOrignalCategoryOneHot(labels)
+                if self.hasMasks: 
+                    labels = self._toOrignalCategoryOneHot(labels)
+                    smalllabels = self._toOrignalCategoryOneHot(smalllabels)
                 defaultLabelValues = np.asarray([1, 0, 0, 0, 0], dtype=np.float32)
         elif self.hasMasks:
             if labels.ndim < 4:
                 labels = np.expand_dims(labels, 3)
+                smalllabels = np.expand_dims(smalllabels, 3)
             defaultLabelValues = np.asarray([0], dtype=np.float32)
 
         #augment data
@@ -76,11 +83,15 @@ class BratsDataset(torch.utils.data.Dataset):
         #                                        self.maxIntensityShift)
 
         if self.nnAugmentation:
-            if self.hasMasks: labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
+            if self.hasMasks: 
+                labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
+                smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
         else:
             if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
                 labels = self._toOrdinal(labels)
                 labels = self._toEvaluationOneHot(labels)
+                smalllabels = self._toOrdinal(smalllabels)
+                smalllabels = self._toEvaluationOneHot(smalllabels)
 
         # random crop
         # if not self.randomCrop is None:
@@ -92,7 +103,9 @@ class BratsDataset(torch.utils.data.Dataset):
         #     if self.hasMasks: labels = labels[x:x + self.randomCrop[0], y:y + self.randomCrop[1], z:z + self.randomCrop[2], :]
 
         image = np.transpose(image, (3, 0, 1, 2))  # bring into NCWH format
-        if self.hasMasks: labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
+        if self.hasMasks: 
+            labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
+            smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]
@@ -100,6 +113,7 @@ class BratsDataset(torch.utils.data.Dataset):
         if self.hasMasks:
             #labels = labels[:, 0:32, 0:32, 0:32]
             labels = torch.from_numpy(labels) 
+            smalllabels = torch.from_numpy(smalllabels) 
 
         #get pid
         pid = self.file["pids_" + self.mode][index]
@@ -109,12 +123,12 @@ class BratsDataset(torch.utils.data.Dataset):
             yOffset = self.file["yOffsets_" + self.mode][index]
             zOffset = self.file["zOffsets_" + self.mode][index]
             if self.hasMasks:
-                return image, str(pid), labels, xOffset, yOffset, zOffset
+                return image, str(pid), labels, smalllabels, xOffset, yOffset, zOffset
             else:
                 return image, pid, xOffset, yOffset, zOffset
         else:
             if self.hasMasks:
-                return image, str(pid), labels
+                return image, str(pid), labels, smalllabels
             else:
                 return image, pid
 

@@ -24,6 +24,7 @@ class BTrain(Train):
         self.bestMeanDice = 0
         self.bestMeanDiceEpoch = 0
         self.meanDice = 0
+        self.smallmeanDice = 0
 
         trainDataset = BratsDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
         validDataset = BratsDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False)
@@ -50,11 +51,12 @@ class BTrain(Train):
                 
 
                 #load data
-                inputs, pid, labels = data
+                inputs, pid, labels, _ = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
                 #forward and backward pass
-                outputs = expcf.net(inputs)
+                outputs, _ = expcf.net(inputs)
+
                 loss = expcf.loss(outputs, labels)
                 total_loss += loss.item()
                 del inputs, outputs, labels
@@ -69,7 +71,6 @@ class BTrain(Train):
 
             epochTime = time.time() - startTime
             total_time += epochTime
-            self.tb.add_scalar("trainingTime", epochTime, epoch)
             
 
 
@@ -82,16 +83,14 @@ class BTrain(Train):
                 expcf.lr_scheduler.step()
 
             total_time += validTime
-            self.tb.add_scalar("validTime", validTime, epoch)
             self.tb.add_scalar("totalTime", total_time, epoch)
 
             self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
 
-            self.tb.add_scalar("bestMeanDice", self.bestMeanDice, epoch)
-            self.tb.add_scalar("bestMeanDiceEpoch", self.bestMeanDiceEpoch, epoch)
             self.tb.add_scalar("meanDice", self.meanDice, epoch)
+            self.tb.add_scalar("smallmeanDice", self.smallmeanDice, epoch)
 
-            print("epoch: {}, bestMeanDice: {}, meanDice: {}".format(epoch, self.bestMeanDice, self.meanDice))
+            print("epoch: {}, bestMeanDice: {}, meanDice: {}, smallMeanDice: {}".format(epoch, self.bestMeanDice, self.meanDice, self.smallmeanDice))
 
 
             
@@ -119,10 +118,15 @@ class BTrain(Train):
             specWT, specTC, specET = [], [], []
             hdWT, hdTC, hdET = [], [], []
 
+            smalldiceWT, smalldiceTC, smalldiceET = [], [], []
+            smallsensWT, smallsensTC, smallsensET = [], [], []
+            smallspecWT, smallspecTC, smallspecET = [], [], []
+            smallhdWT, smallhdTC, smallhdET = [], [], []
+
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
-                inputs, _, labels = data
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = expcf.net(inputs)
+                inputs, _, labels, smalllabels = data
+                inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
+                outputs, smalloutputs = expcf.net(inputs)
 
                 if expcf.train_original_classes:
                     outputsOriginal5 = outputs
@@ -133,10 +137,27 @@ class BTrain(Train):
                     tc = bratsUtils.getTCMask(outputs)
                     et = bratsUtils.getETMask(outputs)
 
+                    smalloutputs = torch.argmax(smalloutputs, 1)
+                    #hist, _ = np.histogram(smalloutputs.cpu().numpy(), 5, (0, 4))
+                    #buckets = buckets + hist
+                    wt = bratsUtils.getWTMask(smalloutputs)
+                    tc = bratsUtils.getTCMask(smalloutputs)
+                    et = bratsUtils.getETMask(smalloutputs)
+
+
+
+
+
+
                     labels = torch.argmax(labels, 1)
                     wtMask = bratsUtils.getWTMask(labels)
                     tcMask = bratsUtils.getTCMask(labels)
                     etMask = bratsUtils.getETMask(labels)
+
+                    smalllabels = torch.argmax(smalllabels, 1)
+                    smallwtMask = bratsUtils.getWTMask(smalllabels)
+                    smalltcMask = bratsUtils.getTCMask(smalllabels)
+                    smalletMask = bratsUtils.getETMask(smalllabels)
 
                 else:
 
@@ -147,11 +168,27 @@ class BTrain(Train):
                     tc = tc.view(s[0], s[2], s[3], s[4])
                     et = et.view(s[0], s[2], s[3], s[4])
 
+                    smallwt, smalltc, smallet = smalloutputs.chunk(3, dim=1)
+                    s = smallwt.shape
+                    smallwt = smallwt.view(s[0], s[2], s[3], s[4])
+                    smalltc = smalltc.view(s[0], s[2], s[3], s[4])
+                    smallet = smallet.view(s[0], s[2], s[3], s[4])
+
+
+
+
+
                     wtMask, tcMask, etMask = labels.chunk(3, dim=1)
                     s = wtMask.shape
                     wtMask = wtMask.view(s[0], s[2], s[3], s[4])
                     tcMask = tcMask.view(s[0], s[2], s[3], s[4])
                     etMask = etMask.view(s[0], s[2], s[3], s[4])
+
+                    smallwtMask, smalltcMask, smalletMask = smalllabels.chunk(3, dim=1)
+                    s = smallwtMask.shape
+                    smallwtMask = smallwtMask.view(s[0], s[2], s[3], s[4])
+                    smalltcMask = smalltcMask.view(s[0], s[2], s[3], s[4])
+                    smalletMask = smalletMask.view(s[0], s[2], s[3], s[4])
 
                 #TODO: add special evaluation metrics for original 5
 
@@ -160,15 +197,23 @@ class BTrain(Train):
                 diceTC.append(bratsUtils.dice(tc, tcMask))
                 diceET.append(bratsUtils.dice(et, etMask))
 
-                #get sensitivity metrics
-                sensWT.append(bratsUtils.sensitivity(wt, wtMask))
-                sensTC.append(bratsUtils.sensitivity(tc, tcMask))
-                sensET.append(bratsUtils.sensitivity(et, etMask))
+                # #get sensitivity metrics
+                # sensWT.append(bratsUtils.sensitivity(wt, wtMask))
+                # sensTC.append(bratsUtils.sensitivity(tc, tcMask))
+                # sensET.append(bratsUtils.sensitivity(et, etMask))
 
-                #get specificity metrics
-                specWT.append(bratsUtils.specificity(wt, wtMask))
-                specTC.append(bratsUtils.specificity(tc, tcMask))
-                specET.append(bratsUtils.specificity(et, etMask))
+                # #get specificity metrics
+                # specWT.append(bratsUtils.specificity(wt, wtMask))
+                # specTC.append(bratsUtils.specificity(tc, tcMask))
+                # specET.append(bratsUtils.specificity(et, etMask))
+
+
+                #get dice metrics
+                smalldiceWT.append(bratsUtils.dice(smallwt, smallwtMask))
+                smalldiceTC.append(bratsUtils.dice(smalltc, smalltcMask))
+                smalldiceET.append(bratsUtils.dice(smallet, smalletMask))
+
+
 
 
                 #calculate mean dice scores
@@ -177,6 +222,13 @@ class BTrain(Train):
             meanDiceET = np.mean(diceET)
             meanDice = np.mean([meanDiceWT, meanDiceTC, meanDiceET])
             self.meanDice = meanDice
+
+
+            smallmeanDiceWT = np.mean(smalldiceWT)
+            smallmeanDiceTC = np.mean(smalldiceTC)
+            smallmeanDiceET = np.mean(smalldiceET)
+            smallmeanDice = np.mean([smallmeanDiceWT, smallmeanDiceTC, smallmeanDiceET])
+            self.smallmeanDice = smallmeanDice
 
             if (meanDice > self.bestMeanDice):
                 self.bestMeanDice = meanDice
