@@ -280,11 +280,11 @@ class UnetUp3_CT(nn.Module):
         print('outputs2.shape:', outputs2.shape)
 
         for i in range(1,4):
-            if inputs1.shape[-i] != inputs2.shape[-i]:
+            if outputs2.shape[-i] != outputs1.shape[-i]:
                 tup = [0,0,0,0,0,0]
-                n_tmp = abs(outputs1.shape[-i] - inputs2.shape[-i])
+                n_tmp = abs(outputs2.shape[-i] - outputs1.shape[-i])
                 tup[i*2 -1] = n_tmp
-                outputs1 = F.pad(outputs1, tuple(tup), 'constant')
+                outputs2 = F.pad(outputs2, tuple(tup), 'constant')
 
         print('outputs1.shape:', outputs1.shape)
         print('outputs2.shape:', outputs2.shape)
