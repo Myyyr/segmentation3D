@@ -83,22 +83,22 @@ class unet_3D(nn.Module):
         maxpool3 = self.maxpool3(conv3)
 
         conv4 = self.conv4(maxpool3)
-        print('conv4.shape:',conv4.shape)
+        # print('conv4.shape:',conv4.shape)
         maxpool4 = self.maxpool4(conv4)
-        print('maxpool4.shape:',maxpool4.shape)
+        # print('maxpool4.shape:',maxpool4.shape)
 
 
 
         center = self.center(maxpool4)
-        print('center.shape:',center.shape)
+        # print('center.shape:',center.shape)
         up4 = self.up_concat4(conv4, center)
-        print('up4.shape:',up4.shape)
+        # print('up4.shape:',up4.shape)
         up3 = self.up_concat3(conv3, up4)
-        print('up3.shape:',up3.shape)
+        # print('up3.shape:',up3.shape)
         up2 = self.up_concat2(conv2, up3)
-        print('up2.shape:',up2.shape)
+        # print('up2.shape:',up2.shape)
         up1 = self.up_concat1(conv1, up2)
-        print('up1.shape:',up1.shape)
+        # print('up1.shape:',up1.shape)
 # 
         # print("||down/up|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||down/up|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
@@ -118,7 +118,7 @@ class unet_3D(nn.Module):
         # print("||interpolation|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||interpolation|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
         # exit(0)
-        exit(0)
+        # exit(0)
         return final, Y
 
     @staticmethod
