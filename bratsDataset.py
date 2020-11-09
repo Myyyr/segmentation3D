@@ -14,8 +14,10 @@ class BratsDataset(torch.utils.data.Dataset):
     def __init__(self, expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False):
         super(BratsDataset, self).__init__()
         self.filePath = expConfig.datapath
+        self.labelPath = expConfig.labelpath
         self.mode = mode
         self.file = None
+        self.labelFile = None
         self.trainOriginalClasses = expConfig.train_original_classes
         self.randomCrop = randomCrop
         self.hasMasks = hasMasks
@@ -41,7 +43,8 @@ class BratsDataset(torch.utils.data.Dataset):
 
         #load from hdf5 file
         image = self.file["images_" + self.mode][index, ...]
-        if self.hasMasks: labels = self.file["masks_" + self.mode][index, ...]
+        if self.hasMasks: 
+            labels = self.labelFile["masks_" + self.mode][index, ...]
 
         #Prepare data depeinding on soft/hard augmentation scheme
         if not self.nnAugmentation:
@@ -124,6 +127,8 @@ class BratsDataset(torch.utils.data.Dataset):
     def openFileIfNotOpen(self):
         if self.file == None:
             self.file = h5py.File(self.filePath, "r")
+        if self.labelFile == None:
+            self.labelFile = h5py.File(self.labelPath, "r")
 
     def _toEvaluationOneHot(self, labels):
         shape = labels.shape

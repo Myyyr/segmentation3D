@@ -14,7 +14,8 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./models/checkpoints"
         self.datapath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_240_240_155_res_1.0_1.0_1.0.hdf5"
-
+        labelpath = "path"
+        
         # GPU
         self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
