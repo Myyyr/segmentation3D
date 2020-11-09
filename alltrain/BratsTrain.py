@@ -19,7 +19,7 @@ class BTrain(Train):
         self.expconfig.net = expconfig.net.to(self.device)
 
 
-        self.tb = SummaryWriter(expconfig.experiment_name)
+        self.tb = SummaryWriter(comment=expconfig.experiment_name)
 
         self.bestMeanDice = 0
         self.bestMeanDiceEpoch = 0
