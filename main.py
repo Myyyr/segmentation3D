@@ -16,6 +16,16 @@ def main(config):
 
 		train.train()
 
+	if config == 'unet':
+		import expconfigs.unet as cfg
+
+
+		excfg = cfg.ExpConfig()
+
+		train = alltrain.BTrain(excfg)
+
+		train.train()
+
 
 
 
