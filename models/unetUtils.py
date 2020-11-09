@@ -273,11 +273,7 @@ class UnetUp3_CT(nn.Module):
         padding = 2 * [offset // 2, offset // 2, 0]
         outputs1 = F.pad(inputs1, padding)
 
-        print('inputs1.shape:', inputs1.shape)
-        print('inputs2.shape:', inputs2.shape)
 
-        print('outputs1.shape:', outputs1.shape)
-        print('outputs2.shape:', outputs2.shape)
 
         for i in range(1,4):
             if outputs2.shape[-i] != outputs1.shape[-i]:
@@ -286,8 +282,8 @@ class UnetUp3_CT(nn.Module):
                 tup[i*2 -1] = n_tmp
                 outputs2 = F.pad(outputs2, tuple(tup), 'constant')
 
-        print('outputs1.shape:', outputs1.shape)
-        print('outputs2.shape:', outputs2.shape)
+
+
 
         return self.conv(torch.cat([outputs1, outputs2], 1))
 

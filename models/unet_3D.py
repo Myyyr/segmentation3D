@@ -94,8 +94,11 @@ class unet_3D(nn.Module):
         up4 = self.up_concat4(conv4, center)
         print('up4.shape:',up4.shape)
         up3 = self.up_concat3(conv3, up4)
+        print('up3.shape:',up3.shape)
         up2 = self.up_concat2(conv2, up3)
+        print('up2.shape:',up2.shape)
         up1 = self.up_concat1(conv1, up2)
+        print('up1.shape:',up1.shape)
 # 
         # print("||down/up|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||down/up|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
@@ -111,11 +114,12 @@ class unet_3D(nn.Module):
         # print("||final|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||final|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
         final = self.interpolation(Y)
-        del Y
+        
         # print("||interpolation|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||interpolation|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
         # exit(0)
-        return final
+        exit(0)
+        return final, Y
 
     @staticmethod
     def apply_argmax_softmax(pred):
