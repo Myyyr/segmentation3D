@@ -16,6 +16,8 @@ def main(config):
 
 		train.train()
 
+		return 0
+
 	if config == 'unet':
 		import expconfigs.unet as cfg
 
@@ -25,6 +27,20 @@ def main(config):
 		train = alltrain.BTrain(excfg)
 
 		train.train()
+
+		return 0
+
+	if config == 'revunet':
+		import expconfigs.revunet as cfg
+
+
+		excfg = cfg.ExpConfig()
+
+		train = alltrain.BTrain(excfg)
+
+		train.train()
+
+		return 0
 
 
 
