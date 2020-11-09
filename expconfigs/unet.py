@@ -8,8 +8,8 @@ import alltrain.bratsUtils as bratsUtils
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "Example"
-        self.id = 0
+        self.experiment_name = "unet_3D"
+        self.id = 1
 
         # System
         self.checkpointsBasePath = "./models/checkpoints"
@@ -17,7 +17,7 @@ class ExpConfig():
         self.datapath = "/local/SSD_DEEPLEARNING/brats/processed/data_3D_size_160_192_155_res_1.0_1.0_1.0.hdf5"
         
         # GPU
-        self.gpu = '0'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
