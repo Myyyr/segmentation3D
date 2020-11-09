@@ -12,7 +12,7 @@ class unet_3D(nn.Module):
         self.is_deconv = is_deconv
         self.in_channels = in_channels
         self.is_batchnorm = is_batchnorm
-        self.feature_scale = feature_scale
+        # self.feature_scale = feature_scale
 
         # filters = [64, 128, 256, 512, 1024]
         # filters = [int(x / self.feature_scale) for x in filters]
