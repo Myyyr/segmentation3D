@@ -45,14 +45,18 @@ class ExpConfig():
             return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
         self.batchsize = 2
-        self.optimizer = optim.SGD(self.net.parameters(),
-                              lr= 0.01, #to do
-                              momentum=0.9,
-                              nesterov=True,
-                              weight_decay=1e-5) #todo
+        # self.optimizer = optim.SGD(self.net.parameters(),
+        #                       lr= 0.01, #to do
+        #                       momentum=0.9,
+        #                       nesterov=True,
+        #                       weight_decay=1e-5) #todo
+        self.optimizer = optim.Adam(self.net.parameters(), lr = 0.0001, weight_decay=1e-5)
+
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000")
+        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000")
+        self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
+
 
 
         
