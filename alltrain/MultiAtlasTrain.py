@@ -28,8 +28,8 @@ class MATrain(Train):
 
         trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
         validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False)
-        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
-        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
+        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=True)
+        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=False)
 
         
 
