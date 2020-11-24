@@ -83,7 +83,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                 smalllabels = self._toOrdinal(smalllabels)
                 smalllabels = self._toEvaluationOneHot(smalllabels)
 
-         if self.hasMasks: 
+        if self.hasMasks: 
             labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
             smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
