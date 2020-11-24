@@ -31,7 +31,7 @@ class MATrain(Train):
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=4, batch_size=expconfig.batchsize, shuffle=False)
 
-        exit(0)
+        
 
     def train(self):
         expcf = self.expconfig
