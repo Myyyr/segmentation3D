@@ -34,7 +34,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.maxIntensityShift = expConfig.max_intensity_shift
 
 
-        self.n_classes = 13
+        self.n_classes = 12
 
     def __getitem__(self, index):
 
@@ -103,9 +103,9 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         #     if self.hasMasks: labels = labels[x:x + self.randomCrop[0], y:y + self.randomCrop[1], z:z + self.randomCrop[2], :]
 
         # image = np.transpose(image, (3, 0, 1, 2))  # bring into NCWH format
-        # if self.hasMasks: 
-        #     labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
-        #     smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
+        if self.hasMasks: 
+            labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
+            smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]
