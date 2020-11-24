@@ -42,6 +42,8 @@ class MATrain(Train):
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
+        print("#### TRAIN SET :", len(self.trainDataLoader))
+        print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
 
 
