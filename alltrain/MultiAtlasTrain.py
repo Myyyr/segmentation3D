@@ -56,7 +56,10 @@ class MATrain(Train):
                 
 
                 #load data
-                inputs, pid, labels, _ = data
+                if expcf.look_small:
+                    inputs, pid, labels, _ = data
+                else:
+                    inputs, pid, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
                 #forward and backward pass
@@ -175,7 +178,7 @@ class MATrain(Train):
             if expcf.look_small:
                 self.smallmeanDice = np.mean([j for j in smallmeanDices])
                 self.save_dict['smallmeanDice'] =  self.smallmeanDice 
-                
+
             self.save_dict['epoch'] = epoch
             self.save_dict['memory'] = convert_bytes(torch.cuda.max_memory_allocated())
             self.save_dict['training_time'] =  time.time() - self.startingTime
