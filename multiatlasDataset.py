@@ -140,9 +140,10 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         if self.mode == 'train':
             self.used_split = self.splits[:self.split] + self.splits[self.split+1:]
+            self.used_split = [j for i in self.used_split for j in i]
         else:
             self.used_split = self.splits[self.split]
-        self.used_split = [j for i in self.used_split for j in i]
+        
             
     def _toEvaluationOneHot(self, labels):
         shape = labels.shape
