@@ -21,7 +21,7 @@ class ResidualInner(nn.Module):
 
 def makeReversibleSequence(channels):
     innerchannels = channels // 2
-    groups = 2#channels[0] // 2
+    groups = 2 if channels[0] > 1 else 1 #channels[0] // 2
     fBlock = ResidualInner(innerchannels, groups)
     gBlock = ResidualInner(innerchannels, groups)
     #gBlock = nn.Sequential()
