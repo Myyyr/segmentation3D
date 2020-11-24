@@ -28,7 +28,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     #bring outputs into correct shape
     chunk = list(outputs.chunk(12, dim=1))
     s = chunk[0].shape
-    # print("atlas loss :",s)
+    print("atlas loss :",s)
 
     for i in range(12):
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
