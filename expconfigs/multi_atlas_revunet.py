@@ -21,8 +21,8 @@ class ExpConfig():
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
-        self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x/16) for x in self.channels]
+        self.channels = [64, 128, 256, 512]
+        self.channels = [int(x/32) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 12, interpolation = (512,512,198))
 
         # Data

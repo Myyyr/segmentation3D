@@ -82,7 +82,7 @@ class RevUnet3D(nn.Module):
     def __init__(self, inchannels ,channels, out_size, interpolation = None):
         super(RevUnet3D, self).__init__()
         depth = 1
-        self.levels = 5
+        self.levels = len(channels)
 
         self.firstConv = nn.Conv3d(inchannels, channels[0], 3, padding=1, bias=False)
         #self.dropout = nn.Dropout3d(0.2, True)
