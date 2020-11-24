@@ -3,17 +3,21 @@ import  torch
 from torch.utils.tensorboard import SummaryWriter
 import time
 # import alltrain.bratsUtils as bratsUtils
+import alltrain.atlasUtils as atlasUtils
 from multiatlasDataset import *
 
 from tqdm import tqdm
 
 from torch.utils.data import DataLoader
 
+import json
+import os
 class MATrain(Train):
 
-    def __init__(self, expconfig):
+    def __init__(self, expconfig, split = 0):
         super(MATrain, self).__init__(expconfig)
         self.expconfig = expconfig
+        self.startingTime = time.time()
 
         self.device = torch.device("cuda")
         self.expconfig.net = expconfig.net.to(self.device)
@@ -26,12 +30,13 @@ class MATrain(Train):
         self.meanDice = 0
         self.smallmeanDice = 0
 
-        trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False)
-        validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False)
+        trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
 
-        
+        self.save_dict = {'original':{} ,'small':{}}
+        self.split = split
 
     def train(self):
         expcf = self.expconfig
@@ -115,128 +120,63 @@ class MATrain(Train):
 
         with torch.no_grad():
             dice = []
-            # sensWT, sensTC, sensET = [], [], []
-            # specWT, specTC, specET = [], [], []
-            # hdWT, hdTC, hdET = [], [], []
-
             smalldice = []
-            # smallsensWT, smallsensTC, smallsensET = [], [], []
-            # smallspecWT, smallspecTC, smallspecET = [], [], []
-            # smallhdWT, smallhdTC, smallhdET = [], [], []
 
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 inputs, _, labels, smalllabels = data
                 inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
                 outputs, smalloutputs = expcf.net(inputs)
 
-                if expcf.train_original_classes:
-                    outputsOriginal5 = outputs
-                    outputs = torch.argmax(outputs, 1)
-                    #hist, _ = np.histogram(outputs.cpu().numpy(), 5, (0, 4))
-                    #buckets = buckets + hist
-                    wt = bratsUtils.getWTMask(outputs)
-                    tc = bratsUtils.getTCMask(outputs)
-                    et = bratsUtils.getETMask(outputs)
+                
+                outputs = torch.argmax(outputs, 1)
+                smalloutputs = torch.argmax(smalloutputs, 1)
 
-                    smalloutputs = torch.argmax(smalloutputs, 1)
-                    #hist, _ = np.histogram(smalloutputs.cpu().numpy(), 5, (0, 4))
-                    #buckets = buckets + hist
-                    wt = bratsUtils.getWTMask(smalloutputs)
-                    tc = bratsUtils.getTCMask(smalloutputs)
-                    et = bratsUtils.getETMask(smalloutputs)
+                masks, smallmasks = [], []
+
+
+                labels = torch.argmax(labels, 1)
+                smalllabels = torch.argmax(smalllabels, 1)
+                label_masks, smalllabel_masks = [], []
 
 
 
+                for i in range(12):
+                    masks.append(atlasUtils.getMask(outputs, i))
+                    smallmasks.append(atlasUtils.getMask(smalloutputs, i))
+
+                    label_masks.append(atlasUtils.getMask(labels, i))
+                    smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+
+                    dice.append(atlasUtils.dice(masks[i], label_masks[i]))
+                    smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+                    
+
+
+             
+
+            meanDices, smallmeanDices = [], []
+            for i in range(12):
+                meanDices.append(np.mean(dice[i]))
+                smallmeanDices.append(np.mean(smalldice[i]))
+
+                self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
+                self.save_dict['small'][self.expconfig.classes_name[i]] = smallmeanDices[i]
+            self.meanDice = np.mean([j for j in meanDices])
+            self.smallmeanDice = np.mean([j for j in smallmeanDices])
+
+            self.save_dict['meanDice'] =  self.meanDice 
+            self.save_dict['smallmeanDice'] =  self.smallmeanDice 
+            self.save_dict['epoch'] = epoch
+            self.save_dict['memory'] = convert_bytes(torch.cuda.max_memory_allocated())
+            self.save_dict['training_time'] =  time.time() - self.startingTime
 
 
 
-                    labels = torch.argmax(labels, 1)
-                    wtMask = bratsUtils.getWTMask(labels)
-                    tcMask = bratsUtils.getTCMask(labels)
-                    etMask = bratsUtils.getETMask(labels)
+        self.save_results()
 
-                    smalllabels = torch.argmax(smalllabels, 1)
-                    smallwtMask = bratsUtils.getWTMask(smalllabels)
-                    smalltcMask = bratsUtils.getTCMask(smalllabels)
-                    smalletMask = bratsUtils.getETMask(smalllabels)
-
-                else:
-
-                    #separate outputs channelwise
-                    wt, tc, et = outputs.chunk(3, dim=1)
-                    s = wt.shape
-                    wt = wt.view(s[0], s[2], s[3], s[4])
-                    tc = tc.view(s[0], s[2], s[3], s[4])
-                    et = et.view(s[0], s[2], s[3], s[4])
-
-                    smallwt, smalltc, smallet = smalloutputs.chunk(3, dim=1)
-                    s = smallwt.shape
-                    smallwt = smallwt.view(s[0], s[2], s[3], s[4])
-                    smalltc = smalltc.view(s[0], s[2], s[3], s[4])
-                    smallet = smallet.view(s[0], s[2], s[3], s[4])
-
-
-
-
-
-                    wtMask, tcMask, etMask = labels.chunk(3, dim=1)
-                    s = wtMask.shape
-                    wtMask = wtMask.view(s[0], s[2], s[3], s[4])
-                    tcMask = tcMask.view(s[0], s[2], s[3], s[4])
-                    etMask = etMask.view(s[0], s[2], s[3], s[4])
-
-                    smallwtMask, smalltcMask, smalletMask = smalllabels.chunk(3, dim=1)
-                    s = smallwtMask.shape
-                    smallwtMask = smallwtMask.view(s[0], s[2], s[3], s[4])
-                    smalltcMask = smalltcMask.view(s[0], s[2], s[3], s[4])
-                    smalletMask = smalletMask.view(s[0], s[2], s[3], s[4])
-
-                #TODO: add special evaluation metrics for original 5
-
-                #get dice metrics
-                diceWT.append(bratsUtils.dice(wt, wtMask))
-                diceTC.append(bratsUtils.dice(tc, tcMask))
-                diceET.append(bratsUtils.dice(et, etMask))
-
-                # #get sensitivity metrics
-                # sensWT.append(bratsUtils.sensitivity(wt, wtMask))
-                # sensTC.append(bratsUtils.sensitivity(tc, tcMask))
-                # sensET.append(bratsUtils.sensitivity(et, etMask))
-
-                # #get specificity metrics
-                # specWT.append(bratsUtils.specificity(wt, wtMask))
-                # specTC.append(bratsUtils.specificity(tc, tcMask))
-                # specET.append(bratsUtils.specificity(et, etMask))
-
-
-                #get dice metrics
-                smalldiceWT.append(bratsUtils.dice(smallwt, smallwtMask))
-                smalldiceTC.append(bratsUtils.dice(smalltc, smalltcMask))
-                smalldiceET.append(bratsUtils.dice(smallet, smalletMask))
-
-
-
-
-                #calculate mean dice scores
-            meanDiceWT = np.mean(diceWT)
-            meanDiceTC = np.mean(diceTC)
-            meanDiceET = np.mean(diceET)
-            meanDice = np.mean([meanDiceWT, meanDiceTC, meanDiceET])
-            self.meanDice = meanDice
-
-
-            smallmeanDiceWT = np.mean(smalldiceWT)
-            smallmeanDiceTC = np.mean(smalldiceTC)
-            smallmeanDiceET = np.mean(smalldiceET)
-            smallmeanDice = np.mean([smallmeanDiceWT, smallmeanDiceTC, smallmeanDiceET])
-            self.smallmeanDice = smallmeanDice
-
-            if (meanDice > self.bestMeanDice):
-                self.bestMeanDice = meanDice
-                self.bestMeanDiceEpoch = epoch
 
         return time.time() - startTime
-
 
 
 
@@ -260,3 +200,8 @@ class MATrain(Train):
         if not os.path.exists(basePath):
             os.makedirs(basePath)
         torch.save(saveDict, path)
+
+
+    def save_results(self):
+        with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
+            json.dump(self.save_dict, f)

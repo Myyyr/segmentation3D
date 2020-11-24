@@ -8,8 +8,8 @@ import alltrain.atlasUtils as atlasUtils
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "revunet_3D"
-        self.id = 2
+        self.experiment_name = "atlas_revunet_3D"
+        self.id = 3
 
         # System
         self.checkpointsBasePath = "./models/checkpoints"
@@ -54,6 +54,9 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
+
+        # Other
+        self.classes_name = ['spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
 
 
         

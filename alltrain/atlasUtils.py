@@ -80,8 +80,8 @@ def getHd95(pred, target):
         # Edge cases that medpy cannot handle
         return -1
 
-def getWTMask(labels):
-    return (labels != 0).float()
+def getMask(labels, i):
+    return (labels == i).float()
 
 # def getTCMask(labels):
 #     return ((labels != 0) * (labels != 2)).float() #We use multiplication as AND
