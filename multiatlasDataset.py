@@ -123,7 +123,9 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         #lazily open file
         self.openFileIfNotOpen()
 
-        return self.file["images_" + self.mode].shape[0]
+        return len(self.used_split)
+
+        # return self.file["images_" + self.mode].shape[0]
 
     def openFileIfNotOpen(self):
         if self.file == None:
