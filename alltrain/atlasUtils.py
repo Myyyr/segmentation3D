@@ -28,15 +28,16 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     #bring outputs into correct shape
     chunk = outputs.chunk(12, dim=1)
     s = chunk[0].shape
+    print("atlas loss :",s)
 
     for i in range(12):
-        chunk[i] = chunk[i].view((s[0], s[2], s[3], s[4]))
+        chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
 
     # bring masks into correct shape
     chunkMask = labels.chunk(12, dim=1)
     s = chunk[0].shape
     for i in range(12):
-        chunkMask[i] = chunkMask[i].view((s[0], s[2], s[3], s[4]))
+        chunkMask[i] = chunkMask[i].view(s[0], s[2], s[3], s[4])
     
 
     #calculate losses
