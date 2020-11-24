@@ -146,7 +146,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
     def _toEvaluationOneHot(self, labels):
         shape = labels.shape
         out = np.zeros([shape[0], shape[1], shape[2], self.n_classes], dtype=np.float32)
-        for i in range(n_classes):
+        for i in range(self.n_classes):
             out[:,:,:,i] = (labels == i)
         # out[:, :, :, 0] = (labels != 0)
         # out[:, :, :, 1] = (labels != 0) * (labels != 2)
