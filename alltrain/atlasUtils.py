@@ -26,7 +26,7 @@ def diceLoss(pred, target, nonSquared=False):
 def atlasDiceLoss(outputs, labels, nonSquared=False):
 
     #bring outputs into correct shape
-    chunk = list(outputs.chunk(12, dim=-1))
+    chunk = list(outputs.chunk(12, dim=1))
     s = chunk[0].shape
 
     print('-------> chunk shape :', s)
@@ -38,7 +38,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
 
     # bring masks into correct shape
-    chunkMask = list(labels.chunk(12, dim=-1))
+    chunkMask = list(labels.chunk(12, dim=1))
     s = chunkMask[0].shape
     
     for i in range(12):
