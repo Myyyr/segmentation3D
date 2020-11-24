@@ -30,7 +30,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     s = chunk[0].shape
 
     for i in range(12):
-        chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
+        chunk[i] = chunk[i].view((s[0], s[2], s[3], s[4]))
 
     # bring masks into correct shape
     chunkMask = labels.chunk(12, dim=1)
