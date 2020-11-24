@@ -111,7 +111,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         #image = image[:, 0:32, 0:32, 0:32]
 
         image = torch.from_numpy(image)
-        image = image.expand(-1,1,-1,-1,-1)
+        image = image.expand(1,-1,-1,-1)
         if self.hasMasks:
             #labels = labels[:, 0:32, 0:32, 0:32]
             labels = torch.from_numpy(labels) 
