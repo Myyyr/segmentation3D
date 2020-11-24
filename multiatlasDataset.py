@@ -109,7 +109,9 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]
+
         image = torch.from_numpy(image)
+        image = image.expand(-1,1,-1,-1,-1)
         if self.hasMasks:
             #labels = labels[:, 0:32, 0:32, 0:32]
             labels = torch.from_numpy(labels) 
@@ -117,6 +119,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         #get pid
         pid = self.file["pids_" + self.mode][index]
+
 
         if self.returnOffsets:
             xOffset = self.file["xOffsets_" + self.mode][index]
