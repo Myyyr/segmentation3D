@@ -57,14 +57,14 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
     hdf5_file = h5py.File(output_file, "w")
 
-    file_list = 'train': []
+    file_list = []
 
     logging.info('Counting files and parsing meta data...')
 
     pid = 0
-    for folder in os.listdir(input_folder+ '/img/'):
+    for folder in os.listdir(input_folder+ '/img'):
         print(get_im_id(folder))
-        train_test = test_train_val_split(pid)
+        # train_test = test_train_val_split(pid)
         pid = pid + 1
         file_list.append(get_im_id(folder))
 
@@ -81,10 +81,16 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
         if num_points > 0:
             print([num_points] + list(size) + [input_channels])
-            data['images_%s' % tt] = hdf5_file.create_dataset("images_%s" % tt, [num_points] + list(size) + [input_channels],
-                                                              dtype=np.float32)
-            data['masks_%s' % tt] = hdf5_file.create_dataset("masks_%s" % tt, [num_points] + list(size), dtype=np.uint8)
-            data['pids_%s' % tt] = hdf5_file.create_dataset("pids_%s" % tt, [num_points] , dtype=h5py.special_dtype(vlen=str))
+            if input_channels != 1:
+                data['images_%s' % tt] = hdf5_file.create_dataset("images_%s" % tt, [num_points] + list(size) + [input_channels],
+                                                                  dtype=np.float32)
+                data['masks_%s' % tt] = hdf5_file.create_dataset("masks_%s" % tt, [num_points] + list(size), dtype=np.uint8)
+                data['pids_%s' % tt] = hdf5_file.create_dataset("pids_%s" % tt, [num_points] , dtype=h5py.special_dtype(vlen=str))
+            else:
+                data['images_%s' % tt] = hdf5_file.create_dataset("images_%s" % tt, [num_points] + list(size),
+                                                                  dtype=np.float32)
+                data['masks_%s' % tt] = hdf5_file.create_dataset("masks_%s" % tt, [num_points] + list(size), dtype=np.uint8)
+                data['pids_%s' % tt] = hdf5_file.create_dataset("pids_%s" % tt, [num_points] , dtype=h5py.special_dtype(vlen=str))
 
     mask_list = []
     img_list = []
@@ -125,7 +131,7 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
             baseFilePath = os.path.join(input_folder, 'img','img'+file+'.nii.gz')
             img, _, img_header = utils.load_nii(baseFilePath )
-            mask, _, _ = utils.load_nii(baseFilePath, 'label','label'+file+'.nii.gz')
+            mask, _, _ = utils.load_nii(os.path.join(input_folder, 'label','label'+file+'.nii.gz'))
 
             # pixel_size = (img_header.structarr['pixdim'][1],
             #               img_header.structarr['pixdim'][2],
@@ -144,8 +150,13 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             #     img = transform.rescale(img, scale_vector, order=1, preserve_range=True, multichannel=True, mode='constant')
             #     mask = transform.rescale(mask, scale_vector, order=0, preserve_range=True, multichannel=False, mode='constant')
 
-            img = pad_slice_to_size(img, size)
-            mask = pad_slice_to_size(mask, size)
+            img = pad_slice_to_size(img, (512, 512, 198))
+            mask = pad_slice_to_size(mask, (512, 512, 198))
+            scale_vector = target_resolution
+            if scale_vector != 1.0:
+                # print(img.shape)
+                img = transform.resize(img, size)
+                mask = transform.resize(mask, size)
 
             img = normalise_image(img)
 
@@ -246,12 +257,14 @@ def load_and_maybe_process_data(input_folder,
 
 
 if __name__ == '__main__':
-    input_folder = "/local/SSD_DEEPLEARNING/brats/train/HGG"
-    preprocessing_folder = "/local/SSD_DEEPLEARNING/brats/processed"
-    # target_size = (240, 240, 155) # ORIGINAL SIZE
-    target_size = (160, 192, 155)
+    input_folder = "/home/themyr/these/data/RawData/Training"
+    preprocessing_folder = "/home/themyr/these/data/RawData/multi_atlas/"
+    # target_size = (512x512x~198) # ORIGINAL SIZE
+    # target_size = (512, 512, 198)
+    target_size = (512//2, 512//2, 198//2)
+    rescale = [0.5, 0.5]
 
-    d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 4, (1.0, 1.0, 1.0), force_overwrite=True)
+    d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
 
 
 

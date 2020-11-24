@@ -43,8 +43,14 @@ def main(config):
 		return 0
 
 
+	if config == "multi_atlas_revunet":
+		import expconfigs.multi_atlas_revunet as cfg
+		excfg = cfg.ExpConfig()
 
+		train = alltrain.MATrain(excfg)
+		train.train()
 
+		return 0
 
 if __name__ == "__main__" :
 	parser = argparse.ArgumentParser("Configs for training")
