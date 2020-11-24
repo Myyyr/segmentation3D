@@ -57,8 +57,7 @@ class ExpConfig():
 
         # Other
         self.classes_name = ['spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
-
-
+        self.look_small = False
         
 
 

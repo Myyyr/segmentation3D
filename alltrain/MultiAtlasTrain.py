@@ -122,13 +122,19 @@ class MATrain(Train):
             smalldice = []
 
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
-                inputs, _, labels, smalllabels = data
-                inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
-                outputs, smalloutputs = expcf.net(inputs)
+                if expcf.look_small:
+                    inputs, _, labels, smalllabels = data
+                    inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
+                    outputs, smalloutputs = expcf.net(inputs)
+                else:
+                    inputs, _, labels = data
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    outputs, _ = expcf.net(inputs)
 
                 
                 outputs = torch.argmax(outputs, 1)
-                smalloutputs = torch.argmax(smalloutputs, 1)
+                if expcf.look_small:
+                    smalloutputs = torch.argmax(smalloutputs, 1)
 
                 masks, smallmasks = [], []
 
@@ -141,13 +147,13 @@ class MATrain(Train):
 
                 for i in range(12):
                     masks.append(atlasUtils.getMask(outputs, i))
-                    smallmasks.append(atlasUtils.getMask(smalloutputs, i))
-
                     label_masks.append(atlasUtils.getMask(labels, i))
-                    smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
-
                     dice.append(atlasUtils.dice(masks[i], label_masks[i]))
-                    smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+                    if expcf.look_small:
+                        smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
+                        smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+                        smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
 
                     
 
@@ -157,15 +163,19 @@ class MATrain(Train):
             meanDices, smallmeanDices = [], []
             for i in range(12):
                 meanDices.append(np.mean(dice[i]))
-                smallmeanDices.append(np.mean(smalldice[i]))
-
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
-                self.save_dict['small'][self.expconfig.classes_name[i]] = smallmeanDices[i]
-            self.meanDice = np.mean([j for j in meanDices])
-            self.smallmeanDice = np.mean([j for j in smallmeanDices])
 
+                if expcf.look_small:
+                    smallmeanDices.append(np.mean(smalldice[i]))
+                    self.save_dict['small'][self.expconfig.classes_name[i]] = smallmeanDices[i]
+
+            self.meanDice = np.mean([j for j in meanDices])
             self.save_dict['meanDice'] =  self.meanDice 
-            self.save_dict['smallmeanDice'] =  self.smallmeanDice 
+
+            if expcf.look_small:
+                self.smallmeanDice = np.mean([j for j in smallmeanDices])
+                self.save_dict['smallmeanDice'] =  self.smallmeanDice 
+                
             self.save_dict['epoch'] = epoch
             self.save_dict['memory'] = convert_bytes(torch.cuda.max_memory_allocated())
             self.save_dict['training_time'] =  time.time() - self.startingTime

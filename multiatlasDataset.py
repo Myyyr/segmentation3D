@@ -33,6 +33,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.doIntensityShift = expConfig.do_intensity_shift
         self.maxIntensityShift = expConfig.max_intensity_shift
 
+        self.look_small = expConfig.look_small
         self.split = split
 
 
@@ -50,8 +51,10 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         image = self.file["images_" + 'train'][index, ...]
         if self.hasMasks: 
             labels = self.labelFile["masks_" + 'train'][index, ...]
-        if self.hasMasks: 
+        if self.look_small: 
             smalllabels = self.file["masks_" + 'train'][index, ...]
+        else:
+            smalllabels = None
 
         #Prepare data depeinding on soft/hard augmentation scheme
         n_classes = 12
@@ -59,33 +62,39 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
                 if self.hasMasks: 
                     labels = self._toEvaluationOneHot(labels)
-                    smalllabels = self._toEvaluationOneHot(smalllabels)
+                    if self.look_small:
+                        smalllabels = self._toEvaluationOneHot(smalllabels)
                 defaultLabelValues = np.zeros(n_classes, dtype=np.float32)
             else:
                 if self.hasMasks: 
                     labels = self._toOrignalCategoryOneHot(labels)
-                    smalllabels = self._toOrignalCategoryOneHot(smalllabels)
+                    if self.look_small:
+                        smalllabels = self._toOrignalCategoryOneHot(smalllabels)
         elif self.hasMasks:
             if labels.ndim < n_classes+1:
                 labels = np.expand_dims(labels, n_classes)
-                smalllabels = np.expand_dims(smalllabels, n_classes)
+                if self.look_small:
+                    smalllabels = np.expand_dims(smalllabels, n_classes)
 
 
 
         if self.nnAugmentation:
             if self.hasMasks: 
                 labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
-                smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
+                if self.look_small:
+                    smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
         else:
             if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
                 labels = self._toOrdinal(labels)
                 labels = self._toEvaluationOneHot(labels)
-                smalllabels = self._toOrdinal(smalllabels)
-                smalllabels = self._toEvaluationOneHot(smalllabels)
+                if self.look_small:
+                    smalllabels = self._toOrdinal(smalllabels)
+                    smalllabels = self._toEvaluationOneHot(smalllabels)
 
         if self.hasMasks: 
             labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
-            smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
+            if self.look_small:
+                smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]
@@ -95,25 +104,20 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         if self.hasMasks:
             #labels = labels[:, 0:32, 0:32, 0:32]
             labels = torch.from_numpy(labels) 
-            smalllabels = torch.from_numpy(smalllabels) 
+            if self.look_small:
+                smalllabels = torch.from_numpy(smalllabels) 
 
         #get pid
         pid = self.file["pids_" + self.mode][index]
 
 
-        if self.returnOffsets:
-            xOffset = self.file["xOffsets_" + self.mode][index]
-            yOffset = self.file["yOffsets_" + self.mode][index]
-            zOffset = self.file["zOffsets_" + self.mode][index]
-            if self.hasMasks:
-                return image, str(pid), labels, smalllabels, xOffset, yOffset, zOffset
-            else:
-                return image, pid, xOffset, yOffset, zOffset
+        
+        if self.hasMasks and self.look_small:
+            return image, str(pid), labels, smalllabels
+        elif self.hasMasks:
+            return image, str(pid), labels
         else:
-            if self.hasMasks:
-                return image, str(pid), labels, smalllabels
-            else:
-                return image, pid
+            return image, pid
 
     def __len__(self):
         #lazily open file
