@@ -42,6 +42,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.openFileIfNotOpen()
         print("## LEN", self.__len__())
         print("hdf5 keys", self.file.keys())
+        print("label hdf5 keys", self.labelFile.keys())
 
         #load from hdf5 file
         image = self.file["images_" + self.mode][index, ...]
