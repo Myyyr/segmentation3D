@@ -3,7 +3,7 @@ from models.revunet_3D import RevUnet3D
 from models.utils import get_scheduler
 from bratsDataset import BratsDataset
 import torch.optim as optim
-import alltrain.bratsUtils as bratsUtils
+import alltrain.atlasUtils as atlasUtils
 
 class ExpConfig():
     def __init__(self):
@@ -42,7 +42,7 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 1000
         def loss(outputs, labels):
-            return bratsUtils.bratsDiceLoss(outputs, labels, nonSquared=True)
+            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
         self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),

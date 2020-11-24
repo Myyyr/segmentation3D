@@ -23,7 +23,7 @@ def dice(pred, target):
 def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, nonSquared=nonSquared)
 
-def bratsDiceLoss(outputs, labels, nonSquared=False):
+def atlasDiceLoss(outputs, labels, nonSquared=False):
 
     #bring outputs into correct shape
     chunk = outputs.chunk(12, dim=1)

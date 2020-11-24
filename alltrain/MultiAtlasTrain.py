@@ -75,6 +75,7 @@ class MATrain(Train):
 
 
             #validation at end of epoch
+            exit(0)
             if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
                 validTime = self.validate(epoch)
 
