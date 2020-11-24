@@ -40,6 +40,8 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         #lazily open file
         self.openFileIfNotOpen()
+        print(self.labelpath)
+        print(self.filePath)
         print("## LEN", self.__len__())
         print("hdf5 keys", self.file.keys())
         print("label hdf5 keys", self.labelFile.keys())
