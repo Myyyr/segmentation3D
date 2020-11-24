@@ -8,7 +8,7 @@ import random
 
 class MultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
-    def __init__(self, expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False):
+    def __init__(self, expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = 0):
         super(MultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
         self.labelPath = expConfig.labelpath
@@ -33,21 +33,25 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.doIntensityShift = expConfig.do_intensity_shift
         self.maxIntensityShift = expConfig.max_intensity_shift
 
+        self.split = split
+
 
         self.n_classes = 12
 
-    def __getitem__(self, index):
+    def __getitem__(self, item_index):
 
         #lazily open file
         self.openFileIfNotOpen()
         
 
+        index = self.used_split[item_index]
+
         #load from hdf5 file
-        image = self.file["images_" + self.mode][index, ...]
+        image = self.file["images_" + 'train'][index, ...]
         if self.hasMasks: 
-            labels = self.labelFile["masks_" + self.mode][index, ...]
+            labels = self.labelFile["masks_" + 'train'][index, ...]
         if self.hasMasks: 
-            smalllabels = self.file["masks_" + self.mode][index, ...]
+            smalllabels = self.file["masks_" + 'train'][index, ...]
 
         #Prepare data depeinding on soft/hard augmentation scheme
         n_classes = 12
@@ -66,21 +70,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                 labels = np.expand_dims(labels, n_classes)
                 smalllabels = np.expand_dims(smalllabels, n_classes)
 
-        #augment data
-        # if self.mode == "train":
-        #     image, labels = aug.augment3DImage(image,
-        #                                        labels,
-        #                                        defaultLabelValues,
-        #                                        self.nnAugmentation,
-        #                                        self.doRotate,
-        #                                        self.rotDegrees,
-        #                                        self.doScale,
-        #                                        self.scaleFactor,
-        #                                        self.doFlip,
-        #                                        self.doElasticAug,
-        #                                        self.sigma,
-        #                                        self.doIntensityShift,
-        #                                        self.maxIntensityShift)
+
 
         if self.nnAugmentation:
             if self.hasMasks: 
@@ -93,17 +83,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                 smalllabels = self._toOrdinal(smalllabels)
                 smalllabels = self._toEvaluationOneHot(smalllabels)
 
-        # random crop
-        # if not self.randomCrop is None:
-        #     shape = image.shape
-        #     x = random.randint(0, shape[0] - self.randomCrop[0])
-        #     y = random.randint(0, shape[1] - self.randomCrop[1])
-        #     z = random.randint(0, shape[2] - self.randomCrop[2])
-        #     image = image[x:x+self.randomCrop[0], y:y+self.randomCrop[1], z:z+self.randomCrop[2], :]
-        #     if self.hasMasks: labels = labels[x:x + self.randomCrop[0], y:y + self.randomCrop[1], z:z + self.randomCrop[2], :]
-
-        # image = np.transpose(image, (3, 0, 1, 2))  # bring into NCWH format
-        if self.hasMasks: 
+         if self.hasMasks: 
             labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
             smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
@@ -147,6 +127,19 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         if self.labelFile == None:
             self.labelFile = h5py.File(self.labelPath, "r")
 
+        self.splits = []
+        n = self.file["images_" + 'train'].shape[0]
+        nb_splits = 5
+        size_splits = n // nb_splits
+        for i in range(n):
+            self.splits.append([j for j in range(size_splits)])
+
+        if self.mode == 'train':
+            self.used_split = self.splits[:self.split] + self.splits[self.split+1:]
+        else:
+            self.used_split = self.splits[self.split]
+        self.used_split = [j for i in self.used_split for j in i]
+            
     def _toEvaluationOneHot(self, labels):
         shape = labels.shape
         out = np.zeros([shape[0], shape[1], shape[2], self.n_classes], dtype=np.float32)

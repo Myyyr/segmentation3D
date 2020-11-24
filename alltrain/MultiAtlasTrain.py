@@ -114,15 +114,15 @@ class MATrain(Train):
         startTime = time.time()
 
         with torch.no_grad():
-            diceWT, diceTC, diceET = [], [], []
-            sensWT, sensTC, sensET = [], [], []
-            specWT, specTC, specET = [], [], []
-            hdWT, hdTC, hdET = [], [], []
+            dice = []
+            # sensWT, sensTC, sensET = [], [], []
+            # specWT, specTC, specET = [], [], []
+            # hdWT, hdTC, hdET = [], [], []
 
-            smalldiceWT, smalldiceTC, smalldiceET = [], [], []
-            smallsensWT, smallsensTC, smallsensET = [], [], []
-            smallspecWT, smallspecTC, smallspecET = [], [], []
-            smallhdWT, smallhdTC, smallhdET = [], [], []
+            smalldice = []
+            # smallsensWT, smallsensTC, smallsensET = [], [], []
+            # smallspecWT, smallspecTC, smallspecET = [], [], []
+            # smallhdWT, smallhdTC, smallhdET = [], [], []
 
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 inputs, _, labels, smalllabels = data
