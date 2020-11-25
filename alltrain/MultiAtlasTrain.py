@@ -69,7 +69,7 @@ class MATrain(Train):
                 inputs = inputs.half()
 
                 #forward and backward pass
-                outputs, _ = expcf.net(inputs)
+                outputs, _ = expcf.net(inputs.half())
 
                 loss = expcf.loss(outputs.half(), labels)
                 total_loss += loss.item()
