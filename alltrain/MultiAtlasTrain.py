@@ -45,8 +45,8 @@ class MATrain(Train):
         print("#### TRAIN SET :", len(self.trainDataLoader))
         print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
-        self.validate(0)
-        exit(0)
+        # self.validate(0)
+        # exit(0)
 
         for epoch in range(expcf.epoch):
             startTime = time.time()
