@@ -123,10 +123,11 @@ class MATrain(Train):
 
     def validate(self, epoch):
         expcf = self.expconfig
-        expcf.net.eval()
+        
         startTime = time.time()
 
         with torch.no_grad():
+            expcf.net.eval()
             dice = []
             smalldice = []
 
