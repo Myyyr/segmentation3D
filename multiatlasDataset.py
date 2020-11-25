@@ -133,18 +133,25 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         if self.labelFile == None:
             self.labelFile = h5py.File(self.labelPath, "r")
 
-        self.splits = []
+        self.splits = self.myAtlasKFold()
         n = self.file["images_" + 'train'].shape[0]
         nb_splits = 5
-        size_splits = n // nb_splits
-        for i in range(n):
-            self.splits.append([j for j in range(size_splits)])
 
         if self.mode == 'train':
             self.used_split = self.splits[:self.split] + self.splits[self.split+1:]
             self.used_split = [j for i in self.used_split for j in i]
         else:
             self.used_split = self.splits[self.split]
+
+
+    def myAtlasKFold(self): 
+    ind = [[21, 22, 23, 24, 25, 26, 27, 28, 29],
+           [12, 13, 14, 15, 16, 17, 18, 19, 20],
+           [ 3,  4,  5,  6,  7,  8,  9, 10, 11],
+           [ 0,  1,  2,  3, 12, 21,  4, 13, 22],
+           [ 1,  5, 14, 23,  2,  6, 15, 24,  7]]
+
+    return ind
         
             
     def _toEvaluationOneHot(self, labels):
