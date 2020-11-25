@@ -68,7 +68,7 @@ class MATrain(Train):
                 #forward and backward pass
                 outputs, _ = expcf.net(inputs)
 
-                loss = expcf.loss(outputs, labels)
+                loss = expcf.loss(outputs.half(), labels)
                 total_loss += loss.item()
                 del inputs, outputs, labels
                 loss.backward()
@@ -132,10 +132,12 @@ class MATrain(Train):
                     inputs, labels, smalllabels = data
                     inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
                     outputs, smalloutputs = expcf.net(inputs)
+                    outputs, smalloutputs = outputs.half(), smalloutputs.half()
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     outputs, _ = expcf.net(inputs)
+                    outputs = outputs.half()
 
                 
                 outputs = torch.argmax(outputs, 1)
