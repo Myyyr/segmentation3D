@@ -108,16 +108,16 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                 smalllabels = torch.from_numpy(smalllabels) 
 
         #get pid
-        pid = self.file["pids_" + self.mode][index]
+        # pid = self.file["pids_" + self.mode][index]
 
 
         
         if self.hasMasks and self.look_small:
-            return image, str(pid), labels, smalllabels
+            return image, labels, smalllabels
         elif self.hasMasks:
-            return image, str(pid), labels
+            return image, labels
         else:
-            return image, pid
+            return image
 
     def __len__(self):
         #lazily open file

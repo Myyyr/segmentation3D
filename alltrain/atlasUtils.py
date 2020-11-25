@@ -82,6 +82,7 @@ def getHd95(pred, target):
 
 def getMask(labels, i):
     return (labels == i).float()
+    # return (labels == i).half()
 
 # def getTCMask(labels):
 #     return ((labels != 0) * (labels != 2)).float() #We use multiplication as AND

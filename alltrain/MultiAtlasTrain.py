@@ -59,9 +59,9 @@ class MATrain(Train):
 
                 #load data
                 if expcf.look_small:
-                    inputs, pid, labels, _ = data
+                    inputs, labels, _ = data
                 else:
-                    inputs, pid, labels = data
+                    inputs, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
                 #forward and backward pass
