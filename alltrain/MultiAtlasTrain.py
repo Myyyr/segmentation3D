@@ -134,11 +134,13 @@ class MATrain(Train):
                 if expcf.look_small:
                     inputs, labels, smalllabels = data
                     inputs, labels, smalllabels = inputs.to(self.device).half(), labels.to(self.device), smalllabels.to(self.device)
+                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, smalloutputs = expcf.net(inputs)
                     outputs, smalloutputs = outputs.half(), smalloutputs.half()
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, _ = expcf.net(inputs)
                     outputs = outputs.half()
 
