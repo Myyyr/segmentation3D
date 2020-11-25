@@ -128,11 +128,11 @@ class MATrain(Train):
 
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 if expcf.look_small:
-                    inputs, _, labels, smalllabels = data
+                    inputs, labels, smalllabels = data
                     inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
                     outputs, smalloutputs = expcf.net(inputs)
                 else:
-                    inputs, _, labels = data
+                    inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     outputs, _ = expcf.net(inputs)
 
