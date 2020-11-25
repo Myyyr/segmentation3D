@@ -38,6 +38,27 @@ class MATrain(Train):
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
 
+    def step(self, inputs, labels, total_loss):
+        inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
+        expcf.net.half()
+        inputs = inputs.type(torch.cuda.HalfTensor)
+
+        #forward and backward pass
+        outputs, _ = expcf.net(inputs)
+
+        loss = expcf.loss(outputs.half(), labels)
+        total_loss += loss.item()
+        del inputs, outputs, labels
+        loss.backward()
+
+        #update params
+        expcf.optimizer.step()
+        expcf.optimizer.zero_grad()
+
+        del loss
+
+        return total_loss
+
     def train(self):
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
@@ -64,22 +85,10 @@ class MATrain(Train):
                     inputs, labels, _ = data
                 else:
                     inputs, labels = data
-                inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
-                expcf.net.half()
-                inputs = inputs.type(torch.cuda.HalfTensor)
+                
 
-                #forward and backward pass
-                outputs, _ = expcf.net(inputs)
-
-                loss = expcf.loss(outputs.half(), labels)
-                total_loss += loss.item()
-                del inputs, outputs, labels
-                loss.backward()
-
-                #update params
-                expcf.optimizer.step()
-                expcf.optimizer.zero_grad()
-
+                total_loss = self.step(inputs, labels, total_loss)
+                del inputs, labels
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
 

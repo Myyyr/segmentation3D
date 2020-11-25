@@ -25,6 +25,7 @@ class ExpConfig():
         self.channels = [64, 128, 256, 512]
         self.channels = [int(x/32) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 12, interpolation = (512,512,198))
+        self.net.half()
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
 
         # Data
@@ -53,6 +54,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         self.optimizer = optim.Adam(self.net.parameters(), lr = 0.0001, weight_decay=1e-5)
+        self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
