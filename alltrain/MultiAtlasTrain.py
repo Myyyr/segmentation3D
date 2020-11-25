@@ -38,7 +38,7 @@ class MATrain(Train):
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
 
-    def step(self, inputs, labels, total_loss):
+    def step(self, expcf, inputs, labels, total_loss):
         inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
         expcf.net.half()
         inputs = inputs.type(torch.cuda.HalfTensor)
@@ -87,7 +87,7 @@ class MATrain(Train):
                     inputs, labels = data
                 
 
-                total_loss = self.step(inputs, labels, total_loss)
+                total_loss = self.step(expcf, inputs, labels, total_loss)
                 del inputs, labels
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
