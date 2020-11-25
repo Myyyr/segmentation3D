@@ -137,13 +137,13 @@ class MATrain(Train):
                     inputs, labels, smalllabels = inputs.to(self.device).half(), labels.to(self.device), smalllabels.to(self.device)
                     inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, smalloutputs = expcf.net(inputs)
-                    outputs, smalloutputs = outputs.half(), smalloutputs.half()
+                    del inputs
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, _ = expcf.net(inputs)
-                    outputs = outputs.half()
+                    del inputs
 
                 
                 outputs = torch.argmax(outputs, 1)
@@ -171,7 +171,9 @@ class MATrain(Train):
                         smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
 
                     
-
+                del outputs, labels, label_masks, masks
+                if expcf.look_small:
+                    del smalloutputs, smalllabels, smallmasks, smalllabel_masks
 
              
 
