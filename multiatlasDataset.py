@@ -151,7 +151,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                [ 0,  1,  2,  3, 12, 21,  4, 13, 22],
                [ 1,  5, 14, 23,  2,  6, 15, 24,  7]]
 
-    return ind
+        return ind
         
             
     def _toEvaluationOneHot(self, labels):
