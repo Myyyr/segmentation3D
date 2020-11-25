@@ -66,10 +66,10 @@ class MATrain(Train):
                     inputs, labels = data
                 inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
                 expcf.net.half()
-                inputs = inputs.half()
+                inputs = inputs.type(torch.cuda.HalfTensor)
 
                 #forward and backward pass
-                outputs, _ = expcf.net(inputs.half())
+                outputs, _ = expcf.net(inputs)
 
                 loss = expcf.loss(outputs.half(), labels)
                 total_loss += loss.item()
