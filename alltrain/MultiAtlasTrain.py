@@ -52,6 +52,7 @@ class MATrain(Train):
             startTime = time.time()
             expcf.net.train()
 
+
             total_loss = 0
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
@@ -63,8 +64,9 @@ class MATrain(Train):
                     inputs, labels, _ = data
                 else:
                     inputs, labels = data
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-
+                inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
+                expcf.net.half()
+                
                 #forward and backward pass
                 outputs, _ = expcf.net(inputs)
 
