@@ -46,7 +46,7 @@ class ExpConfig():
         def loss(outputs, labels):
             return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
-        self.batchsize = 2
+        self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
