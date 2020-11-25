@@ -66,7 +66,8 @@ class MATrain(Train):
                     inputs, labels = data
                 inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
                 expcf.net.half()
-                
+                inputs = inputs.half()
+
                 #forward and backward pass
                 outputs, _ = expcf.net(inputs)
 
