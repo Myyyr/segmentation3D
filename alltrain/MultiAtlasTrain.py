@@ -45,7 +45,8 @@ class MATrain(Train):
         print("#### TRAIN SET :", len(self.trainDataLoader))
         print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
-
+        self.validate(0)
+        exit(0)
 
         for epoch in range(expcf.epoch):
             startTime = time.time()
@@ -145,7 +146,8 @@ class MATrain(Train):
 
 
                 labels = torch.argmax(labels, 1)
-                smalllabels = torch.argmax(smalllabels, 1)
+                if expcf.look_small:
+                    smalllabels = torch.argmax(smalllabels, 1)
                 label_masks, smalllabel_masks = [], []
 
 
