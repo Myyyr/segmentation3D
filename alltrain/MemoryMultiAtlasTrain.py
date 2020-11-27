@@ -222,7 +222,7 @@ class MemMATrain(Train):
                 self.save_dict['smallmeanDice'] =  self.smallmeanDice 
 
             self.save_dict['epoch'] = epoch
-            self.save_dict['memory'] = self.convert_bytes(torch.cuda.max_memory_allocated())
+            self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
             self.save_dict['training_time'] =  time.time() - self.startingTime
 
 
