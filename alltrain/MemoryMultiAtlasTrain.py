@@ -108,7 +108,7 @@ class MemMATrain(Train):
                 del inputs, labels
                 self.prt_mem('after del')
 
-            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
+            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
             epochTime = time.time() - startTime
             total_time += epochTime
