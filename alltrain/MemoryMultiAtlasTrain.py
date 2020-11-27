@@ -106,10 +106,12 @@ class MemMATrain(Train):
                 self.prt_mem('before_step')
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
                 self.prt_mem('after step')
+                del inputs, labels
+                self.prt_mem('after del in out')
                 self.back_step(expcf, loss)
                 self.prt_mem('after back_step')
-                del inputs, labels, loss
-                self.prt_mem('after del')
+                del loss
+                self.prt_mem('after del loss')
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
