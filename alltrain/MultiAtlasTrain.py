@@ -12,7 +12,7 @@ from torch.utils.data import DataLoader
 
 import json
 import os
-class MemMATrain(Train):
+class MATrain(Train):
 
     def __init__(self, expconfig, split = 0):
         super(MATrain, self).__init__(expconfig)
