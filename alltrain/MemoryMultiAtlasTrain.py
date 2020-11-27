@@ -49,8 +49,7 @@ class MemMATrain(Train):
         self.prt_mem('inputs')
         labels = labels.to(self.device)
         self.prt_mem('labels')
-        expcf.net
-        # inputs = inputs.type(torch.cuda.HalfTensor)
+        # expcf.net
 
         #forward and backward pass
         outputs, _ = expcf.net(inputs)
@@ -61,6 +60,9 @@ class MemMATrain(Train):
         total_loss += loss.item()
         del inputs, outputs, labels
         self.prt_mem('del in, out, lab')
+        return loss, total_loss
+
+    def back_step(self, loss):
         loss.backward()
         self.prt_mem('backward')
 
@@ -71,7 +73,6 @@ class MemMATrain(Train):
         self.prt_mem('zero')
         del loss
         self.prt_mem('del loss')
-        return total_loss
 
     def train(self):
         expcf = self.expconfig
@@ -103,9 +104,11 @@ class MemMATrain(Train):
                     inputs, labels = data
                 
                 self.prt_mem('before_step')
-                total_loss = self.step(expcf, inputs, labels, total_loss)
+                loss, total_loss = self.step(expcf, inputs, labels, total_loss)
                 self.prt_mem('after step')
-                del inputs, labels
+                self.back_step(loss)
+                self.prt_mem('after back_step')
+                del inputs, labels, loss
                 self.prt_mem('after del')
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
@@ -194,13 +197,11 @@ class MemMATrain(Train):
                 if expcf.look_small:
                     inputs, labels, smalllabels = data
                     inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
-                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, smalloutputs = expcf.net(inputs)
                     del inputs
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
-                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, _ = expcf.net(inputs)
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
