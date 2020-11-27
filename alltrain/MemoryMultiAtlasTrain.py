@@ -157,7 +157,7 @@ class MemMATrain(Train):
 
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
+        outputs = torch.argmax(outputs, 1).short()
         print('#### SHAPE :' ,outputs.shape)
         self.prt_mem('#argamax outputs')
         if expcf.look_small:
@@ -166,7 +166,7 @@ class MemMATrain(Train):
         masks, smallmasks = [], []
 
 
-        labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
+        labels = torch.argmax(labels, 1).short()
         if expcf.look_small:
             smalllabels = torch.argmax(smalllabels, 1)
         label_masks, smalllabel_masks = [], []
