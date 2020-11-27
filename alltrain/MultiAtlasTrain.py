@@ -15,7 +15,7 @@ import os
 class MemMATrain(Train):
 
     def __init__(self, expconfig, split = 0):
-        super(MemMATrain, self).__init__(expconfig)
+        super(MATrain, self).__init__(expconfig)
         self.expconfig = expconfig
         self.startingTime = time.time()
 
