@@ -12,10 +12,10 @@ from torch.utils.data import DataLoader
 
 import json
 import os
-class MemMATrain(Train):
+class MATrain(Train):
 
     def __init__(self, expconfig, split = 0):
-        super(MemMATrain, self).__init__(expconfig)
+        super(MATrain, self).__init__(expconfig)
         self.expconfig = expconfig
         self.startingTime = time.time()
 
@@ -38,27 +38,26 @@ class MemMATrain(Train):
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
 
-
     def step(self, expcf, inputs, labels, total_loss):
-        inputs = inputs.to(self.device)
-        labels = labels.to(self.device)
-        # expcf.net
+        inputs, labels = inputs.to(self.device).half(), labels.to(self.device)
+        expcf.net.half()
+        inputs = inputs.type(torch.cuda.HalfTensor)
 
         #forward and backward pass
         outputs, _ = expcf.net(inputs)
 
-        loss = expcf.loss(outputs, labels)
+        loss = expcf.loss(outputs.half(), labels)
         total_loss += loss.item()
         del inputs, outputs, labels
-        return loss, total_loss
-
-    def back_step(self, expcf, loss):
         loss.backward()
 
         #update params
         expcf.optimizer.step()
         expcf.optimizer.zero_grad()
+
         del loss
+
+        return total_loss
 
     def train(self):
         expcf = self.expconfig
@@ -69,7 +68,6 @@ class MemMATrain(Train):
         total_time = 0.0
         # self.validate(0)
         # exit(0)
-
 
         for epoch in range(expcf.epoch):
             startTime = time.time()
@@ -88,14 +86,11 @@ class MemMATrain(Train):
                 else:
                     inputs, labels = data
                 
-                loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+
+                total_loss = self.step(expcf, inputs, labels, total_loss)
                 del inputs, labels
-                self.back_step(expcf, loss)
-                del loss
 
-                break
-
-            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
+            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
 
             epochTime = time.time() - startTime
             total_time += epochTime
@@ -126,49 +121,19 @@ class MemMATrain(Train):
 
         self.tb.close()
 
-    def convert_byte(self, v):
-        units = {'Bytes':1,'KB':1e-3, 'MB':1e-6, 'GB':1e-9}
-        tmp = 'Bytes'
-        for k in list(units.keys()):
-            if int(v*units[k]) == 0:
-                return v*units[tmp], tmp
-            tmp = k
-        return v*units[tmp], tmp
+    def convert_bytes(self, size):
+        for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
+            if size < 1024.0:
+                return "%3.2f %s" % (size, x)
+            size /= 1024.0
+
+        return size
 
 
-    def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
-        if expcf.look_small:
-            smalloutputs = torch.argmax(smalloutputs, 1)
-
-        masks, smallmasks = [], []
-
-
-        labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
-        if expcf.look_small:
-            smalllabels = torch.argmax(smalllabels, 1)
-        label_masks, smalllabel_masks = [], []
-
-
-        for i in range(12):
-            mask = atlasUtils.getMask(outputs, i)
-            label_mask = atlasUtils.getMask(labels, i)
-            dice.append(atlasUtils.dice(mask, label_mask))
-
-            if expcf.look_small:
-                smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
-                smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
-                smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
-
-        del outputs, labels, label_masks, masks
-        if expcf.look_small:
-            del smalloutputs, smalllabels, smallmasks, smalllabel_masks
- 
     def validate(self, epoch):
         expcf = self.expconfig
         
         startTime = time.time()
-
 
         with torch.no_grad():
             expcf.net.eval()
@@ -178,19 +143,47 @@ class MemMATrain(Train):
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 if expcf.look_small:
                     inputs, labels, smalllabels = data
-                    inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
+                    inputs, labels, smalllabels = inputs.to(self.device).half(), labels.to(self.device), smalllabels.to(self.device)
+                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, smalloutputs = expcf.net(inputs)
                     del inputs
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, _ = expcf.net(inputs)
-                    smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
+
                 
-                self.valide_step(expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
-                del labels, outputs
-                
+                outputs = torch.argmax(outputs, 1)
+                if expcf.look_small:
+                    smalloutputs = torch.argmax(smalloutputs, 1)
+
+                masks, smallmasks = [], []
+
+
+                labels = torch.argmax(labels, 1)
+                if expcf.look_small:
+                    smalllabels = torch.argmax(smalllabels, 1)
+                label_masks, smalllabel_masks = [], []
+
+
+
+                for i in range(12):
+                    masks.append(atlasUtils.getMask(outputs, i))
+                    label_masks.append(atlasUtils.getMask(labels, i))
+                    dice.append(atlasUtils.dice(masks[i], label_masks[i]))
+
+                    if expcf.look_small:
+                        smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
+                        smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+                        smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+                    
+                del outputs, labels, label_masks, masks
+                if expcf.look_small:
+                    del smalloutputs, smalllabels, smallmasks, smalllabel_masks
+
              
 
             meanDices, smallmeanDices = [], []
@@ -210,12 +203,13 @@ class MemMATrain(Train):
                 self.save_dict['smallmeanDice'] =  self.smallmeanDice 
 
             self.save_dict['epoch'] = epoch
-            self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+            self.save_dict['memory'] = self.convert_bytes(torch.cuda.max_memory_allocated())
             self.save_dict['training_time'] =  time.time() - self.startingTime
 
 
 
         self.save_results()
+
 
         return time.time() - startTime
 
