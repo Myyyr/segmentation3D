@@ -62,7 +62,7 @@ class MemMATrain(Train):
         self.prt_mem('del in, out, lab')
         return loss, total_loss
 
-    def back_step(self, loss):
+    def back_step(self, expcf, loss):
         loss.backward()
         self.prt_mem('backward')
 
@@ -106,7 +106,7 @@ class MemMATrain(Train):
                 self.prt_mem('before_step')
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
                 self.prt_mem('after step')
-                self.back_step(loss)
+                self.back_step(expcf, loss)
                 self.prt_mem('after back_step')
                 del inputs, labels, loss
                 self.prt_mem('after del')
