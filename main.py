@@ -52,6 +52,15 @@ def main(config):
 
 		return 0
 
+	if config == "memory_multi_atlas_revunet":
+		import expconfigs.memory_multi_atlas_revunet as cfg
+		excfg = cfg.ExpConfig()
+
+		train = alltrain.MemMATrain(excfg)
+		train.train()
+
+		return 0
+
 if __name__ == "__main__" :
 	parser = argparse.ArgumentParser("Configs for training")
 	parser.add_argument('-c', '--config', help='Config to use', required=True)
