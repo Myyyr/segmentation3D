@@ -39,38 +39,38 @@ class MemMATrain(Train):
         self.split = split
 
 
-    def prt_mem(txt, d, flt_type = 4):
+    def prt_mem(self, txt, d, flt_type = 4):
         a = torch.cuda.max_memory_allocated()
         b = torch.cuda.memory_allocated()
         print(txt,':' ,convert_byte(a) , convert_byte(b))
 
     def step(self, expcf, inputs, labels, total_loss):
         inputs = inputs.to(self.device).half()
-        prt_mem('inputs')
+        self.prt_mem('inputs')
         labels = labels.to(self.device).half()
-        prt_mem('labels')
+        self.prt_mem('labels')
         expcf.net.half()
         inputs = inputs.type(torch.cuda.HalfTensor)
 
         #forward and backward pass
         outputs, _ = expcf.net(inputs)
-        prt_mem('forward')
+        self.prt_mem('forward')
 
         loss = expcf.loss(outputs.half(), labels)
-        prt_mem('loss')
+        self.prt_mem('loss')
         total_loss += loss.item()
         del inputs, outputs, labels
-        prt_mem('del in, out, lab')
+        self.prt_mem('del in, out, lab')
         loss.backward()
-        prt_mem('backward')
+        self.prt_mem('backward')
 
         #update params
         expcf.optimizer.step()
-        prt_mem('opti step')
+        self.prt_mem('opti step')
         expcf.optimizer.zero_grad()
-        prt_mem('zero')
+        self.prt_mem('zero')
         del loss
-        prt_mem('del loss')
+        self.prt_mem('del loss')
         return total_loss
 
     def train(self):
@@ -83,7 +83,7 @@ class MemMATrain(Train):
         # self.validate(0)
         # exit(0)
 
-        prt_mem('start')
+        self.prt_mem('start')
 
         for epoch in range(expcf.epoch):
             startTime = time.time()
@@ -102,9 +102,11 @@ class MemMATrain(Train):
                 else:
                     inputs, labels = data
                 
-                prt_mem('before_step')
+                self.prt_mem('before_step')
                 total_loss = self.step(expcf, inputs, labels, total_loss)
+                self.prt_mem('after step')
                 del inputs, labels
+                self.prt_mem('after del')
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), self.convert_bytes(torch.cuda.max_memory_allocated())))
 
