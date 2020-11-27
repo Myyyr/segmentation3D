@@ -42,7 +42,7 @@ class MemMATrain(Train):
     def prt_mem(self, txt, flt_type = 4):
         a = torch.cuda.max_memory_allocated()
         b = torch.cuda.memory_allocated()
-        print(txt,':' ,convert_byte(a) , convert_byte(b))
+        print(txt,':' ,self.convert_byte(a) , self.convert_byte(b))
 
     def step(self, expcf, inputs, labels, total_loss):
         inputs = inputs.to(self.device).half()
@@ -139,7 +139,7 @@ class MemMATrain(Train):
 
         self.tb.close()
 
-    def convert_byte(v):
+    def convert_byte(self, v):
         units = {'Bytes':1,'KB':1e-3, 'MB':1e-6, 'GB':1e-9}
         tmp = 'Bytes'
         for k in list(units.keys()):
