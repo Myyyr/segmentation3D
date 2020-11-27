@@ -45,18 +45,18 @@ class MemMATrain(Train):
         print(txt,':' ,self.convert_byte(a) , self.convert_byte(b))
 
     def step(self, expcf, inputs, labels, total_loss):
-        inputs = inputs.half().to(self.device)
+        inputs = inputs.to(self.device)
         self.prt_mem('inputs')
-        labels = labels.half().to(self.device)
+        labels = labels.to(self.device)
         self.prt_mem('labels')
-        expcf.net.half()
+        expcf.net
         # inputs = inputs.type(torch.cuda.HalfTensor)
 
         #forward and backward pass
         outputs, _ = expcf.net(inputs)
         self.prt_mem('forward')
 
-        loss = expcf.loss(outputs.half(), labels)
+        loss = expcf.loss(outputs, labels)
         self.prt_mem('loss')
         total_loss += loss.item()
         del inputs, outputs, labels
@@ -193,7 +193,7 @@ class MemMATrain(Train):
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
                 if expcf.look_small:
                     inputs, labels, smalllabels = data
-                    inputs, labels, smalllabels = inputs.to(self.device).half(), labels.to(self.device), smalllabels.to(self.device)
+                    inputs, labels, smalllabels = inputs.to(self.device), labels.to(self.device), smalllabels.to(self.device)
                     inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, smalloutputs = expcf.net(inputs)
                     del inputs
@@ -205,7 +205,7 @@ class MemMATrain(Train):
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
 
-                self.valide_step(expcf, expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
+                self.valide_step(expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
                 # outputs = torch.argmax(outputs, 1)
                 # if expcf.look_small:
                 #     smalloutputs = torch.argmax(smalloutputs, 1)
