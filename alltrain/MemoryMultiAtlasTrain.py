@@ -45,12 +45,12 @@ class MemMATrain(Train):
         print(txt,':' ,self.convert_byte(a) , self.convert_byte(b))
 
     def step(self, expcf, inputs, labels, total_loss):
-        inputs = inputs.to(self.device).half()
+        inputs = inputs.half().to(self.device)
         self.prt_mem('inputs')
-        labels = labels.to(self.device).half()
+        labels = labels.half().to(self.device)
         self.prt_mem('labels')
         expcf.net.half()
-        inputs = inputs.type(torch.cuda.HalfTensor)
+        # inputs = inputs.type(torch.cuda.HalfTensor)
 
         #forward and backward pass
         outputs, _ = expcf.net(inputs)
