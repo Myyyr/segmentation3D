@@ -39,7 +39,7 @@ class MemMATrain(Train):
         self.split = split
 
 
-    def prt_mem(self, txt, d, flt_type = 4):
+    def prt_mem(self, txt, flt_type = 4):
         a = torch.cuda.max_memory_allocated()
         b = torch.cuda.memory_allocated()
         print(txt,':' ,convert_byte(a) , convert_byte(b))
