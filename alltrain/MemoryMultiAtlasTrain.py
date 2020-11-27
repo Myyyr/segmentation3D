@@ -157,7 +157,7 @@ class MemMATrain(Train):
 
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        outputs = torch.argmax(outputs.cpu(), 1).short()
+        outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
         print('#### SHAPE :' ,outputs.shape)
         self.prt_mem('#argamax outputs')
         if expcf.look_small:
@@ -166,7 +166,7 @@ class MemMATrain(Train):
         masks, smallmasks = [], []
 
 
-        labels = torch.argmax(labels.cpu(), 1).short()
+        labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
         if expcf.look_small:
             smalllabels = torch.argmax(smalllabels, 1)
         label_masks, smalllabel_masks = [], []
@@ -174,9 +174,9 @@ class MemMATrain(Train):
         self.prt_mem('#argmax label')
 
         for i in range(12):
-            masks.append(atlasUtils.getMask(outputs, i))
-            label_masks.append(atlasUtils.getMask(labels, i))
-            dice.append(atlasUtils.dice(masks[i], label_masks[i]))
+            mask = atlasUtils.getMask(outputs, i)
+            label_mask atlasUtils.getMask(labels, i)
+            dice.append(atlasUtils.dice(masks, label_masks))
 
             if expcf.look_small:
                 smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        

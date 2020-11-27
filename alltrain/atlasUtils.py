@@ -17,9 +17,9 @@ def softDice(pred, target, smoothing=1, nonSquared=False):
     return dice.mean()
 
 def dice(pred, target):
-    # predBin = (pred > 0.5).float()
-    predBin = (pred > 0.5)
-    predBin = predBin.float()
+    predBin = (pred > 0.5).float()
+    # predBin = (pred > 0.5)
+    # predBin = predBin.float()
     return softDice(predBin, target, 0, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
