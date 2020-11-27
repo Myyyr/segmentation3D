@@ -149,6 +149,37 @@ class MemMATrain(Train):
         return v*units[tmp], tmp
 
 
+    def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
+        outputs = torch.argmax(outputs, 1)
+        if expcf.look_small:
+            smalloutputs = torch.argmax(smalloutputs, 1)
+
+        masks, smallmasks = [], []
+
+
+        labels = torch.argmax(labels, 1)
+        if expcf.look_small:
+            smalllabels = torch.argmax(smalllabels, 1)
+        label_masks, smalllabel_masks = [], []
+
+
+
+        for i in range(12):
+            masks.append(atlasUtils.getMask(outputs, i))
+            label_masks.append(atlasUtils.getMask(labels, i))
+            dice.append(atlasUtils.dice(masks[i], label_masks[i]))
+
+            if expcf.look_small:
+                smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
+                smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+                smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+            
+        del outputs, labels, label_masks, masks
+        if expcf.look_small:
+            del smalloutputs, smalllabels, smallmasks, smalllabel_masks
+
+ 
     def validate(self, epoch):
         expcf = self.expconfig
         
@@ -171,37 +202,38 @@ class MemMATrain(Train):
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     inputs = inputs.type(torch.cuda.HalfTensor)
                     outputs, _ = expcf.net(inputs)
+                    smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
 
-                
-                outputs = torch.argmax(outputs, 1)
-                if expcf.look_small:
-                    smalloutputs = torch.argmax(smalloutputs, 1)
+                self.valide_step(expcf, expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
+                # outputs = torch.argmax(outputs, 1)
+                # if expcf.look_small:
+                #     smalloutputs = torch.argmax(smalloutputs, 1)
 
-                masks, smallmasks = [], []
-
-
-                labels = torch.argmax(labels, 1)
-                if expcf.look_small:
-                    smalllabels = torch.argmax(smalllabels, 1)
-                label_masks, smalllabel_masks = [], []
+                # masks, smallmasks = [], []
 
 
+                # labels = torch.argmax(labels, 1)
+                # if expcf.look_small:
+                #     smalllabels = torch.argmax(smalllabels, 1)
+                # label_masks, smalllabel_masks = [], []
 
-                for i in range(12):
-                    masks.append(atlasUtils.getMask(outputs, i))
-                    label_masks.append(atlasUtils.getMask(labels, i))
-                    dice.append(atlasUtils.dice(masks[i], label_masks[i]))
 
-                    if expcf.look_small:
-                        smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
-                        smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
-                        smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+                # for i in range(12):
+                #     masks.append(atlasUtils.getMask(outputs, i))
+                #     label_masks.append(atlasUtils.getMask(labels, i))
+                #     dice.append(atlasUtils.dice(masks[i], label_masks[i]))
+
+                #     if expcf.look_small:
+                #         smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
+                #         smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+                #         smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
 
                     
-                del outputs, labels, label_masks, masks
-                if expcf.look_small:
-                    del smalloutputs, smalllabels, smallmasks, smalllabel_masks
+                # del outputs, labels, label_masks, masks
+                # if expcf.look_small:
+                #     del smalloutputs, smalllabels, smallmasks, smalllabel_masks
 
              
 
