@@ -156,6 +156,7 @@ class MemMATrain(Train):
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
         outputs = torch.argmax(outputs, 1)
+        self.prt_mem('#argamax outputs')
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
@@ -167,7 +168,7 @@ class MemMATrain(Train):
             smalllabels = torch.argmax(smalllabels, 1)
         label_masks, smalllabel_masks = [], []
 
-
+        self.prt_mem('#argmax label')
 
         for i in range(12):
             masks.append(atlasUtils.getMask(outputs, i))
@@ -179,16 +180,18 @@ class MemMATrain(Train):
                 smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
                 smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
 
-            
+        self.prt_mem('#masks')    
         del outputs, labels, label_masks, masks
         if expcf.look_small:
             del smalloutputs, smalllabels, smallmasks, smalllabel_masks
-
+        self.prt_mem('#del all')
  
     def validate(self, epoch):
         expcf = self.expconfig
         
         startTime = time.time()
+
+        self.prt_mem('#VALIDATE start')
 
         with torch.no_grad():
             expcf.net.eval()
@@ -207,37 +210,10 @@ class MemMATrain(Train):
                     outputs, _ = expcf.net(inputs)
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
-
+                self.prt_mem('#input/out')
                 self.valide_step(expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
-                # outputs = torch.argmax(outputs, 1)
-                # if expcf.look_small:
-                #     smalloutputs = torch.argmax(smalloutputs, 1)
-
-                # masks, smallmasks = [], []
-
-
-                # labels = torch.argmax(labels, 1)
-                # if expcf.look_small:
-                #     smalllabels = torch.argmax(smalllabels, 1)
-                # label_masks, smalllabel_masks = [], []
-
-
-
-                # for i in range(12):
-                #     masks.append(atlasUtils.getMask(outputs, i))
-                #     label_masks.append(atlasUtils.getMask(labels, i))
-                #     dice.append(atlasUtils.dice(masks[i], label_masks[i]))
-
-                #     if expcf.look_small:
-                #         smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
-                #         smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
-                #         smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
-
-                    
-                # del outputs, labels, label_masks, masks
-                # if expcf.look_small:
-                #     del smalloutputs, smalllabels, smallmasks, smalllabel_masks
-
+                self.prt_mem('#after_validate_step')
+                
              
 
             meanDices, smallmeanDices = [], []
