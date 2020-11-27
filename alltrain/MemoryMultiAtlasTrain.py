@@ -175,7 +175,7 @@ class MemMATrain(Train):
 
         for i in range(12):
             mask = atlasUtils.getMask(outputs, i)
-            label_mask atlasUtils.getMask(labels, i)
+            label_mask = atlasUtils.getMask(labels, i)
             dice.append(atlasUtils.dice(masks, label_masks))
 
             if expcf.look_small:
