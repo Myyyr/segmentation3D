@@ -209,12 +209,16 @@ class MemMATrain(Train):
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    self.prt_mem('#input/out')
                     outputs, _ = expcf.net(inputs)
+                    self.prt_mem('#forward')
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
-                self.prt_mem('#input/out')
+                
                 self.valide_step(expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
                 self.prt_mem('#after_validate_step')
+                del labels, outputs
+                self.prt_mem('#del lab out')
                 
              
 
