@@ -8,8 +8,8 @@ import alltrain.atlasUtils as atlasUtils
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "atlas_revunet_3D"
-        self.id = 3
+        self.experiment_name = "atlas_unet_3D"
+        self.id = 5
 
         # System
         self.checkpointsBasePath = "./models/checkpoints"
@@ -50,7 +50,7 @@ class ExpConfig():
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.optimizer = optim.Adam(self.net.parameters(), lr = 0.0001, weight_decay=1e-5)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         self.lr_scheduler = get_scheduler(self.optimizer, "multistep")

@@ -9,13 +9,13 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.experiment_name = "atlas_revunet_3D"
-        self.id = 3
+        self.id = 4
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
+        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_0.5_0.5.hdf5"
         
         # GPU
         self.gpu = '1'
@@ -23,7 +23,7 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x/8) for x in self.channels]
+        self.channels = [int(x/16) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 12, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
 
