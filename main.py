@@ -52,6 +52,16 @@ def main(config):
 
 		return 0
 
+	if config == "multi_atlas_unet":
+		import expconfigs.multi_atlas_unet as cfg
+		excfg = cfg.ExpConfig()
+
+		train = alltrain.MATrain(excfg)
+		train.train()
+
+		return 0
+
+
 	if config == "memory_multi_atlas_revunet":
 		import expconfigs.memory_multi_atlas_revunet as cfg
 		excfg = cfg.ExpConfig()
