@@ -142,10 +142,10 @@ class MATrain(Train):
         return v*units[tmp], tmp
 
     def convert_time(self, t):
-        units = {'s':1, 'm':60, 'h':3600, 'd':3600*24}
+        units = {'d':3600*24, 'h':3600, 'm':60, 's':1  }
         ret = ''
         for k in list(units.keys()):
-            ret += str(t//units[k])+k
+            ret += str(int(t//units[k])  )+k
         return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
