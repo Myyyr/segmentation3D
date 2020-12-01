@@ -113,7 +113,7 @@ class MemMATrain(Train):
                 del loss
                 self.prt_mem('after del loss')
 
-                break
+                
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
