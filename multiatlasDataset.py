@@ -140,12 +140,10 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         if self.mode == 'train':
             self.used_split = self.splits[:self.split] + self.splits[self.split+1:]
             self.used_split = [j for i in self.used_split for j in i]
-            print("###  DEBUG   :::: ",len(self.splits[self.split]))
             for i in self.splits[self.split]:
                 if i in self.used_split:
-                    print("### !!!! DEBUG   :::: ", i)
                     self.used_split.remove(i)
-            print("### :::: DEBUG   :::: ", len(self.used_split))
+            self.used_split = list(set(self.used_split))
         else:
             self.used_split = self.splits[self.split]
 
