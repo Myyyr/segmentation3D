@@ -76,7 +76,7 @@ def main(config):
 		import expconfigs.multi_atlas_unet_res01 as cfg
 		excfg = cfg.ExpConfig()
 
-		train = alltrain.MemMATrain(excfg)
+		train = alltrain.MATrain(excfg)
 		train.train()
 
 		return 0
