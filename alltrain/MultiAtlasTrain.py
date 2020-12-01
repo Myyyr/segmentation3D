@@ -115,9 +115,13 @@ class MATrain(Train):
             self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
 
             self.tb.add_scalar("meanDice", self.meanDice, epoch)
-            self.tb.add_scalar("smallmeanDice", self.smallmeanDice, epoch)
+            if expcf.look_small:
+                self.tb.add_scalar("smallmeanDice", self.smallmeanDice, epoch)
 
-            print("epoch: {}, bestMeanDice: {}, meanDice: {}, smallMeanDice: {}".format(epoch, self.bestMeanDice, self.meanDice, self.smallmeanDice))
+            if expcf.look_small:
+                print("epoch: {}, meanDice: {}, smallMeanDice: {}".format(epoch, self.meanDice, self.smallmeanDice))
+            else:
+                print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, self.meanDice, self.convert_byte(torch.cuda.max_memory_allocated())), self.convert_time(total_time) )
 
 
             
@@ -134,6 +138,12 @@ class MATrain(Train):
             tmp = k
         return v*units[tmp], tmp
 
+    def convert_time(self, t):
+        units = {'s':1, 'm':60, 'h':3600, 'd':3600*24}
+        ret = ''
+        for k in list(units.keys()):
+            ret += str(t//units[k])+k
+        return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
         outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)

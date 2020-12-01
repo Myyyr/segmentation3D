@@ -261,7 +261,7 @@ if __name__ == '__main__':
     preprocessing_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
-    target_size = (512//10, 5110//10, 198//10)
+    target_size = (512//10, 512//10, 198//10)
     rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
