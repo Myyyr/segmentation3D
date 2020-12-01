@@ -141,7 +141,8 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             self.used_split = self.splits[:self.split] + self.splits[self.split+1:]
             self.used_split = [j for i in self.used_split for j in i]
             for i in self.splits[self.split]:
-                self.used_split.remove(i)
+                if i in self.used_split:
+                    self.used_split.remove(i)
         else:
             self.used_split = self.splits[self.split]
 
