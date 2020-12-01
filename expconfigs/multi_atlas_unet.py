@@ -1,5 +1,5 @@
 import os
-from models.revunet_3D import RevUnet3D
+from models.unet_3D import unet_3D
 from models.utils import get_scheduler
 from bratsDataset import BratsDataset
 import torch.optim as optim
