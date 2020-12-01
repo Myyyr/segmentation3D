@@ -63,7 +63,7 @@ def main(config):
 
 
 	if config == "memory_multi_atlas":
-		import expconfigs.multi_atlas_unet as cfg
+		import expconfigs.memory_multi_atlas_unet as cfg
 		excfg = cfg.ExpConfig()
 
 		train = alltrain.MemMATrain(excfg)
