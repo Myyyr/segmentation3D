@@ -257,8 +257,8 @@ def load_and_maybe_process_data(input_folder,
 
 
 if __name__ == '__main__':
-    input_folder = "/home/themyr/these/data/RawData/Training"
-    preprocessing_folder = "/home/themyr/these/data/RawData/multi_atlas/"
+    input_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/RawData/Training/"
+    preprocessing_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
     target_size = (512//10, 5110//10, 198//10)
