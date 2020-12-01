@@ -272,6 +272,7 @@ class UnetUp3_CT(nn.Module):
         offset = outputs2.size()[2] - inputs1.size()[2]
         padding = 2 * [offset // 2, offset // 2, 0]
         # outputs1 = F.pad(inputs1, padding)
+        outputs1 = inputs1
 
 
 
