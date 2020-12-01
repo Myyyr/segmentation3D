@@ -143,6 +143,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             print("###  DEBUG   :::: ",len(self.splits[self.split]))
             for i in self.splits[self.split]:
                 if i in self.used_split:
+                    print("### !!!! DEBUG   :::: ", i)
                     self.used_split.remove(i)
         else:
             self.used_split = self.splits[self.split]
