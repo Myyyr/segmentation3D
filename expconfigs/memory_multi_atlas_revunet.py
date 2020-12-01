@@ -47,12 +47,19 @@ class ExpConfig():
             return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
         self.batchsize = 1
+        self.lr_rate = 5e-4
+        self.l2_reg_weight = 1e-5
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.optimizer = optim.Adam(self.net.parameters(), lr = 0.0001, weight_decay=1e-5)
+        # self.optimizer = optim.Adam(self.net.parameters(), lr = 0.0001, weight_decay=1e-5)
+        self.optimizer = optim.SGD(params,
+                                    lr=self.lr_rate,
+                                    momentum=0.9,
+                                    nesterov=True,
+                                    weight_decay=self.l2_reg_weight)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
