@@ -36,31 +36,31 @@ class LookMAT(Train):
 
         for i in range(end):
             if expcf.look_small:
-            	if i < start:
-                	inputs, labels, smalllabels = data.next()
-                	_,_,x,y,z = inputs.shape
-                	_,c,lx,ly,lz = labels.shape
+                if i < start:
+                    inputs, labels, smalllabels = data.next()
+                    _,_,x,y,z = inputs.shape
+                    _,c,lx,ly,lz = labels.shape
 
-                	img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-                	self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                    img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                    self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
 
-                	for k in range(c):
-	                	img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-	                	self.tb.add_image('image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p)), img_grid)
+                    for k in range(c):
+                        img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        self.tb.add_image('image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p)), img_grid)
 
-	                	img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-	                	self.tb.add_image('image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                        img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        self.tb.add_image('image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
                 else:
-                	_ = data.next()
-	        else:
-	        	if i < start:
-                	inputs, labels = data.next()
+                    _ = data.next()
+            else:
+                if i < start:
+                    inputs, labels = data.next()
                 else:
-                	_ = data.next()
-	        	
+                    _ = data.next()
+                
 
 
-	    self.tb.close()
+        self.tb.close()
 
 
 
