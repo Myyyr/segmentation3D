@@ -32,7 +32,7 @@ class LookMAT(Train):
         print("#### VALID SET :", len(self.valDataLoader))
         print("#### LOOK THE DATA")
 
-        data = iter(trainDataset)
+        data = iter(self.trainDataLoader)
 
         for i in range(end):
             if expcf.look_small:
