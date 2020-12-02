@@ -8,6 +8,7 @@ from multiatlasDataset import *
 from torch.utils.data import DataLoader
 import os
 import torchvision
+import matplotlib.pyplot as plt
 
 class LookMAT(Train):
 
@@ -42,13 +43,16 @@ class LookMAT(Train):
                     _,c,lx,ly,lz = labels.shape
 
                     img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                    plt.imshow(img_grid)
                     self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
 
                     for k in range(c):
                         img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        plt.imshow(img_grid)
                         self.tb.add_image('image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p)), img_grid)
 
                         img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        plt.imshow(img_grid)
                         self.tb.add_image('image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
                 else:
                     _ = data.next()
