@@ -45,7 +45,7 @@ class MATrain(Train):
         # expcf.net
 
         #forward and backward pass
-        outputs, _ = expcf.net.apply_argmax_softmax((expcf.net(inputs)))
+        outputs = expcf.net.apply_argmax_softmax((expcf.net(inputs)))
 
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
@@ -198,7 +198,7 @@ class MATrain(Train):
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
-                    outputs, _ = expcf.net.apply_argmax_softmax(expcf.net(inputs))
+                    outputs = expcf.net.apply_argmax_softmax(expcf.net(inputs))
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
                 
