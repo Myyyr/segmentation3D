@@ -12,9 +12,9 @@ def main(config, s, e):
 
 		excfg = cfg.ExpConfig()
 
-		train = data_process.LookMAT(excfg, s, e)
+		train = data_process.LookMAT(excfg)
 
-		train.train()
+		train.train(s, e)
 
 		return 0
 
