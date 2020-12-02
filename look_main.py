@@ -5,14 +5,14 @@ import  argparse
 
 
 
-def main(config):
+def main(config, s, e):
 	if config == 'mat':
 		import expconfigs.multi_atlas_unet as cfg
 
 
 		excfg = cfg.ExpConfig()
 
-		train = data_process.LookMAT(excfg)
+		train = data_process.LookMAT(excfg, s, e)
 
 		train.train()
 
