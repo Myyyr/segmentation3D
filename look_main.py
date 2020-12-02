@@ -26,6 +26,6 @@ if __name__ == "__main__" :
 	parser.add_argument('-s', '--start', help='start image', required=True)
 	parser.add_argument('-e', '--end', help='last image', required=True)
 
-	main(parser.parse_args().config)
+	main(parser.parse_args().config, int(parser.parse_args().start), int(parser.parse_args().end))
 
 
