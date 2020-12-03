@@ -64,7 +64,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
                 if self.hasMasks: 
                     labels = self._toEvaluationOneHot(labels)
-                    print( 'np.sum(labels)' ,np.sum(labels))
+                    print( '1.np.sum(labels)' ,np.sum(labels))
                     print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
                     exit(0)
                     if self.look_small:
@@ -73,6 +73,9 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             else:
                 if self.hasMasks: 
                     labels = self._toOrignalCategoryOneHot(labels)
+                    print( '2.np.sum(labels)' ,np.sum(labels))
+                    print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+                    exit(0)
                     if self.look_small:
                         smalllabels = self._toOrignalCategoryOneHot(smalllabels)
         elif self.hasMasks:
@@ -91,7 +94,12 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         else:
             if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
                 labels = self._toOrdinal(labels)
+                print( '3.np.sum(labels)' ,np.sum(labels))
+                print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
                 labels = self._toEvaluationOneHot(labels)
+                print( '31.np.sum(labels)' ,np.sum(labels))
+                print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+                exit(0)
                 if self.look_small:
                     smalllabels = self._toOrdinal(smalllabels)
                     smalllabels = self._toEvaluationOneHot(smalllabels)
