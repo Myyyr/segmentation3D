@@ -138,13 +138,14 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             img = pad_slice_to_size(img, (512, 512, 198))
             mask = pad_slice_to_size(mask, (512, 512, 198))
             print("mask sum ", np.sum(mask))
-            exit(0)
             scale_vector = target_resolution
             if scale_vector != [1.0]:
                 # print(img.shape)
                 img = transform.resize(img, size)
                 mask = transform.resize(mask, size)
 
+            print("mask sum ", np.sum(mask))
+            exit(0)
             img = normalise_image(img)
 
             img_list.append(img)
@@ -247,9 +248,10 @@ if __name__ == '__main__':
     input_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/RawData/Training/"
     preprocessing_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
     # target_size = (512x512x~198) # ORIGINAL SIZE
-    # target_size = (512, 512, 198)
-    target_size = (512//10, 512//10, 198//10)
-    rescale = [0.1]
+    target_size = (512, 512, 198)
+    rescale = [1.0]
+    # target_size = (512//10, 512//10, 198//10)
+    # rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
 
