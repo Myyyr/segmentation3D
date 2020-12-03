@@ -85,23 +85,23 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
 
 
-        # if self.nnAugmentation:
-        #     if self.hasMasks: 
-        #         labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
-        #         if self.look_small:
-        #             smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
-        # else:
-        #     if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
-        #         labels = self._toOrdinal(labels)
+        if self.nnAugmentation:
+            if self.hasMasks: 
+                labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
+                if self.look_small:
+                    smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
+        else:
+            if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
+                labels = self._toOrdinal(labels)
                 # print( '3.np.sum(labels)' ,np.sum(labels))
-        #         print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-        #         labels = self._toEvaluationOneHot(labels)
-        #         print( '31.np.sum(labels)' ,np.sum(labels))
-        #         print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-        #         exit(0)
-        #         if self.look_small:
-        #             smalllabels = self._toOrdinal(smalllabels)
-        #             smalllabels = self._toEvaluationOneHot(smalllabels)
+                # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+                labels = self._toEvaluationOneHot(labels)
+                # print( '31.np.sum(labels)' ,np.sum(labels))
+                # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+                # exit(0)
+                if self.look_small:
+                    smalllabels = self._toOrdinal(smalllabels)
+                    smalllabels = self._toEvaluationOneHot(smalllabels)
 
         if self.hasMasks: 
             labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
