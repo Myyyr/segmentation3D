@@ -17,7 +17,7 @@ def main(config, s, e, mod):
 		if mod == 'look':
 			train.train(s, e)
 		elif mod == 'info':
-			train.data_info()
+			train.data_info(e)
 		return 0
 
 	

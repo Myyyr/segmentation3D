@@ -77,7 +77,7 @@ class LookMAT(Train):
             
 
 
-    def data_info(self):
+    def data_info(self, end):
         data = iter(self.trainDataLoader)
 
         info = {'inputs': {'mean':[], 'std':[]}, 'labels':{'sum':[]}, 'smalllabels':{'sum':[]}}
