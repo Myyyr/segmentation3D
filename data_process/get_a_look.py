@@ -26,6 +26,7 @@ class LookMAT(Train):
 
 
     def save(self, x, path, filename):
+        print("saving", filename, '...')
         x = x.numpy()
 
         if not os.path.exists(path):
