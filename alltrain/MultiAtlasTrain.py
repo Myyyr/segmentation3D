@@ -48,7 +48,7 @@ class MATrain(Train):
 
         #forward and backward pass
         a = expcf.net(inputs)
-        print(outputs.sum().cpu().item(), np.prod(outputs.shape))
+        print(a.sum().cpu().item(), np.prod(a.shape))
         outputs = expcf.net.apply_argmax_softmax(a)
         print(outputs.sum().cpu().item(), np.prod(outputs.shape))
 
