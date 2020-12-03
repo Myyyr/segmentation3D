@@ -60,48 +60,50 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         #Prepare data depeinding on soft/hard augmentation scheme
         n_classes = 12
-        if not self.nnAugmentation:
-            if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
-                if self.hasMasks: 
-                    labels = self._toEvaluationOneHot(labels)
-                    # print( '1.np.sum(labels)' ,np.sum(labels))
-                    # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-                    # exit(0)
-                    if self.look_small:
-                        smalllabels = self._toEvaluationOneHot(smalllabels)
-                defaultLabelValues = np.zeros(n_classes, dtype=np.float32)
-            else:
-                if self.hasMasks: 
-                    labels = self._toOrignalCategoryOneHot(labels)
-                    # print( '2.np.sum(labels)' ,np.sum(labels))
-                    # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-                    if self.look_small:
-                        smalllabels = self._toOrignalCategoryOneHot(smalllabels)
-        elif self.hasMasks:
-            if labels.ndim < n_classes+1:
-                labels = np.expand_dims(labels, n_classes)
-                if self.look_small:
-                    smalllabels = np.expand_dims(smalllabels, n_classes)
+        # if not self.nnAugmentation:
+        #     if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
+        #         if self.hasMasks: 
+        #             labels = self._toEvaluationOneHot(labels)
+        #             # print( '1.np.sum(labels)' ,np.sum(labels))
+        #             # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+        #             # exit(0)
+        #             if self.look_small:
+        #                 smalllabels = self._toEvaluationOneHot(smalllabels)
+        #         defaultLabelValues = np.zeros(n_classes, dtype=np.float32)
+        #     else:
+        #         if self.hasMasks: 
+        #             labels = self._toOrignalCategoryOneHot(labels)
+        #             # print( '2.np.sum(labels)' ,np.sum(labels))
+        #             # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+        #             if self.look_small:
+        #                 smalllabels = self._toOrignalCategoryOneHot(smalllabels)
+        # elif self.hasMasks:
+        #     if labels.ndim < n_classes+1:
+        #         labels = np.expand_dims(labels, n_classes)
+        #         if self.look_small:
+        #             smalllabels = np.expand_dims(smalllabels, n_classes)
 
+        labels = self._toEvaluationOneHot(labels)
+        if self.look_small:
+            smalllabels = self._toEvaluationOneHot(smalllabels)
 
-
-        if self.nnAugmentation:
-            if self.hasMasks: 
-                labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
-                if self.look_small:
-                    smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
-        else:
-            if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
-                labels = self._toOrdinal(labels)
-                # print( '3.np.sum(labels)' ,np.sum(labels))
-                # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-                labels = self._toEvaluationOneHot(labels)
-                # print( '31.np.sum(labels)' ,np.sum(labels))
-                # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-                # exit(0)
-                if self.look_small:
-                    smalllabels = self._toOrdinal(smalllabels)
-                    smalllabels = self._toEvaluationOneHot(smalllabels)
+        # if self.nnAugmentation:
+        #     if self.hasMasks: 
+        #         labels = self._toEvaluationOneHot(np.squeeze(labels, 3))
+        #         if self.look_small:
+        #             smalllabels = self._toEvaluationOneHot(np.squeeze(smalllabels, 3))
+        # else:
+        #     if self.mode == "train" and not self.softAugmentation and not self.trainOriginalClasses and self.hasMasks:
+        #         labels = self._toOrdinal(labels)
+        #         # print( '3.np.sum(labels)' ,np.sum(labels))
+        #         # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+        #         labels = self._toEvaluationOneHot(labels)
+        #         # print( '31.np.sum(labels)' ,np.sum(labels))
+        #         # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
+        #         # exit(0)
+        #         if self.look_small:
+        #             smalllabels = self._toOrdinal(smalllabels)
+        #             smalllabels = self._toEvaluationOneHot(smalllabels)
 
         if self.hasMasks: 
             labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
