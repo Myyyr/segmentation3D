@@ -16,9 +16,9 @@ class LookMAT(Train):
         super(LookMAT, self).__init__(expconfig)
         self.expconfig = expconfig
         # self.tb = SummaryWriter(comment=expconfig.experiment_name+str('_lookimages'))
-
-        trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        self.expconfig.look_small = True
+        trainDataset = MultiAtlasDataset(self.expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        validDataset = MultiAtlasDataset(self.expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
 
