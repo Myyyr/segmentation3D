@@ -15,7 +15,7 @@ class LookMAT(Train):
     def __init__(self, expconfig, split = 0):
         super(LookMAT, self).__init__(expconfig)
         self.expconfig = expconfig
-        # self.tb = SummaryWriter(comment=expconfig.experiment_name+str('_lookimages'))
+        self.tb = SummaryWriter(comment=expconfig.experiment_name+str('_lookimages'))
 
         trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
         validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
@@ -78,7 +78,7 @@ class LookMAT(Train):
 
 
 
-        # self.tb.close()
+        self.tb.close()
 
 
 
