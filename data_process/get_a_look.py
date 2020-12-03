@@ -32,7 +32,7 @@ class LookMAT(Train):
         if not os.path.exists(path):
             os.makedirs(path)
 
-        x.save(os.path.join(path, filename))
+        np.save(os.path.join(path, filename), x)
 
 
 
