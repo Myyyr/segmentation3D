@@ -145,7 +145,6 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
                 mask = transform.resize(mask, size)
 
             print("mask sum ", np.sum(mask))
-            exit(0)
             img = normalise_image(img)
 
             img_list.append(img)
@@ -186,6 +185,11 @@ def _write_range_to_hdf5(hdf5_data, train_test, img_list, mask_list, pids_list, 
 
     img_arr = np.asarray(img_list, dtype=np.float32)
     mask_arr = np.asarray(mask_list, dtype=np.uint8)
+
+    a = np.sum(mask_arr)
+
+    print("all mask sum ", a, '| /n', a/len(mask_list))
+    exit(0)
 
     hdf5_data['images_%s' % train_test][counter_from:counter_to, ...] = img_arr
     hdf5_data['masks_%s' % train_test][counter_from:counter_to, ...] = mask_arr
