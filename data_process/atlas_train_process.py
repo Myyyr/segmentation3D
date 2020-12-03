@@ -133,18 +133,18 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             img, _, img_header = utils.load_nii(baseFilePath )
             mask, _, _ = utils.load_nii(os.path.join(input_folder, 'label','label'+file+'.nii.gz'))
 
-            print("mask sum ", np.sum(mask))
+            # print("mask sum ", np.sum(mask))
 
             img = pad_slice_to_size(img, (512, 512, 198))
             mask = pad_slice_to_size(mask, (512, 512, 198))
-            print("mask sum ", np.sum(mask))
+            # print("mask sum ", np.sum(mask))
             scale_vector = target_resolution
             if scale_vector != [1.0]:
                 # print(img.shape)
                 img = transform.resize(img, size)
                 mask = transform.resize(mask, size)
 
-            print("mask sum ", np.sum(mask))
+            # print("mask sum ", np.sum(mask))
             img = normalise_image(img)
 
             img_list.append(img)
@@ -186,14 +186,14 @@ def _write_range_to_hdf5(hdf5_data, train_test, img_list, mask_list, pids_list, 
     img_arr = np.asarray(img_list, dtype=np.float32)
     mask_arr = np.asarray(mask_list, dtype=np.uint8)
 
-    a = np.sum(mask_arr)
-    b = [np.sum(i) for i in mask_list]
-    c = sum(b)
+    # a = np.sum(mask_arr)
+    # b = [np.sum(i) for i in mask_list]
+    # c = sum(b)
 
-    print("all mask sum ", a, '| ',c, '|',b)
-    print("min", [np.min(i) for i in mask_list])
-    print("max", [np.max(i) for i in mask_list])
-    exit(0)
+    # print("all mask sum ", a, '| ',c, '|',b)
+    # print("min", [np.min(i) for i in mask_list])
+    # print("max", [np.max(i) for i in mask_list])
+    # exit(0)
 
     hdf5_data['images_%s' % train_test][counter_from:counter_to, ...] = img_arr
     hdf5_data['masks_%s' % train_test][counter_from:counter_to, ...] = mask_arr
