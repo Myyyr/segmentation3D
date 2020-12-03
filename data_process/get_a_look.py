@@ -85,6 +85,7 @@ class LookMAT(Train):
 
 
         for i in range(end):
+            print(i)
             inputs, labels, smalllabels = data.next()
 
             info['inputs']['mean'].append(inputs.mean().item())
@@ -92,6 +93,8 @@ class LookMAT(Train):
 
             info['labels']['sum'].append(labels.sum().item())
             info['smalllabels']['sum'].append(smalllabels.sum().item())
+
+            del inputs, labels, smalllabels
 
 
 
