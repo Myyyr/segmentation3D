@@ -40,8 +40,10 @@ class MATrain(Train):
 
 
     def step(self, expcf, inputs, labels, total_loss):
+        print(labels.sum().item(), np.prod(labels.shape))
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
+
         # expcf.net
 
         #forward and backward pass
