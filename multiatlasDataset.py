@@ -75,7 +75,6 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                     labels = self._toOrignalCategoryOneHot(labels)
                     print( '2.np.sum(labels)' ,np.sum(labels))
                     print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-                    exit(0)
                     if self.look_small:
                         smalllabels = self._toOrignalCategoryOneHot(smalllabels)
         elif self.hasMasks:
