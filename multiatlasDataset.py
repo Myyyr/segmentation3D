@@ -52,6 +52,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         if self.hasMasks: 
             labels = self.labelFile["masks_" + 'train'][index, ...]
             print( 'np.sum(labels)' ,np.sum(labels))
+            print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
             exit(0)
         if self.look_small: 
             smalllabels = self.file["masks_" + 'train'][index, ...]
