@@ -56,7 +56,7 @@ class LookMAT(Train):
                     # img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
                     # plt.imshow(img_grid)
                     # self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
-                    self.save(inputs[0,0,:,:,int(z//2)+ps], "./lookimages/", 'image_input'+str(i)+str((int(x//2)+ps,:,int(z//2)+ps))+".npy")
+                    self.save(inputs[0,0,:,:,int(z//2)+ps], "./lookimages/", 'image_input'+str(i)+str((int(x//2)+ps, str((int(y//2)+ps, int(z//2)+ps))+".npy")
 
                     for k in range(c):
                         # img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
