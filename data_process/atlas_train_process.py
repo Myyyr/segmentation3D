@@ -191,6 +191,8 @@ def _write_range_to_hdf5(hdf5_data, train_test, img_list, mask_list, pids_list, 
     c = sum(b)
 
     print("all mask sum ", a, '| ',c, '|',b)
+    print("min", [np.min(i) for i in mask_list])
+    print("max", [np.max(i) for i in mask_list])
     exit(0)
 
     hdf5_data['images_%s' % train_test][counter_from:counter_to, ...] = img_arr
