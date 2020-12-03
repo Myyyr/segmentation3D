@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 import os
 import torchvision
 import matplotlib.pyplot as plt
-
+import json
 class LookMAT(Train):
 
     def __init__(self, expconfig, split = 0):
@@ -38,7 +38,6 @@ class LookMAT(Train):
 
     def train(self, start, end, ps = 0, look_small = True):
         expcf = self.expconfig
-        expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
         print("#### TRAIN SET :", len(self.trainDataLoader))
         print("#### VALID SET :", len(self.valDataLoader))
@@ -76,6 +75,38 @@ class LookMAT(Train):
                 else:
                     _ = data.next()
             
+
+
+    def data_info(self):
+        data = iter(self.trainDataLoader)
+
+        info = {'inputs': {'mean':[], 'std':[]}, 'labels':{'sum':[]}, 'smalllabels':{'sum':[]}}
+
+
+
+        for i in range(end):
+            inputs, labels, smalllabels = data.next()
+
+            info['inputs']['mean'].append(inputs.mean().item())
+            info['inputs']['std'].append(torch.std(inputs).item())
+
+            info['labels']['sum'].append(labels.sum().item())
+            info['smalllabels']['sum'].append(smalllabels.sum().item())
+
+
+
+        info['total'] = {'labels_sum' : np.sum(info['labels']['sum']),
+                        'smalllabels_sum' : np.sum(info['smalllabels']['sum']),
+                        'inputs_mean' : np.mean(info['inputs']['mean']),
+                        'inputs_std' : np.mean(info['inputs']['std'])}    
+
+
+
+        print(info)
+
+
+        with open('lookimages/info.json', 'w') as f:
+            json.dump(info, f)
 
 
 
