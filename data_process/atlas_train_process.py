@@ -133,27 +133,14 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             img, _, img_header = utils.load_nii(baseFilePath )
             mask, _, _ = utils.load_nii(os.path.join(input_folder, 'label','label'+file+'.nii.gz'))
 
-            # pixel_size = (img_header.structarr['pixdim'][1],
-            #               img_header.structarr['pixdim'][2],
-            #               img_header.structarr['pixdim'][3])
-
-            # logging.info('Pixel size:')
-            # logging.info(pixel_size)
-
-            ### PROCESSING LOOP FOR 3D DATA ################################
-
-            # scale_vector = [pixel_size[0] / target_resolution[0],
-            #                 pixel_size[1] / target_resolution[1],
-            #                 pixel_size[2]/ target_resolution[2]]
-
-            # if scale_vector != [1.0, 1.0, 1.0]:
-            #     img = transform.rescale(img, scale_vector, order=1, preserve_range=True, multichannel=True, mode='constant')
-            #     mask = transform.rescale(mask, scale_vector, order=0, preserve_range=True, multichannel=False, mode='constant')
+            print("mask sum ", np.sum(mask))
 
             img = pad_slice_to_size(img, (512, 512, 198))
             mask = pad_slice_to_size(mask, (512, 512, 198))
+            print("mask sum ", np.sum(mask))
+            exit(0)
             scale_vector = target_resolution
-            if scale_vector != 1.0:
+            if scale_vector:
                 # print(img.shape)
                 img = transform.resize(img, size)
                 mask = transform.resize(mask, size)
@@ -262,7 +249,7 @@ if __name__ == '__main__':
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
     target_size = (512//10, 512//10, 198//10)
-    rescale = [0.1]
+    rescale = True
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
 
