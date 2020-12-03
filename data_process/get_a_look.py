@@ -15,7 +15,7 @@ class LookMAT(Train):
     def __init__(self, expconfig, split = 0):
         super(LookMAT, self).__init__(expconfig)
         self.expconfig = expconfig
-        self.tb = SummaryWriter(comment=expconfig.experiment_name+str('_lookimages'))
+        # self.tb = SummaryWriter(comment=expconfig.experiment_name+str('_lookimages'))
 
         trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
         validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
@@ -23,6 +23,16 @@ class LookMAT(Train):
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
 
         self.split = split
+
+
+    def save(self, x, path, filename):
+        x = x.numpy()
+
+        if not os.path.exists(path):
+            os.makedirs(path)
+
+        np.save(x, os.path.join(path, filename))
+
 
 
     def train(self, start, end, ps = 0):
@@ -42,18 +52,21 @@ class LookMAT(Train):
                     _,_,x,y,z = inputs.shape
                     _,c,lx,ly,lz = labels.shape
 
-                    img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-                    plt.imshow(img_grid)
-                    self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                    # img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                    # plt.imshow(img_grid)
+                    # self.tb.add_image('image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                    self.save(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps], "./lookimages/", 'image_input'+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p))+".npy")
 
                     for k in range(c):
-                        img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-                        plt.imshow(img_grid)
-                        self.tb.add_image('image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p)), img_grid)
+                        # img_grid = torchvision.utils.make_grid(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        # plt.imshow(img_grid)
+                        # self.tb.add_image('image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p)), img_grid)
+                        self.save(labels[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps], "./lookimages/", 'image_labels_'+str(k)+str(i)+str((int(lx//2)+ps,int(ly//2)+ps,int(lz//2)+p))+".npy")
 
-                        img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
-                        plt.imshow(img_grid)
-                        self.tb.add_image('image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                        # img_grid = torchvision.utils.make_grid(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps])
+                        # plt.imshow(img_grid)
+                        # self.tb.add_image('image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p)), img_grid)
+                        self.save(inputs[0,0,int(x//2)+ps,int(y//2)+ps,int(z//2)+ps], "./lookimages/", 'image_smalllabel'+str(k)+str(i)+str((int(x//2)+ps,int(y//2)+ps,int(z//2)+p))+".npy")
                 else:
                     _ = data.next()
             else:
@@ -61,10 +74,11 @@ class LookMAT(Train):
                     inputs, labels = data.next()
                 else:
                     _ = data.next()
-                
+            
 
 
-        self.tb.close()
+
+        # self.tb.close()
 
 
 
