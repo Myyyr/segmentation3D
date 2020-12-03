@@ -48,7 +48,7 @@ class LookMAT(Train):
 
         for i in range(end):
             if look_small:
-                if i < start:
+                if i >= start:
                     inputs, labels, smalllabels = data.next()
                     _,_,x,y,z = inputs.shape
                     _,c,lx,ly,lz = labels.shape
