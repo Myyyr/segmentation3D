@@ -26,11 +26,11 @@ def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, nonSquared=nonSquared)
 
 def atlasDiceLoss(outputs, labels, nonSquared=False):
-    print('###IN LOSS###')
-    print('outputs', outputs.sum().cpu().item())
-    print('labels.sum', labels.sum().cpu().item())
-    print('labels.max', labels.max().cpu().item())
-    print('labels.min', labels.min().cpu().item())
+    # print('###IN LOSS###')
+    # print('outputs', outputs.sum().cpu().item())
+    # print('labels.sum', labels.sum().cpu().item())
+    # print('labels.max', labels.max().cpu().item())
+    # print('labels.min', labels.min().cpu().item())
     #bring outputs into correct shape
     chunk = list(outputs.chunk(12, dim=1))
     
@@ -38,10 +38,10 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     
 
     for i in range(12):
-        print('chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
+        # print('chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
-        print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
-        print('view.chunk['+str(i)+'].shape', chunk[i].shape)
+        # print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
+        # print('view.chunk['+str(i)+'].shape', chunk[i].shape)
         
 
 
@@ -50,10 +50,10 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     s = chunkMask[0].shape
     
     for i in range(12):
-        print('chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
+        # print('chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
         chunkMask[i] = chunkMask[i].view(s[0], s[2], s[3], s[4])
-        print('view.chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
-        print('view.chunkMask['+str(i)+'].shape', chunkMask[i].shape)
+        # print('view.chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
+        # print('view.chunkMask['+str(i)+'].shape', chunkMask[i].shape)
         
 
 
@@ -64,7 +64,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     for i in range(12):
         losses.append(diceLoss(chunk[i], chunkMask[i], nonSquared=nonSquared))
 
-    print('###END LOSS###')
+    # print('###END LOSS###')
 
     return sum(losses) / 12
 
