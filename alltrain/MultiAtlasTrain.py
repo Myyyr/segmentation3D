@@ -42,7 +42,8 @@ class MATrain(Train):
     def step(self, expcf, inputs, labels, total_loss):
         # print(labels.sum().item(), np.prod(labels.shape))
         inputs = inputs.to(self.device)
-        labels = labels.to(self.device)
+        if 1 == 1:
+            labels = labels.to(self.device)
 
         # expcf.net
 
@@ -51,10 +52,10 @@ class MATrain(Train):
         # print(a.sum().cpu().item(), np.prod(a.shape))
         outputs = expcf.net.apply_argmax_softmax(expcf.net(inputs))
         # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
-
+        del inputs
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
-        del inputs, outputs, labels
+        del outputs, labels
         return loss, total_loss
 
     def back_step(self, expcf, loss):
