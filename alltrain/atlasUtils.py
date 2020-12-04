@@ -42,9 +42,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
         print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
         print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
-        
-
-        print('view.chunkMask['+str(i)+'].shape', chunkMask[i].shape)
+        print('view.chunk['+str(i)+'].shape', chunk[i].shape)
         
 
 
@@ -57,8 +55,6 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
         chunkMask[i] = chunkMask[i].view(s[0], s[2], s[3], s[4])
         print('view.chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
         print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
-        
-
         print('view.chunkMask['+str(i)+'].shape', chunkMask[i].shape)
         
 
