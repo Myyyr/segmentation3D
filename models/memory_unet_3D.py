@@ -119,7 +119,8 @@ class memory_unet_3D(nn.Module):
         # print("||interpolation|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
         # exit(0)
         # exit(0)
-        return final, Y
+        del Y
+        return final
 
     @staticmethod
     def apply_argmax_softmax(pred):

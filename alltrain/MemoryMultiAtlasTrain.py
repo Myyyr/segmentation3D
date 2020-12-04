@@ -52,7 +52,7 @@ class MemMATrain(Train):
         # expcf.net
 
         #forward and backward pass
-        outputs, _ = expcf.net.apply_argmax_softmax(expcf.net(inputs))
+        outputs= expcf.net.apply_argmax_softmax(expcf.net(inputs))
         self.prt_mem('forward')
 
         loss = expcf.loss(outputs, labels)
@@ -211,7 +211,7 @@ class MemMATrain(Train):
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     self.prt_mem('#input/out')
-                    outputs, _ = expcf.net(inputs)
+                    outputs= expcf.net(inputs)
                     self.prt_mem('#forward')
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
