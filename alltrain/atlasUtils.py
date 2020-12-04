@@ -48,8 +48,8 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
 
     # bring masks into correct shape
     chunkMask = list(labels.chunk(n_classe, dim=1))
-    print('len(chunkMask)', len(chunkMask))
-    print('len(chunk)', len(chunk))
+    # print('len(chunkMask)', len(chunkMask))
+    # print('len(chunk)', len(chunk))
     s = chunkMask[0].shape
     
     for i in range(n_classe):
