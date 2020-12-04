@@ -59,7 +59,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             smalllabels = None
 
         #Prepare data depeinding on soft/hard augmentation scheme
-        n_classes = 12
+        n_classes = 13
         # if not self.nnAugmentation:
         #     if not self.trainOriginalClasses and (self.mode != "train" or self.softAugmentation):
         #         if self.hasMasks: 
