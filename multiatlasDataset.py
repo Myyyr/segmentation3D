@@ -37,7 +37,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.split = split
 
 
-        self.n_classes = 12
+        self.n_classes = 13
 
     def __getitem__(self, item_index):
 
