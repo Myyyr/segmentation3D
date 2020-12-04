@@ -40,7 +40,7 @@ class MATrain(Train):
 
 
     def step(self, expcf, inputs, labels, total_loss):
-        # print(labels.sum().item(), np.prod(labels.shape))
+        print(labels.sum().item(), np.prod(labels.shape))
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
 
@@ -50,7 +50,7 @@ class MATrain(Train):
         # a = 
         # print(a.sum().cpu().item(), np.prod(a.shape))
         outputs = expcf.net.apply_argmax_softmax(expcf.net(inputs))
-        # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
+        print(outputs.sum().cpu().item(), np.prod(outputs.shape))
 
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
