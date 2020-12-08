@@ -113,7 +113,7 @@ class unet_3D(nn.Module):
         del up1
         # print("||final|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||final|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
-        final = self.interpolation(Y)
+        final = self.interpolation(F.softmax(Y, dim=1))
         
         # print("||interpolation|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||interpolation|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
