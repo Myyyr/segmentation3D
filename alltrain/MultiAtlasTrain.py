@@ -53,6 +53,8 @@ class MATrain(Train):
         outputs = expcf.net(inputs)
         # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
         del inputs
+        for i in range(13):
+            print('sum ', outputs[0,i,...].sum().item() )
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
         del outputs, labels
@@ -175,7 +177,7 @@ class MATrain(Train):
         label_masks, smalllabel_masks = [], []
 
 
-        for i in range(12):
+        for i in range(13):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
             dice.append(atlasUtils.dice(mask, label_mask))
@@ -220,7 +222,7 @@ class MATrain(Train):
              
 
             meanDices, smallmeanDices = [], []
-            for i in range(12):
+            for i in range(13):
                 meanDices.append(np.mean(dice[i]))
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
 
