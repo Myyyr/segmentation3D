@@ -158,6 +158,7 @@ class MATrain(Train):
         # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
         # outputs = torch.argmax(outputs.half(), 1).short()
         outputs = outputs.argmax(dim = 1).short()
+        print('unique',np.unique(outputs.cpu().numpy()))
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
