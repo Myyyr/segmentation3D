@@ -156,7 +156,7 @@ class MATrain(Train):
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
         # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
-        outputs = torch.argmax(outputs, 1).short()
+        outputs = torch.argmax(outputs.half(), 1).short()
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
