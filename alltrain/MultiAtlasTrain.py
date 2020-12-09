@@ -53,6 +53,7 @@ class MATrain(Train):
         outputs = expcf.net(inputs)
         # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
         del inputs
+        print('argmax :', np.unique(outputs.argmax(dim = 1).detach().cpu().numpy()))
         for i in range(13):
             print('sum ', outputs[0,i,...].sum().item() )
         loss = expcf.loss(outputs, labels)
