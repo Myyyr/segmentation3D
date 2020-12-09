@@ -156,7 +156,8 @@ class MATrain(Train):
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
         # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
-        outputs = torch.argmax(outputs.half(), 1).short()
+        # outputs = torch.argmax(outputs.half(), 1).short()
+        outputs = outputs.argmax(dim = 1).short()
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
@@ -164,7 +165,8 @@ class MATrain(Train):
 
 
         # labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
-        labels = torch.argmax(labels, 1).short()
+        # labels = torch.argmax(labels, 1).short()
+        labels = labels.argmax(dim = 1).short()
         if expcf.look_small:
             smalllabels = torch.argmax(smalllabels, 1)
         label_masks, smalllabel_masks = [], []
@@ -174,6 +176,7 @@ class MATrain(Train):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
             dice.append(atlasUtils.dice(mask, label_mask))
+            del mask, label_mask
 
             if expcf.look_small:
                 smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
