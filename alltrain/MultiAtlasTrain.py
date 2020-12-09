@@ -158,7 +158,7 @@ class MATrain(Train):
         # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
         # outputs = torch.argmax(outputs.half(), 1).short()
         outputs = outputs.argmax(dim = 1).short()
-        print('unique',np.unique(outputs.cpu().numpy()))
+        print('out unique',np.unique(outputs.cpu().numpy()))
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
@@ -168,6 +168,8 @@ class MATrain(Train):
         # labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
         # labels = torch.argmax(labels, 1).short()
         labels = labels.argmax(dim = 1).short()
+        print('lab unique',np.unique(labels.cpu().numpy()))
+
         if expcf.look_small:
             smalllabels = torch.argmax(smalllabels, 1)
         label_masks, smalllabel_masks = [], []
