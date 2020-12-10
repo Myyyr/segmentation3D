@@ -172,7 +172,7 @@ class MATrain(Train):
         # labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
         # labels = torch.argmax(labels, 1).short()
         labels = labels.argmax(dim = 1).short()
-        print('lab unique',np.unique(labels.cpu().numpy()))
+        # print('lab unique',np.unique(labels.cpu().numpy()))
 
         if expcf.look_small:
             smalllabels = torch.argmax(smalllabels, 1)
