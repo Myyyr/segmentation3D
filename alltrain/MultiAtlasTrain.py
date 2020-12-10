@@ -53,8 +53,8 @@ class MATrain(Train):
         outputs = expcf.net(inputs)
         # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
         del inputs
-        print('out argmax :', np.unique(outputs.detach().cpu().argmax(dim = 1).numpy()))
-        print('lab argmax :', np.unique(labels.detach().cpu().argmax(dim = 1).numpy()))
+        # print('out argmax :', np.unique(outputs.detach().cpu().argmax(dim = 1).numpy()))
+        # print('lab argmax :', np.unique(labels.detach().cpu().argmax(dim = 1).numpy()))
         # for i in range(13):
         #     print('sum ', outputs[0,i,...].sum().item() )
         loss = expcf.loss(outputs, labels)
@@ -162,7 +162,7 @@ class MATrain(Train):
         # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
         # outputs = torch.argmax(outputs.half(), 1).short()
         outputs = outputs.argmax(dim = 1).short()
-        print('out unique',np.unique(outputs.cpu().numpy()))
+        # print('out unique',np.unique(outputs.cpu().numpy()))
         if expcf.look_small:
             smalloutputs = torch.argmax(smalloutputs, 1)
 
