@@ -55,8 +55,8 @@ class MATrain(Train):
         del inputs
         print('out argmax :', np.unique(outputs.detach().cpu().argmax(dim = 1).numpy()))
         print('lab argmax :', np.unique(labels.detach().cpu().argmax(dim = 1).numpy()))
-        for i in range(13):
-            print('sum ', outputs[0,i,...].sum().item() )
+        # for i in range(13):
+        #     print('sum ', outputs[0,i,...].sum().item() )
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
         del outputs, labels

@@ -4,7 +4,7 @@ from torch.optim import lr_scheduler
 
 
 
-def get_scheduler(optimizer, opt):
+def get_scheduler(optimizer, opt, lr):
     scheduler = None
     if opt == "lambdarule_1":
         def lambda_rule(epoch):
@@ -21,11 +21,11 @@ def get_scheduler(optimizer, opt):
         def lambda_rule(epoch):
             #print(epoch)
             if epoch < 300:
-                lr_l = 0.01
+                lr_l = lr[0]
             elif 300 <= epoch < 650:
-                lr_l = 0.002
+                lr_l = lr[1]
             else:
-                lr_l = 0.0004
+                lr_l = lr[2]
             return lr_l
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
