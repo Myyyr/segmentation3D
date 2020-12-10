@@ -71,17 +71,17 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
 
     return sum(losses) / n_classe
 
-    def MyAtlasDiceLoss(outputs, labels, nonSquared=False):
-        n_classe = 13
-        smooth = 0.01
+def MyAtlasDiceLoss(outputs, labels, nonSquared=False):
+    n_classe = 13
+    smooth = 0.01
 
-        inter = torch.sum(outputs * labels) + smooth
-        union = torch.sum(outputs) + torch.sum(outputs) + smooth
+    inter = torch.sum(outputs * labels) + smooth
+    union = torch.sum(outputs) + torch.sum(outputs) + smooth
 
-        dice = 2.0 * inter / union
-        dice = 1.0 - dice/float(n_classe)
+    dice = 2.0 * inter / union
+    dice = 1.0 - dice/float(n_classe)
 
-        return dice
+    return dice
 
 
 def sensitivity(pred, target):
