@@ -13,7 +13,8 @@ class ExpConfig():
 
         # System
         self.checkpointsBasePath = "./checkpoints"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
+        # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
+        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_19_res_0.1.hdf5"
         self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_19_res_0.1.hdf5"
         
         # GPU
@@ -23,7 +24,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x/2) for x in self.channels]
-        self.net = unet_3D(self.channels, n_classes=13, is_batchnorm=False, in_channels=1, interpolation = (512, 512, 198))#1, self.channels, 12, interpolation = (512,512,198))
+        self.net = unet_3D(self.channels, n_classes=13, is_batchnorm=False, in_channels=1, interpolation = None)#(512, 512, 198))#1, self.channels, 12, interpolation = (512,512,198))
 
         # Data
         self.nn_augmentation = False
@@ -42,7 +43,8 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 1000
         def loss(outputs, labels):
-            return atlasUtils.MyAtlasDiceLoss(outputs, labels)
+            # return atlasUtils.MyAtlasDiceLoss(outputs, labels)
+            return atlasUtils.atlasDiceLoss(outputs, labels)
         self.loss = loss
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
@@ -52,8 +54,8 @@ class ExpConfig():
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
 
-        self.lr_rate = 5e-4
-        # self.lr_rate = [0.1, 0.01, 0.0001]
+        # self.lr_rate = 5e-4
+        self.lr_rate = [0.1, 0.01, 0.0001]
         self.l2_reg_weight = 1e-5
 
         self.optimizer = optim.SGD(self.net.parameters(),
@@ -63,8 +65,8 @@ class ExpConfig():
                                     weight_decay=self.l2_reg_weight)
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
 
         # Other
         self.classes_name = ['spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
