@@ -214,7 +214,8 @@ class MATrain(Train):
                 else:
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
-                    outputs = expcf.net.apply_argmax_softmax(expcf.net(inputs))
+                    outputs = expcf.net(inputs)
+                    self.save_pred(inputs.cpu().numpy(), labels.cpu().numpy(), outputs.cpu().numpy())
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
                 
@@ -276,3 +277,8 @@ class MATrain(Train):
     def save_results(self):
         with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
             json.dump(self.save_dict, f)
+
+    def save_pred(self, x, y, py):
+        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'x.npy'), x)
+        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'y.npy'), y)
+        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'py.npy'), py)
