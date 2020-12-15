@@ -146,7 +146,7 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             if scale_vector != [1.0]:
                 # print(img.shape)
                 #img = transform.resize(img, size)
-                img = transform.rescale(img, scale_vector[0], anti_aliasing=False)
+                img = transform.rescale(img, scale_vector[0], anti_aliasing=False, preserve_range=True)
                 #mask = transform.resize(mask, size)
                 mask = rescale_labels(mask, scale_vector[0])
                 print_info(img, "x")
