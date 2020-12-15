@@ -186,7 +186,7 @@ def print_info(x, name):
     txt += "sum : " + str(np.sum(x))
     txt += "#############"
 
-
+    print(txt)
 
 def _write_range_to_hdf5(hdf5_data, train_test, img_list, mask_list, pids_list, counter_from, counter_to):
     '''
