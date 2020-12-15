@@ -59,14 +59,14 @@ class ExpConfig():
         self.l2_reg_weight = 1e-5
 
         self.optimizer = optim.SGD(self.net.parameters(),
-                                    lr=self.lr_rate,#[0],
+                                    lr=self.lr_rate[0],
                                     momentum=0.9,
                                     nesterov=True,
                                     weight_decay=self.l2_reg_weight)
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
 
         # Other
         self.classes_name = ['spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
