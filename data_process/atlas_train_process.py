@@ -284,7 +284,9 @@ if __name__ == '__main__':
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
     rescale = [0.1]
-    target_size = (512//10, 512//10, 198//10)
+    # target_size = (512//10, 512//10, 198//10)
+    target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
+
     # rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
