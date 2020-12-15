@@ -180,10 +180,10 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
 def print_info(x, name):
     txt = "## INFO : "+name+"##\n"
-    txt += "mean : " + str(np.mean(x))
-    txt += "min : " + str(np.min(x))
-    txt += "max : " + str(np.max(x))
-    txt += "sum : " + str(np.sum(x))
+    txt += "mean : " + str(np.mean(x)) + "\n"
+    txt += "min : " + str(np.min(x)) + "\n"
+    txt += "max : " + str(np.max(x)) + "\n"
+    txt += "sum : " + str(np.sum(x)) + "\n"
     txt += "#############"
 
     print(txt)
