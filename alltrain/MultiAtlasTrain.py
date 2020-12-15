@@ -38,6 +38,8 @@ class MATrain(Train):
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
 
+        self.classes = 14
+
 
     def step(self, expcf, inputs, labels, total_loss):
         # print(labels.sum().item(), np.prod(labels.shape))
@@ -55,7 +57,7 @@ class MATrain(Train):
         del inputs
         # print('out argmax :', np.unique(outputs.detach().cpu().argmax(dim = 1).numpy()))
         # print('lab argmax :', np.unique(labels.detach().cpu().argmax(dim = 1).numpy()))
-        # for i in range(13):
+        # for i in range(self.classes):
         #     print('sum ', outputs[0,i,...].sum().item() )
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
@@ -179,7 +181,7 @@ class MATrain(Train):
         label_masks, smalllabel_masks = [], []
 
 
-        for i in range(13):
+        for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
             dice.append(atlasUtils.dice(mask, label_mask))
@@ -225,7 +227,7 @@ class MATrain(Train):
              
 
             meanDices, smallmeanDices = [], []
-            for i in range(13):
+            for i in range(self.classes):
                 meanDices.append(np.mean(dice[i]))
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
 

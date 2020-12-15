@@ -37,7 +37,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.split = split
 
 
-        self.n_classes = 13
+        self.n_classes = 14
 
     def __getitem__(self, item_index):
 
@@ -59,7 +59,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             smalllabels = None
 
         #Prepare data depeinding on soft/hard augmentation scheme
-        n_classes = 13
+        n_classes = self.n_classes
 
 
         if 1 == 1:
