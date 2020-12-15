@@ -137,13 +137,18 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
             img = pad_slice_to_size(img, (512, 512, 198))
             mask = pad_slice_to_size(mask, (512, 512, 198))
+
+            print_info(img, "X")
+            print_info(mask, "Y")
+
             # print("mask sum ", np.sum(mask))
             scale_vector = target_resolution
             if scale_vector != [1.0]:
                 # print(img.shape)
                 img = transform.resize(img, size)
                 mask = transform.resize(mask, size)
-
+                print_info(img, "x")
+                print_info(mask, "y")
             # print("mask sum ", np.sum(mask))
             img = normalise_image(img)
 
@@ -173,6 +178,13 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
     # After test train loop:
     hdf5_file.close()
 
+def print_info(x, name):
+    txt = "## INFO : "+name+"##\n"
+    txt += "mean : " + str(np.mean(x))
+    txt += "min : " + str(np.min(x))
+    txt += "max : " + str(np.max(x))
+    txt += "sum : " + str(np.sum(x))
+    txt += "#############"
 
 
 
@@ -257,8 +269,8 @@ if __name__ == '__main__':
     preprocessing_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
-    rescale = [0.1]
-    target_size = (512//10, 512//10, 198//10)
+    rescale = [0.2]
+    target_size = (512//5, 512//5, 198//5)
     # rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
