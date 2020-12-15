@@ -32,7 +32,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     # print('labels.max', labels.max().cpu().item())
     # print('labels.min', labels.min().cpu().item())
     #bring outputs into correct shape
-    n_classe = 13
+    n_classe = 14
     chunk = list(outputs.chunk(n_classe, dim=1))
     
     s = chunk[0].shape
@@ -72,7 +72,7 @@ def atlasDiceLoss(outputs, labels, nonSquared=False):
     return sum(losses) / n_classe
 
 def MyAtlasDiceLoss(outputs, labels, nonSquared=False):
-    n_classe = 13
+    n_classe = 14
     smooth = 0.01
 
     inter = torch.sum(outputs * labels) + smooth
