@@ -45,7 +45,7 @@ def pad_slice_to_size(image, target_size):
     pad_width = ((xd_a, xd_b),(yd_a, yd_b),(zd_a, zd_b))
 
     
-    output_volume = np.pad(image, pad_width)
+    output_volume = np.pad(image, pad_width, mode='minimum')
     
 
     return output_volume
@@ -145,8 +145,10 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             scale_vector = target_resolution
             if scale_vector != [1.0]:
                 # print(img.shape)
-                img = transform.resize(img, size)
-                mask = transform.resize(mask, size)
+                #img = transform.resize(img, size)
+                img = transform.rescale(pad_x, scale_vector[0], anti_aliasing=False)
+                #mask = transform.resize(mask, size)
+                mask = rescale_labels(mask, scale_vector[0])
                 print_info(img, "x")
                 print_info(mask, "y")
             # print("mask sum ", np.sum(mask))
@@ -177,6 +179,18 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
     # After test train loop:
     hdf5_file.close()
+
+
+def rescale_labels(y, factor,  c = 14):
+    s = y.shape
+    ret = np.zeros((c, int(round(s[0]*factor)), int(round(s[1]*factor)), int(round(s[2]*factor))))
+    for i in range(c):
+        a = (y == i)
+        a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
+        ret[i,...] = a
+    a = np.argmax(ret, axis=0)
+    return a
+
 
 def print_info(x, name):
     txt = "## INFO : "+name+"##\n"
