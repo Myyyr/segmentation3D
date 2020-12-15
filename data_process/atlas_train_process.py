@@ -189,7 +189,6 @@ def rescale_labels(y, factor,  c = 14):
         a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
         ret[i,...] = a
     a = np.argmax(ret, axis=0)
-    if 
     return a
 
 
