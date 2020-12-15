@@ -150,7 +150,7 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
                 #mask = transform.resize(mask, size)
                 mask = rescale_labels(mask, scale_vector[0])
                 print_info(img, "x")
-                print_info(mask, "y")
+                print_info(mask, "y", unique = True)
             # print("mask sum ", np.sum(mask))
             img = normalise_image(img)
 
@@ -189,15 +189,18 @@ def rescale_labels(y, factor,  c = 14):
         a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
         ret[i,...] = a
     a = np.argmax(ret, axis=0)
+    if 
     return a
 
 
-def print_info(x, name):
+def print_info(x, name, unique = False):
     txt = "## INFO : "+name+"##\n"
     txt += "mean : " + str(np.mean(x)) + "\n"
     txt += "min : " + str(np.min(x)) + "\n"
     txt += "max : " + str(np.max(x)) + "\n"
     txt += "sum : " + str(np.sum(x)) + "\n"
+    if unique:
+        txt += "unique : " + str(np.unique(x)) + "\n"
     txt += "#############"
 
     print(txt)
