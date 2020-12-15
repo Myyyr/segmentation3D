@@ -279,6 +279,6 @@ class MATrain(Train):
             json.dump(self.save_dict, f)
 
     def save_pred(self, x, y, py):
-        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'x.npy'), x)
-        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'y.npy'), y)
-        np.save(os.path.join('self.expconfig.checkpointsBasePath', 'py.npy'), py)
+        np.save(os.path.join(self.expconfig.checkpointsBasePath, 'x.npy'), x)
+        np.save(os.path.join(self.expconfig.checkpointsBasePath, 'y.npy'), y)
+        np.save(os.path.join(self.expconfig.checkpointsBasePath, 'py.npy'), py)
