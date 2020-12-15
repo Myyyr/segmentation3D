@@ -59,10 +59,7 @@ class ExpConfig():
         self.l2_reg_weight = 1e-5
 
         self.optimizer = optim.SGD(self.net.parameters(),
-                                    lr=self.lr_rate,
-                                    momentum=0.9,
-                                    nesterov=True,
-                                    weight_decay=self.l2_reg_weight)
+                                    lr=self.lr_rate)
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
