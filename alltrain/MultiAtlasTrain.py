@@ -217,7 +217,7 @@ class MATrain(Train):
                     inputs, labels = data
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     outputs = expcf.net(inputs)
-                    self.save_pred(inputs.cpu().numpy(), labels.cpu().numpy(), outputs.cpu().numpy())
+                    # self.save_pred(inputs.cpu().numpy(), labels.cpu().numpy(), outputs.cpu().numpy())
                     smalldice, smalllabels, smalloutputs = None, None, None
                     del inputs
                 
