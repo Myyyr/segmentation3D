@@ -81,6 +81,15 @@ def main(config):
 
 		return 0
 
+	if config == "ma_unet_res01_v2":
+		import expconfigs.multi_atlas_unet_res01_v2 as cfg
+		excfg = cfg.ExpConfig()
+
+		train = alltrain.MATrain(excfg)
+		train.train()
+
+		return 0
+
 if __name__ == "__main__" :
 	parser = argparse.ArgumentParser("Configs for training")
 	parser.add_argument('-c', '--config', help='Config to use', required=True)
