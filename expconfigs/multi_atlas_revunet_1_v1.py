@@ -8,8 +8,8 @@ import alltrain.atlasUtils as atlasUtils
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "atlas_revunet_3D"
-        self.id = 4
+        self.experiment_name = "atlas_revunet_3D_1_v1"
+        self.id = 9
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
@@ -24,7 +24,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x/16) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 12, interpolation = (512,512,198))
+        self.net = RevUnet3D(1, self.channels, 14, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
 
         # Data
@@ -52,14 +52,18 @@ class ExpConfig():
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
+        # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
+        self.lr_rate = 5e-2
+        self.optimizer = optim.SGD(self.net.parameters(),
+                                    lr=self.lr_rate)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
+        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
+        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
 
         # Other
-        self.classes_name = ['spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
+        self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
         self.look_small = False
         
 

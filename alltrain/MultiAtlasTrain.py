@@ -139,8 +139,10 @@ class MATrain(Train):
                                                                             self.convert_time(total_time)) )
 
 
-            
 
+
+
+        self.saveToDisk(epoch)
 
         self.tb.close()
 
@@ -261,9 +263,7 @@ class MATrain(Train):
         #gather things to save
         saveDict = {"net_state_dict": self.expconfig.net.state_dict(),
                     "optimizer_state_dict": self.expconfig.optimizer.state_dict(),
-                    "epoch": epoch,
-                    "bestMeanDice": self.bestMeanDice,
-                    "bestMeanDiceEpoch": self.bestMeanDiceEpoch
+                    "epoch": epoch
                     }
         if self.expconfig.lr_scheduler != None:
             saveDict["lr_scheduler_state_dict"] = self.expconfig.lr_scheduler.state_dict()
