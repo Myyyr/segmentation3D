@@ -18,7 +18,7 @@ class ExpConfig():
         self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         
         # GPU
-        self.gpu = '0'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
