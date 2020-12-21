@@ -7,6 +7,14 @@ import random
 
 id = random.getrandbits(64)
 
+class softmax(nn.Module):
+    def __init__(self, dim):
+        super(softmax, self).__init__()
+        self.dim = dim
+
+    def forward(self, x):
+        return F.softmax(x, dim = self.dim)
+
 
 class ResidualInner(nn.Module):
     def __init__(self, channels, groups):
@@ -101,6 +109,8 @@ class RevUnet3D(nn.Module):
             decoderModules.append(DecoderModule(getchannelsAtIndex(self.levels - i - 1, channels), getchannelsAtIndex(self.levels - i - 2, channels), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
+        self.softmax = softmax(1)
+
         self.interpolation = interpolation
         if self.interpolation != None:
             self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
@@ -131,12 +141,13 @@ class RevUnet3D(nn.Module):
 
         x = self.lastConv(x)
 
-        # if tibo_in_shape != [512,512,256]:
+        x = self.softmax(x)
+
         if self.interpolation != None:
-            xi = self.interpolation(x)
-            return xi, x
+            x = self.interpolation(x)
+            return x
         #x = torch.sigmoid(x)
-        return x, None
+        return x
 
     @staticmethod
     def apply_argmax_softmax(pred):
