@@ -118,7 +118,7 @@ def main(config):
 		return 0
 
 	if config == "multi_atlas_revunet_01_v1":
-		import expconfigs.multi_atlas_revunet_5_v1 as cfg
+		import expconfigs.multi_atlas_revunet__v1 as cfg
 		excfg = cfg.ExpConfig()
 
 		train = alltrain.MATrain(excfg)
