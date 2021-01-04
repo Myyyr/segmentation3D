@@ -285,7 +285,7 @@ if __name__ == '__main__':
     preprocessing_folder = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
     # target_size = (512x512x~198) # ORIGINAL SIZE
     # target_size = (512, 512, 198)
-    rescale = [0.5]
+    rescale = [0.2]
     # target_size = (512//10, 512//10, 198//10)
     target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
 
