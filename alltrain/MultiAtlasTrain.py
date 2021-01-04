@@ -269,7 +269,7 @@ class MATrain(Train):
             saveDict["lr_scheduler_state_dict"] = self.expconfig.lr_scheduler.state_dict()
 
         #save dict
-        basePath = self.expconfig.checkpointsBasePathSave + "{}".format(self.expconfig.id)
+        basePath = self.expconfig.checkpointsBasePathMod + "{}".format(self.expconfig.id)
         path = basePath + "/e_{}.pt".format(epoch)
         if not os.path.exists(basePath):
             os.makedirs(basePath)
