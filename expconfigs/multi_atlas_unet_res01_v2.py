@@ -14,7 +14,7 @@ class ExpConfig():
 
         # System
         self.checkpointsBasePath = "./checkpoints"
-        self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
+        self.checkpointsBasePathMod = self.checkpointsBasePath + './checkpoints/models/'
 
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
