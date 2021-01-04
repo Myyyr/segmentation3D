@@ -88,9 +88,9 @@ class DecoderModule(nn.Module):
         return x
 
 class RevUnet3D(nn.Module):
-    def __init__(self, inchannels ,channels, out_size, interpolation = None):
+    def __init__(self, inchannels ,channels, out_size, depth = 1, interpolation = None):
         super(RevUnet3D, self).__init__()
-        depth = 1
+        depth = depth
         self.levels = len(channels)
 
         self.firstConv = nn.Conv3d(inchannels, channels[0], 3, padding=1, bias=False)
