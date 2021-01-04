@@ -15,7 +15,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.experiment_name = "atlas_revunet_3D_5_v2"
-        self.id = 12
+        self.id = 13
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
@@ -34,7 +34,7 @@ class ExpConfig():
         self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
-        
+
         # Data
         self.nn_augmentation = False
         self.soft_augmentation = False
