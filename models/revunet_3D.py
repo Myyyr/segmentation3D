@@ -94,16 +94,16 @@ class DecoderModule(nn.Module):
         if self.upsample:
             x = self.conv(x)
             x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
-        for i in range(1,4):
-            # print("#" ,x.shape,shape)
-            if x.shape[-i] != shape[-i]:
+        # for i in range(1,4):
+        #     # print("#" ,x.shape,shape)
+        #     if x.shape[-i] != shape[-i]:
 
-                tup = [0,0,0,0,0,0]
-                n_tmp = abs(x.shape[-i] - shape[-i])
-                tup[i*2 -1] = n_tmp
+        #         tup = [0,0,0,0,0,0]
+        #         n_tmp = abs(x.shape[-i] - shape[-i])
+        #         tup[i*2 -1] = n_tmp
 
-                x = F.pad(x, tuple(tup), 'constant')
-                # print("##", n_tmp, x.shape)
+        #         x = F.pad(x, tuple(tup), 'constant')
+        #         # print("##", n_tmp, x.shape)
         return x
 
 class RevUnet3D(nn.Module):
@@ -130,31 +130,23 @@ class RevUnet3D(nn.Module):
 
         self.softmax = softmax(1)
 
-        self.interpolation = interpolation
-        if self.interpolation != None:
-            self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
+        # self.interpolation = interpolation
+        # if self.interpolation != None:
+        #     self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
 
     def forward(self, x):
-        # tibo_in_shape = x.shape[-3:]
-        # print("x.shape :",x.shape)
         x = self.firstConv(x)
-        #x = self.dropout(x)
-
         inputStack = []
         shapes = [x.shape]
-        # print("level :", -1, " x.shape :",x.shape)
         for i in range(self.levels):
             
             x = self.encoders[i](x)
             shapes.append(x.shape)
-            # print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 inputStack.append(x)
 
         for i in range(self.levels):
-            
             x = self.decoders[i](x, shapes[-(i+2)])
-            # print("level :", i, " x.shape :",x.shape)
             if i < self.levels - 1:
                 x = x + inputStack.pop()
 
