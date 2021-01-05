@@ -136,7 +136,7 @@ def main(config):
 
 		return 0
 	
-	cfg = importlib.import_module("expconfigs/"+config+".py")
+	cfg = importlib.import_module("expconfigs."+config+".py")
 	excfg = cfg.ExpConfig()
 
 	train = alltrain.MATrain(excfg)
