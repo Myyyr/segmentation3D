@@ -50,8 +50,8 @@ def makeReversibleSequence(channels):
     innerchannels = channels // 2
     groups = 2 if innerchannels > 1 else 1 #channels[0] // 2
     # print("chan, groups" ,channels, groups)
-    fBlock = ResidualInner(innerchannels, groups)
-    gBlock = ResidualInner(innerchannels, groups)
+    fBlock = NoGNResidualInner(innerchannels, groups)
+    gBlock = NoGNResidualInner(innerchannels, groups)
     #gBlock = nn.Sequential()
     return rv.ReversibleBlock(fBlock, gBlock)
 
