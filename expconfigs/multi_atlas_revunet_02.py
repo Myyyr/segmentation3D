@@ -14,7 +14,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "atlas_revunet_3D_01_v3"
+        self.experiment_name = "atlas_revunet_3D_02"
         self.id = 14
 
         # System
@@ -22,17 +22,17 @@ class ExpConfig():
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
 #        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
-        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
+        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_102_102_40_res_0.2.hdf5"
+        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_102_102_40_res_0.2.hdf5"
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '2'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 4 ,interpolation = None)#(512,512,198))
+        self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
@@ -77,15 +77,4 @@ class ExpConfig():
         
 
 
-    def net_stats(self):
-        s = 0
-        for p in self.net.parameters():
-            if p.requires_grad:
-                s += p.sum()
-
-        print('Mean :', s.item()/self.n_parameters)
-        # s2 = 0
-        # for p in self.net.parameters():
-        #     if p.requires_grad:
-        #         s2 += p.sum()/p.numel() - s/self.n_parameters
-        # print('Var :', s2.item()/self.n_parameters)
+        

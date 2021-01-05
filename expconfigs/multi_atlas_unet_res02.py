@@ -1,40 +1,34 @@
-# More Parameters (depth) to match with classical UNet number of parameters.
-# n_parameters = 114557582
+# The good lr
 import os
-from models.revunet_3D import RevUnet3D
+from models.unet_3D import unet_3D
 from models.utils import get_scheduler
 from bratsDataset import BratsDataset
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-
-def count_parameters(model): 
-    return sum(p.numel() for p in model.parameters() if p.requires_grad)
-
-
+# Version without interp
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "atlas_revunet_3D_01_v3"
-        self.id = 14
+        self.experiment_name = "atlas_unet_3D_resolution_02"
+        self.id = 15
 
         # System
-        self.checkpointsBasePath = "./checkpoints/"
-        self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-#        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
-        # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
-        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
-        
+        self.checkpointsBasePath = "./checkpoints"
+        self.checkpointsBasePathMod = self.checkpointsBasePath + './checkpoints/models/'
+
+        # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
+        # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_51_51_20_res_0.1.hdf5"
+        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_102_102_40_res_0.2.hdf5"
+        self.labelpath = self.datapath
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 4 ,interpolation = None)#(512,512,198))
-        # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
-        self.n_parameters = count_parameters(self.net)
+        self.channels = [int(x/1) for x in self.channels]
+        # self.net = unet_3D(self.channels, n_classes=14, is_batchnorm=False, in_channels=1, interpolation = None)#(512, 512, 198))#1, self.channels, 12, interpolation = (512,512,198))
+        self.net = unet_3D(self.channels, n_classes=14, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
 
         # Data
         self.nn_augmentation = False
@@ -53,7 +47,8 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 2000
         def loss(outputs, labels):
-            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True)
+            # return atlasUtils.MyAtlasDiceLoss(outputs, labels)
+            return atlasUtils.atlasDiceLoss(outputs, labels)
         self.loss = loss
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
@@ -62,30 +57,23 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
+
         self.lr_rate = 5e-3
+        # self.lr_rate = [0.1, 0.01, 0.0001]
+        self.l2_reg_weight = 1e-5
+
         self.optimizer = optim.SGD(self.net.parameters(),
                                     lr=self.lr_rate)
-        self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
-        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
+        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_e1000", self.lr_rate)
         self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
+
+
         self.look_small = False
+
+
         
-
-
-    def net_stats(self):
-        s = 0
-        for p in self.net.parameters():
-            if p.requires_grad:
-                s += p.sum()
-
-        print('Mean :', s.item()/self.n_parameters)
-        # s2 = 0
-        # for p in self.net.parameters():
-        #     if p.requires_grad:
-        #         s2 += p.sum()/p.numel() - s/self.n_parameters
-        # print('Var :', s2.item()/self.n_parameters)
