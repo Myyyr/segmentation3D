@@ -79,13 +79,13 @@ class ExpConfig():
 
     def net_stats(self):
         s = 0
-        for p in model.parameters():
+        for p in self.net.parameters():
             if p.requires_grad:
                 s += p.sum()
 
         print('Mean :', s/self.n_parameters)
         s2 = 0
-        for p in model.parameters():
+        for p in self.net.parameters():
             if p.requires_grad:
                 s2 += p.sum()/p.numel() - s/self.n_parameters
         print('Var :', s2/self.n_parameters)
