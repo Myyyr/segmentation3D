@@ -1,6 +1,7 @@
 import alltrain
 import  argparse
 
+import importlib
 
 
 
@@ -134,6 +135,14 @@ def main(config):
 		train.train()
 
 		return 0
+	
+	cfg = importlib.import_module("expconfigs/"+config+".py")
+	excfg = cfg.ExpConfig()
+
+	train = alltrain.MATrain(excfg)
+	train.train()
+
+	return 0
 
 if __name__ == "__main__" :
 	parser = argparse.ArgumentParser("Configs for training")
