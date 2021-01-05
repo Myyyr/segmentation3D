@@ -93,7 +93,8 @@ class DecoderModule(nn.Module):
         x = self.reversibleBlocks(x)
         if self.upsample:
             x = self.conv(x)
-            x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
+            # x = F.interpolate(x, scale_factor=2, mode="trilinear", align_corners=False)
+            x = F.interpolate(x, size=shape)
         # for i in range(1,4):
         #     # print("#" ,x.shape,shape)
         #     if x.shape[-i] != shape[-i]:
