@@ -92,7 +92,7 @@ class MATrain(Train):
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
 
-                expcf.net_stats()
+                # expcf.net_stats()
 
                 #load data
                 if expcf.look_small:
