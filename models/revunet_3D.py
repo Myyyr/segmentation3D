@@ -16,15 +16,34 @@ class softmax(nn.Module):
         return F.softmax(x, dim = self.dim)
 
 
-class ResidualInner(nn.Module):
+class OldResidualInner(nn.Module):
     def __init__(self, channels, groups):
-        super(ResidualInner, self).__init__()
+        super(OldResidualInner, self).__init__()
         # self.gn = nn.BatchNorm3d(channels)
         self.gn = nn.GroupNorm(groups, channels)
         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
 
     def forward(self, x):
         x = F.leaky_relu(self.gn(self.conv(x)), inplace=True)
+        return x
+
+class ResidualInner(nn.Module):
+    def __init__(self, channels, groups):
+        super(ResidualInner, self).__init__()
+        self.gn = nn.GroupNorm(groups, channels)
+        self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
+
+    def forward(self, x):
+        x = F.relu(self.gn(self.conv(x)), inplace=True)
+        return x
+
+class NoGNResidualInner(nn.Module):
+    def __init__(self, channels, groups):
+        super(NoGNResidualInner, self).__init__()
+        self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
+
+    def forward(self, x):
+        x = F.relu(self.conv(x), inplace=True)
         return x
 
 def makeReversibleSequence(channels):
@@ -141,11 +160,11 @@ class RevUnet3D(nn.Module):
 
         x = self.lastConv(x)
 
-        x = self.softmax(x)
-
-        if self.interpolation != None:
-            x = self.interpolation(x)
-            return x
+        # x = self.softmax(x)
+        x = F.softmax(x, dim=1)
+        # if self.interpolation != None:
+        #     x = self.interpolation(x)
+        #     return x
         #x = torch.sigmoid(x)
         return x
 
