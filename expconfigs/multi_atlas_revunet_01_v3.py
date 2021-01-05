@@ -62,7 +62,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
-        self.lr_rate = 5e-2
+        self.lr_rate = 5e-3
         self.optimizer = optim.SGD(self.net.parameters(),
                                     lr=self.lr_rate)
         self.optimizer.zero_grad()
@@ -77,4 +77,15 @@ class ExpConfig():
         
 
 
-        
+    def net_stats(self):
+        s = 0
+        for p in model.parameters():
+            if p.requires_grad:
+                s += p.sum()
+
+        print('Mean :', s/self.n_parameters)
+        s2 = 0
+        for p in model.parameters():
+            if p.requires_grad:
+                s2 += p.sum()/p.numel() - s/self.n_parameters
+        print('Var :', s2/self.n_parameters)
