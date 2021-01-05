@@ -149,7 +149,7 @@ class RevUnet3D(nn.Module):
                 inputStack.append(x)
 
         for i in range(self.levels):
-            x = self.decoders[i](x, shapes[-(i+2)])
+            x = self.decoders[i](x, shapes[-(i+1)])
             if i < self.levels - 1:
                 x = x + inputStack.pop()
 
