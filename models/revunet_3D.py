@@ -86,6 +86,8 @@ class DecoderModule(nn.Module):
         super(DecoderModule, self).__init__()
         self.reversibleBlocks = makeReversibleComponent(inchannels, depth)
         self.upsample = upsample
+        self.inc = inchannels
+        self.out = outchannels
         if self.upsample:
             self.conv = nn.Conv3d(inchannels, outchannels, 1)
 
@@ -98,6 +100,7 @@ class DecoderModule(nn.Module):
             print('i s ', shape)
             x = F.interpolate(x, size=shape[-3:])
             print('x s ', x.shape)
+            print(self.inc, self.out)
         # for i in range(1,4):
         #     # print("#" ,x.shape,shape)
         #     if x.shape[-i] != shape[-i]:
