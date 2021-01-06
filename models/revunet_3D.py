@@ -67,7 +67,7 @@ class DecoderModule(nn.Module):
         return x
 
 class RevUnet3D(nn.Module):
-    def __init__(self, inchannels, channels, out_size, depth = 1, interp = None):
+    def __init__(self, inchannels, channels, out_size, depth = 1, interpolation = None):
         super(RevUnet3D, self).__init__()
         self.levels = len(channels)
 
