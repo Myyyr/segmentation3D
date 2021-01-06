@@ -7,8 +7,8 @@ import h5py
 from skimage import transform
 
 import utils
-
-
+import torch.functional as F
+import torch
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
 
@@ -143,12 +143,17 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
             # print("mask sum ", np.sum(mask))
             scale_vector = target_resolution
+
             if scale_vector != [1.0]:
                 # print(img.shape)
-                #img = transform.resize(img, size)
-                img = transform.rescale(img, scale_vector[0], anti_aliasing=False, preserve_range=True)
-                #mask = transform.resize(mask, size)
-                mask = rescale_labels(mask, scale_vector[0])
+                # #img = transform.resize(img, size)
+                # img = transform.rescale(img, scale_vector[0], anti_aliasing=False, preserve_range=True)
+                # #mask = transform.resize(mask, size)
+                # mask = rescale_labels(mask, scale_vector[0])
+
+                img = F.interpolate(torch.from_numpy(img), size = size, mode = 'trilinear').numpy()
+                mask = rescale_labels(masm, scale_vector[0], size)
+                
                 print_info(img, "x")
                 print_info(mask, "y", unique = True)
             # print("mask sum ", np.sum(mask))
@@ -181,12 +186,14 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
     hdf5_file.close()
 
 
-def rescale_labels(y, factor,  c = 14):
+def rescale_labels(y, factor, new_shape,  c = 14):
     s = y.shape
-    ret = np.zeros((c, int(round(s[0]*factor)), int(round(s[1]*factor)), int(round(s[2]*factor))))
+    # ret = np.zeros((c, int(round(s[0]*factor)), int(round(s[1]*factor)), int(round(s[2]*factor))))
+    ret = np.zeros(new_shape)
     for i in range(c):
         a = (y == i)
-        a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
+        # a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
+        a = F.interpolate(torch.from_numpy(a), size = new_shape, mode='trilinear').numpy()
         ret[i,...] = a
     a = np.argmax(ret, axis=0)
     return a
@@ -287,8 +294,8 @@ if __name__ == '__main__':
     # target_size = (512, 512, 198)
     rescale = [0.16]
     # target_size = (512//10, 512//10, 198//10)
-    target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
-
+    # target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
+    target_size = (80,80,32)
     # rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
