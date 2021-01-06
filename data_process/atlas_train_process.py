@@ -152,7 +152,7 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
                 # mask = rescale_labels(mask, scale_vector[0])
 
                 img = F.interpolate(torch.from_numpy(img)[None, None, :, :, :].float(), size = size, mode = 'trilinear').numpy()
-                mask = rescale_labels(masm, scale_vector[0], size)
+                mask = rescale_labels(mask, scale_vector[0], size)
                 
                 print_info(img, "x")
                 print_info(mask, "y", unique = True)
