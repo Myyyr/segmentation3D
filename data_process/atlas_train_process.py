@@ -189,14 +189,14 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 def rescale_labels(y, factor, new_shape,  c = 14):
     s = y.shape
     # ret = np.zeros((c, int(round(s[0]*factor)), int(round(s[1]*factor)), int(round(s[2]*factor))))
-    ret = np.zeros(new_shape)
+    ret = np.zeros( tuple([c] + list(new_shape)))
     for i in range(c):
         a = (y == i)
         # a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
         a = F.interpolate(torch.from_numpy(a)[None, None, :, :, :].float(), size = new_shape, mode='trilinear').numpy()
-        print('a.shape :',a.shape)
-        print('ret.shape :',ret.shape)
-        print('a[0,0,...].shape :',a[0,0,...].shape)
+        # print('a.shape :',a.shape)
+        # print('ret.shape :',ret.shape)
+        # print('a[0,0,...].shape :',a[0,0,...].shape)
         ret[i,...] = a[0,0,...]
     a = np.argmax(ret, axis=0)
     return a
