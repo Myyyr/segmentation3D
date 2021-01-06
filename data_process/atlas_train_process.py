@@ -151,7 +151,7 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
                 # #mask = transform.resize(mask, size)
                 # mask = rescale_labels(mask, scale_vector[0])
 
-                img = F.interpolate(torch.from_numpy(img), size = size, mode = 'trilinear').numpy()
+                img = F.interpolate(torch.from_numpy(img)[None, None, :, :, :], size = size, mode = 'trilinear').numpy()
                 mask = rescale_labels(masm, scale_vector[0], size)
                 
                 print_info(img, "x")
@@ -193,7 +193,7 @@ def rescale_labels(y, factor, new_shape,  c = 14):
     for i in range(c):
         a = (y == i)
         # a = transform.rescale(a, factor, preserve_range=True, anti_aliasing=False, order=0)
-        a = F.interpolate(torch.from_numpy(a), size = new_shape, mode='trilinear').numpy()
+        a = F.interpolate(torch.from_numpy(a)[None, None, :, :, :], size = new_shape, mode='trilinear').numpy()
         ret[i,...] = a
     a = np.argmax(ret, axis=0)
     return a
