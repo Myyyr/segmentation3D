@@ -7,7 +7,7 @@ import h5py
 from skimage import transform
 
 import utils
-import torch.functional as F
+import torch.nn.functional as F
 import torch
 
 logging.basicConfig(level=logging.INFO, format='%(asctime)s %(message)s')
