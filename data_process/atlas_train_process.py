@@ -196,6 +196,7 @@ def rescale_labels(y, factor, new_shape,  c = 14):
         a = F.interpolate(torch.from_numpy(a)[None, None, :, :, :].float(), size = new_shape, mode='trilinear').numpy()
         print('a.shape :',a.shape)
         print('ret.shape :',ret.shape)
+        print('a[0,0,...].shape :',a[0,0,...].shape)
         ret[i,...] = a[0,0,...]
     a = np.argmax(ret, axis=0)
     return a
