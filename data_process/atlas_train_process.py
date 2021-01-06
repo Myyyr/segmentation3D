@@ -156,10 +156,12 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
                 np.save('checkpoints/images/img.npy', img)
                 np.save('checkpoints/images/mask.npy', mask)
-                exit(0)
+
                 
                 print_info(img, "x")
                 print_info(mask, "y", unique = True)
+
+                exit(0)
             # print("mask sum ", np.sum(mask))
             img = normalise_image(img)
 
