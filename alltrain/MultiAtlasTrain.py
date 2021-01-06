@@ -12,6 +12,7 @@ from torch.utils.data import DataLoader
 
 import json
 import os
+
 class MATrain(Train):
 
     def __init__(self, expconfig, split = 0):
@@ -99,6 +100,8 @@ class MATrain(Train):
                     inputs, labels, _ = data
                 else:
                     inputs, labels = data
+
+                
                 
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
                 del inputs, labels
