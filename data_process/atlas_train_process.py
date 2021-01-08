@@ -44,8 +44,7 @@ def pad_slice_to_size(image, target_size):
 
     pad_width = ((xd_a, xd_b),(yd_a, yd_b),(zd_a, zd_b))
 
-    
-    output_volume = np.pad(image, pad_width, mode='minimum')
+    output_volume = np.pad(image, pad_width, mode='constant', constant_values = np.min(image))
     
 
     return output_volume
