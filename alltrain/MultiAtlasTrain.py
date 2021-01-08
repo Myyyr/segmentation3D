@@ -68,12 +68,16 @@ class MATrain(Train):
         #update params
         expcf.optimizer.step()
         if expcf.debug:
-            L = []
+            L1, L2, L3 = [],[],[]
             for l in expcf.net.modules():
                 if type(l) == torch.nn.Conv3d:
                     #L.append((l.weight.grad).mean().item())
-                    L.append(((l.weight).mean().item()))
-            print('mean :', L)
+                    L1.append(((l.weight).mean().item()))
+                    L2.append(((l.weight).min().item()))
+                    L3.append(((l.weight).max().item()))
+            print('mean :', L1)
+            print('max :', L2)
+            print('min :', L3)
         expcf.optimizer.zero_grad()
         del loss
 
