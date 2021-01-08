@@ -6,15 +6,25 @@ import revtorch.revtorch as rv
 import random
 
 
-class ResidualInner(nn.Module):
+class OldResidualInner(nn.Module):
     def __init__(self, channels, groups):
-        super(ResidualInner, self).__init__()
+        super(OldResidualInner, self).__init__()
         # self.gn = nn.BatchNorm3d(channels)
         self.gn = nn.GroupNorm(groups, channels)
         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
 
     def forward(self, x):
         x = F.leaky_relu(self.gn(self.conv(x)), inplace=True)
+        return x
+
+class ResidualInner(nn.Module):
+    def __init__(self, channels, groups):
+        super(ResidualInner, self).__init__()
+        # self.gn = nn.BatchNorm3d(channels)
+        self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
+
+    def forward(self, x):
+        x = F.relu(self.conv(x), inplace=True)
         return x
 
 def makeReversibleSequence(channels):
@@ -73,7 +83,7 @@ class RevUnet3D(nn.Module):
 
         self.firstConv = nn.Conv3d(inchannels, channels[0], 3, padding=1, bias=False)
         #self.dropout = nn.Dropout3d(0.2, True)
-        self.lastConv = nn.Conv3d(channels[0], out_size, 1, bias=True)
+        self.lastConv = nn.Conv3d(channels[0], out_size, 1)#, bias=True)
 
         #create encoder levels
         encoderModules = []
