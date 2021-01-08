@@ -76,8 +76,8 @@ class MATrain(Train):
                     L2.append(((l.weight).min().item()))
                     L3.append(((l.weight).max().item()))
             print('mean :', L1)
-            print('max :', L2)
-            print('min :', L3)
+            print('min :', L2)
+            print('max :', L3)
         expcf.optimizer.zero_grad()
         del loss
 

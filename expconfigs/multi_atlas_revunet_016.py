@@ -33,7 +33,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 1 ,interpolation = None)#(512,512,198))
+        self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
@@ -56,7 +56,7 @@ class ExpConfig():
         def loss(outputs, labels):
             return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True)
         self.loss = loss
-        self.batchsize = 1
+        self.batchsize = 4
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
