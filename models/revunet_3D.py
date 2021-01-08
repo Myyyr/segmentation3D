@@ -57,7 +57,9 @@ class EncoderModule(nn.Module):
         if downsample:
             self.conv = nn.Conv3d(inChannels, outChannels, 1)
         self.reversibleBlocks = makeReversibleComponent(outChannels, depth)
-
+        for m in self.children():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
     def forward(self, x):
         if self.downsample:
             x = F.max_pool3d(x, 2)
@@ -72,7 +74,10 @@ class DecoderModule(nn.Module):
         self.upsample = upsample
         if self.upsample:
             self.conv = nn.Conv3d(inChannels, outChannels, 1)
-
+        for m in self.children():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
+                
     def forward(self, x):
         x = self.reversibleBlocks(x)
         if self.upsample:
@@ -101,13 +106,12 @@ class RevUnet3D(nn.Module):
             decoderModules.append(DecoderModule(getChannelsAtIndex(self.levels - i - 1, channels), getChannelsAtIndex(self.levels - i - 2, channels), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
-        
+
         # initialise weights
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
-            elif isinstance(m, nn.BatchNorm3d):
-                init_weights(m, init_type='kaiming')
+            
 
 
     def forward(self, x):
