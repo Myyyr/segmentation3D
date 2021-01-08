@@ -262,7 +262,7 @@ class UnetUp3_CT(nn.Module):
         self.conv = UnetConv3(in_size + out_size, out_size, is_batchnorm, kernel_size=(3,3,3), padding_size=(1,1,1))
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
 
-        initialise the blocks
+        # initialise the blocks
         for m in self.children():
             if m.__class__.__name__.find('UnetConv3') != -1: continue
             init_weights(m, init_type='kaiming')
