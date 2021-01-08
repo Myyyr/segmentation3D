@@ -70,7 +70,7 @@ class MATrain(Train):
         if expcf.debug:
             for l in expcf.net.modules():
                 if type(l) == torch.nn.Conv3d:
-                    print('mean grad ',l,':',(l.weight.grad).mean().item())
+                    print('mean grad', l.name,':',(l.weight.grad).mean().item())
         expcf.optimizer.zero_grad()
         del loss
 
