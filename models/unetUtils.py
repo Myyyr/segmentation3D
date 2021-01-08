@@ -113,8 +113,8 @@ class UnetConv3(nn.Module):
                                        nn.ReLU(inplace=True),)
 
         # initialise the blocks
-        for m in self.children():
-            init_weights(m, init_type='kaiming')
+        # for m in self.children():
+        #     init_weights(m, init_type='kaiming')
 
     def forward(self, inputs):
         outputs = self.conv1(inputs)
@@ -263,9 +263,9 @@ class UnetUp3_CT(nn.Module):
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
 
         # initialise the blocks
-        for m in self.children():
-            if m.__class__.__name__.find('UnetConv3') != -1: continue
-            init_weights(m, init_type='kaiming')
+        # for m in self.children():
+        #     if m.__class__.__name__.find('UnetConv3') != -1: continue
+        #     init_weights(m, init_type='kaiming')
 
     def forward(self, inputs1, inputs2):
         outputs2 = self.up(inputs2)
