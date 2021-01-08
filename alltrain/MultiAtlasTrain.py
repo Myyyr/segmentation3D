@@ -56,10 +56,7 @@ class MATrain(Train):
         outputs = expcf.net(inputs)
         # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
         del inputs
-        # print('out argmax :', np.unique(outputs.detach().cpu().argmax(dim = 1).numpy()))
-        # print('lab argmax :', np.unique(labels.detach().cpu().argmax(dim = 1).numpy()))
-        # for i in range(self.classes):
-        #     print('sum ', outputs[0,i,...].sum().item() )
+ 
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
         del outputs, labels
@@ -70,6 +67,10 @@ class MATrain(Train):
 
         #update params
         expcf.optimizer.step()
+        if expcf.debug:
+            for l in expcf.net.modules():
+                if type(l) == torch.nn.Conv3d:
+                    print('mean grad ',l,':',(l.weight.grad).mean().item())
         expcf.optimizer.zero_grad()
         del loss
 
