@@ -16,7 +16,7 @@ class ExpConfig():
         # ID and Name
         self.experiment_name = "atlas_revunet_3D_016"
         self.id = 16
-        self.debug = True
+        self.debug = False
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
