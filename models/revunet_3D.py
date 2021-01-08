@@ -4,6 +4,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import revtorch.revtorch as rv
 import random
+from models.networks_other import init_weights
 
 
 class OldResidualInner(nn.Module):
@@ -12,6 +13,9 @@ class OldResidualInner(nn.Module):
         # self.gn = nn.BatchNorm3d(channels)
         self.gn = nn.GroupNorm(groups, channels)
         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
+
+        for m in self.children():
+            init_weights(m, init_type='kaiming')
 
     def forward(self, x):
         x = F.leaky_relu(self.gn(self.conv(x)), inplace=True)
@@ -97,6 +101,13 @@ class RevUnet3D(nn.Module):
             decoderModules.append(DecoderModule(getChannelsAtIndex(self.levels - i - 1, channels), getChannelsAtIndex(self.levels - i - 2, channels), depth, i != (self.levels -1)))
         self.decoders = nn.ModuleList(decoderModules)
 
+        
+        # initialise weights
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
+            elif isinstance(m, nn.BatchNorm3d):
+                init_weights(m, init_type='kaiming')
 
 
     def forward(self, x):

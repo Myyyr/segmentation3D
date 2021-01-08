@@ -52,11 +52,11 @@ class unet_3D(nn.Module):
 
 
         # initialise weights
-        # for m in self.modules():
-            # if isinstance(m, nn.Conv3d):
-                # init_weights(m, init_type='kaiming')
-            # elif isinstance(m, nn.BatchNorm3d):
-                # init_weights(m, init_type='kaiming')
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
+            elif isinstance(m, nn.BatchNorm3d):
+                init_weights(m, init_type='kaiming')
 
     def forward(self, X):
         # print("||start|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))

@@ -112,9 +112,9 @@ class UnetConv3(nn.Module):
             self.conv2 = nn.Sequential(nn.Conv3d(out_size, out_size, kernel_size, 1, padding_size),
                                        nn.ReLU(inplace=True),)
 
-        # initialise the blocks
-        # for m in self.children():
-        #     init_weights(m, init_type='kaiming')
+        #initialise the blocks
+        for m in self.children():
+            init_weights(m, init_type='kaiming')
 
     def forward(self, inputs):
         outputs = self.conv1(inputs)
@@ -262,10 +262,10 @@ class UnetUp3_CT(nn.Module):
         self.conv = UnetConv3(in_size + out_size, out_size, is_batchnorm, kernel_size=(3,3,3), padding_size=(1,1,1))
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
 
-        # initialise the blocks
-        # for m in self.children():
-        #     if m.__class__.__name__.find('UnetConv3') != -1: continue
-        #     init_weights(m, init_type='kaiming')
+        initialise the blocks
+        for m in self.children():
+            if m.__class__.__name__.find('UnetConv3') != -1: continue
+            init_weights(m, init_type='kaiming')
 
     def forward(self, inputs1, inputs2):
         outputs2 = self.up(inputs2)
