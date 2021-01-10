@@ -302,7 +302,7 @@ if __name__ == '__main__':
     rescale = [1.0]
     # target_size = (512//10, 512//10, 198//10)
     # target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
-    target_size = (512,512,200)
+    target_size = (512,512,208)
     # rescale = [0.1]
 
     d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
