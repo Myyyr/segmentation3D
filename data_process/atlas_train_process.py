@@ -134,8 +134,8 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
 
             # print("mask sum ", np.sum(mask))
 
-            img = pad_slice_to_size(img, (512, 512, 200))
-            mask = pad_slice_to_size(mask, (512, 512, 200))
+            img = pad_slice_to_size(img, (512, 512, 208))
+            mask = pad_slice_to_size(mask, (512, 512, 208))
 
             print_info(img, "X")
             print_info(mask, "Y")
