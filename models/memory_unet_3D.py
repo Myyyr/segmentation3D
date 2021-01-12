@@ -45,7 +45,7 @@ class memory_unet_3D(nn.Module):
         self.final = nn.Conv3d(filters[0], n_classes, 1)
 
         # interpolation
-        self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
+        # self.interpolation = nn.Upsample(size = interpolation, mode = "trilinear")
 
 
         # initialise weights
@@ -113,14 +113,14 @@ class memory_unet_3D(nn.Module):
         del up1
         # print("||final|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||final|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
-        final = self.interpolation(F.softmax(Y, dim=1))
+        # final = self.interpolation(F.softmax(Y, dim=1))
         
         # print("||interpolation|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||interpolation|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
         # exit(0)
         # exit(0)
-        del Y
-        return final
+        
+        return F.softmax(final, 1)
 
     @staticmethod
     def apply_argmax_softmax(pred):
