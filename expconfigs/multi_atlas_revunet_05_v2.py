@@ -14,7 +14,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "atlas_revunet_3D_016"
+        self.experiment_name = "atlas_revunet_3D_016_v2"
         self.id = 20
         self.debug = False
 
