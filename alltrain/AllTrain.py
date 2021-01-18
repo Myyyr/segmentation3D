@@ -166,6 +166,8 @@ class AllTrain(Train):
         labels = labels.argmax(dim = 1)
         label_masks = []
         print('outputs.shape after:', outputs.shape)
+        print('out unique :', np.unique(outputs.cpu().numpy()))
+        print('lab unique :', np.unique(labels.cpu().numpy()))
 
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
