@@ -105,7 +105,7 @@ def preprocess_and_serialize(data_parameters, data_dir, image_output_dir, annota
     assert slice_view in SLICE_VIEWS_AXES.keys()
 
     dataset_cls = get_dataset(data_parameters['dataset'])
-    dataset = dataset_cls(data_dir, data_parameters['class_info'], split = 0)
+    dataset = dataset_cls(data_dir,  split = 0)
     nb_patient = len(dataset)
 
     print("Start writing {} patients in ({}, {}), save_mode='{}', slice_view='{}'".format(nb_patient, image_output_dir, annotation_output_dir, save_mode, slice_view))
