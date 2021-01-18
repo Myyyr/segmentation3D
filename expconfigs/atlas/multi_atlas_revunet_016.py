@@ -39,6 +39,17 @@ class ExpConfig():
 
         
         self.n_classes = 14 
+        self.nn_augmentation = False
+        self.soft_augmentation = False
+        self.do_rotate = False
+        self.rot_degrees = 20
+        self.do_scale = False
+        self.scale_factor = False
+        self.do_flip = False
+        self.do_elastic_aug = False
+        self.sigma = 10
+        self.do_intensity_shift = False
+        self.max_intensity_shift = 0.1
 
         # Training
         self.train_original_classes = False
