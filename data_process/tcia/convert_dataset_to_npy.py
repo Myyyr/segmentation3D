@@ -13,7 +13,7 @@ import sys
 # from datasets.lits.lits_dataset import LITSDataset
 # from datasets.vpdataset.vp_dataset import VPDataset
 
-from pancreasCTDDataset import TCIAPancreasDataset
+from pancreasCTDataset import TCIAPancreasDataset
 
 def read_config_file(file_path):
     if not os.path.isfile(file_path):
