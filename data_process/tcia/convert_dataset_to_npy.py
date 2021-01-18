@@ -11,28 +11,28 @@ import sys
 # sys.path.append("~/stage2020/prototype.tar/prototype/datasets")
 # import datasets
 # from datasets.lits.lits_dataset import LITSDataset
-from datasets.tcia.tcia_pancreas_dataset import TCIAPancreasDataset
 # from datasets.vpdataset.vp_dataset import VPDataset
 
 # from tcia.tcia_pancreas_dataset import TCIAPancreasDataset
 
-from experimentation import read_config_file
+def read_config_file(file_path):
+    if not os.path.isfile(file_path):
+        raise Exception('{} does not exists'.format(file_path))
+    if file_path.split('.')[-1].lower() != 'yaml':
+        raise Exception('{} is not a yaml file'.format(file_path))
+    with open(file_path) as f:
+        file_content = yaml.load(f, Loader=yaml.FullLoader)
+    return file_content
 
+
+    
 SAVE_MODES = ['slices', 'volumes']
 SLICE_VIEWS_AXES = {'axial' : 2,
                     'sagittal' : 1,
                     'coronal' : 0}
 
 
-def get_dataset(dataset_name):
-    if dataset_name == 'tcia':
-        return TCIAPancreasDataset
-    elif dataset_name == 'lits':
-        return LITSDataset
-    elif dataset_name == 'vpdataset':
-        return VPDataset
-    else:
-        raise Exception('Unknown dataset name :', dataset_name)
+
 
 
 # Data array is saved as follow {target_directory}/pid/slice_num.npy
