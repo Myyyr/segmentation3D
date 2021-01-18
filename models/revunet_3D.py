@@ -7,9 +7,9 @@ import random
 from models.networks_other import init_weights
 
 
-class OldResidualInner(nn.Module):
+class ResidualInner(nn.Module):
     def __init__(self, channels, groups):
-        super(OldResidualInner, self).__init__()
+        super(ResidualInner, self).__init__()
         # self.gn = nn.BatchNorm3d(channels)
         self.gn = nn.GroupNorm(groups, channels)
         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
@@ -21,15 +21,15 @@ class OldResidualInner(nn.Module):
         x = F.leaky_relu(self.gn(self.conv(x)), inplace=True)
         return x
 
-class ResidualInner(nn.Module):
-    def __init__(self, channels, groups):
-        super(ResidualInner, self).__init__()
-        # self.gn = nn.BatchNorm3d(channels)
-        self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
+# class ResidualInner(nn.Module):
+#     def __init__(self, channels, groups):
+#         super(ResidualInner, self).__init__()
+#         # self.gn = nn.BatchNorm3d(channels)
+#         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
 
-    def forward(self, x):
-        x = F.relu(self.conv(x), inplace=True)
-        return x
+#     def forward(self, x):
+#         x = F.relu(self.conv(x), inplace=True)
+#         return x
 
 def makeReversibleSequence(channels):
     innerChannels = channels // 2
