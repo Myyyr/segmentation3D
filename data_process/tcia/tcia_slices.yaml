@@ -1,0 +1,6 @@
+dataset : tcia
+
+size : [512,512,256]
+voxel_spacing : [-1.0,-1.0,2]
+windowing :  [-160,300]
+class_info : None
