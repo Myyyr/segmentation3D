@@ -13,7 +13,7 @@ import sys
 # from datasets.lits.lits_dataset import LITSDataset
 # from datasets.vpdataset.vp_dataset import VPDataset
 
-# from tcia.tcia_pancreas_dataset import TCIAPancreasDataset
+from pancreasCTDDataset import TCIAPancreasDataset
 
 def read_config_file(file_path):
     if not os.path.isfile(file_path):
@@ -25,11 +25,23 @@ def read_config_file(file_path):
     return file_content
 
 
-    
+
 SAVE_MODES = ['slices', 'volumes']
 SLICE_VIEWS_AXES = {'axial' : 2,
                     'sagittal' : 1,
                     'coronal' : 0}
+
+
+def get_dataset(dataset_name):
+    if dataset_name == 'tcia':
+        return TCIAPancreasDataset
+    elif dataset_name == 'lits':
+        return LITSDataset
+    elif dataset_name == 'vpdataset':
+        return VPDataset
+    else:
+        raise Exception('Unknown dataset name :', dataset_name)
+
 
 
 
