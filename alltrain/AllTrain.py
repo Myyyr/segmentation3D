@@ -9,6 +9,7 @@ import alltrain.atlasUtils as atlasUtils
 from tqdm import tqdm
 import json
 import os
+import numpy as np
 
 class AllTrain(Train):
 
@@ -159,12 +160,12 @@ class AllTrain(Train):
         return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
+        print('outputs.shape before:', outputs.shape)
         outputs = outputs.argmax(dim = 1)    
         masks = []
         labels = labels.argmax(dim = 1)
         label_masks = []
-
-        print('outputs.shape :', outputs.shape)
+        print('outputs.shape after:', outputs.shape)
 
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
