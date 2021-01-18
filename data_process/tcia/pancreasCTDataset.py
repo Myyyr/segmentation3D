@@ -14,8 +14,16 @@ import torch
 
 
 class SplitTCIA3DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None):
+    def __init__(self, root_dir, split, data_splits = None, im_dim = None, transform=None):
         super(SplitTCIA3DDataset, self).__init__()
+
+        if data_splits == None:
+            data_splits = {'train':[], 'test':[]}
+            all_splits = ['split_'+str(i+1) for i in range(6)]
+            for i in range(6):
+                data_splits['test'] = [all_splits[i]]
+                data_splits['train'] = all_splits[:i] + all_splits[i+1:]
+
         
         self.im_dim = im_dim
 
