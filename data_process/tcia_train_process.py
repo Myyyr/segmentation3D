@@ -75,6 +75,7 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 	for split in ['images', 'annotations']:
 		fl = file_list(os.path.join(root_path, split))
+		print(os.path.join(root_path, split))
 		print("Nmmber of file :",len(fl))
 		for f in fl:
 			pid = f.replace('.npy','')
