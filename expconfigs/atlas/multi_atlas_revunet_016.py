@@ -6,6 +6,7 @@ from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
 from multiatlasDataset import *
+from torch.utils.data import DataLoader
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)

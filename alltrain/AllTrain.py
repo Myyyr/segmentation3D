@@ -4,7 +4,7 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 # import alltrain.bratsUtils as bratsUtils
 import alltrain.atlasUtils as atlasUtils
-from multiatlasDataset import *
+# from multiatlasDataset import *
 
 from tqdm import tqdm
 import json
