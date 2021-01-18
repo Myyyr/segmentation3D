@@ -22,7 +22,7 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        self.datapath =,"/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/80_80_32/"
+        self.datapath ="/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/80_80_32/"
         self.im_dim = (80,80,32)
         
         # GPU
