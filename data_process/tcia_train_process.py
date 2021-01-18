@@ -86,9 +86,9 @@ def main(root_path, out_dir, n_split = 6, size = None):
 			npyimg = load_npy(os.path.join(root_path, split, f))
 			# change size
 			if split == 'images':
-				npyimg = transform_size(npyimg, size, c = 2)
-			else:
 				npyimg = transform_size(npyimg, size)
+			else:
+				npyimg = rescale_labels(npyimg, size, c = 2)
 			niiim  = npy2nii(npyimg)
 
 			out_path = ''
