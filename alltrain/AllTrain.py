@@ -64,7 +64,7 @@ class AllTrain(Train):
                     # L1.append(((l.weight).mean().item()))
                     # L2.append(((l.weight).min().item()))
                     # L3.append(((l.weight).max().item()))
-                    L1.append(torch.norm(l.weight.grad.item()))
+                    L1.append(torch.norm(l.weight.grad).item())
             print('mean :', L1)
             # print('min :', L2)
             # print('max :', L3)
