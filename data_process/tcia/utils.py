@@ -1,8 +1,11 @@
 import nibabel as nib
 import numpy as np
 import os
-from utils.util import mkdir
 
+def mkdir(path):
+    if not os.path.exists(path):
+        os.makedirs(path)
+        
 def is_image_file(filename):
     return any(filename.endswith(extension) for extension in [".nii"])
 
