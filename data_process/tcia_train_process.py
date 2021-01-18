@@ -102,4 +102,4 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 
 if __name__ == '__main__':
-	main("/etudiants/siscol/t/themyr_l/data/TCIA_torch", "/etudiants/siscol/t/themyr_l/data/256_256_128", 6, (256,256,128))
+	main("/local/SSD_DEEPLEARNING/TCIA/", "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/80_80_32", 6, (80,80,32))
