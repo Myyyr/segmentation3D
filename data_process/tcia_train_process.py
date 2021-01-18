@@ -54,6 +54,16 @@ def transform_size(img, size = None):
 		img = torch.squeeze(img)
 	return img.numpy()
 
+def rescale_labels(y, new_shape,  c = 14):
+    s = y.shape
+    ret = np.zeros( tuple([c] + list(new_shape)))
+    for i in range(c):
+        a = (y == i)
+        a = F.interpolate(torch.from_numpy(a)[None, None, :, :, :].float(), size = new_shape, mode='trilinear', align_corners = True).numpy()
+        ret[i,...] = a[0,0,...]
+    a = np.argmax(ret, axis=0)
+    return a
+
 
 def main(root_path, out_dir, n_split = 6, size = None):
 	train = ['74', '52', '22', '81', '44', '40', '35', '76', '58', '54', '77', '13', '45', '41', '3', '50', '8', '18', '43', '39', '80', '67', '66', '25', '32', '46', '49', '51', '53', '28', '16', '36', '11', '61', '21', '78', '17', '71', '73', '56', '48', '65', '34', '10', '27', '15', '1', '68', '57', '37', '20', '59', '4', '7', '33', '79', '9', '75', '82', '47', '29', '2', '72', '24', '70']
@@ -63,7 +73,7 @@ def main(root_path, out_dir, n_split = 6, size = None):
 	
 	set_up_splits_folders(out_dir ,n_split=n_split)
 
-	for split in ['images']:#, 'labels']:
+	for split in ['images', 'annotations']:
 		fl = file_list(os.path.join(root_path, split))
 		for f in fl:
 			pid = f.replace('.npy','')
@@ -73,8 +83,10 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 			npyimg = load_npy(os.path.join(root_path, split, f))
 			# change size
-			npyimg = transform_size(npyimg, size)
-
+			if split == 'images':
+				npyimg = transform_size(npyimg, size, c = 2)
+			else:
+				npyimg = transform_size(npyimg, size)
 			niiim  = npy2nii(npyimg)
 
 			out_path = ''
