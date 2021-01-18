@@ -7,16 +7,13 @@ import alltrain.atlasUtils as atlasUtils
 from multiatlasDataset import *
 
 from tqdm import tqdm
-
-from torch.utils.data import DataLoader
-
 import json
 import os
 
-class MATrain(Train):
+class AllTrain(Train):
 
     def __init__(self, expconfig, split = 0):
-        super(MATrain, self).__init__(expconfig)
+        super(AllTrain, self).__init__(expconfig)
         self.expconfig = expconfig
         self.startingTime = time.time()
 
@@ -31,30 +28,21 @@ class MATrain(Train):
         self.meanDice = 0
         self.smallmeanDice = 0
 
-        trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
-        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
+        self.expconfig.set_data(split)
+
+        self.trainDataLoader = self.expconfig.trainDataLoader
+        self.valDataLoader = self.expconfig.valDataLoader
 
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
 
-        self.classes = 14
+        self.classes = self.expconfig.n_classes
 
 
     def step(self, expcf, inputs, labels, total_loss):
-        # print(labels.sum().item(), np.prod(labels.shape))
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
-
-        # expcf.net
-
-        #forward and backward pass
-        # a = 
-        # print(a.sum().cpu().item(), np.prod(a.shape))
-        # outputs = expcf.net.apply_argmax_softmax(expcf.net(inputs))
         outputs = expcf.net(inputs)
-        # print(outputs.sum().cpu().item(), np.prod(outputs.shape))
         del inputs
  
         loss = expcf.loss(outputs, labels)
@@ -67,17 +55,17 @@ class MATrain(Train):
 
         #update params
         expcf.optimizer.step()
-        if expcf.debug:
-            L1, L2, L3 = [],[],[]
-            for l in expcf.net.modules():
-                if type(l) == torch.nn.Conv3d:
-                    #L.append((l.weight.grad).mean().item())
-                    L1.append(((l.weight).mean().item()))
-                    L2.append(((l.weight).min().item()))
-                    L3.append(((l.weight).max().item()))
-            print('mean :', L1)
-            print('min :', L2)
-            print('max :', L3)
+        # if expcf.debug:
+        #     L1, L2, L3 = [],[],[]
+        #     for l in expcf.net.modules():
+        #         if type(l) == torch.nn.Conv3d:
+        #             #L.append((l.weight.grad).mean().item())
+        #             L1.append(((l.weight).mean().item()))
+        #             L2.append(((l.weight).min().item()))
+        #             L3.append(((l.weight).max().item()))
+        #     print('mean :', L1)
+        #     print('min :', L2)
+        #     print('max :', L3)
         expcf.optimizer.zero_grad()
         del loss
 
@@ -88,8 +76,6 @@ class MATrain(Train):
         print("#### TRAIN SET :", len(self.trainDataLoader))
         print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
-        # self.validate(0)
-        # exit(0)
         self.save_dict['first_batch_memory'] = ""
 
         for epoch in range(expcf.epoch):
@@ -104,10 +90,7 @@ class MATrain(Train):
                 # expcf.net_stats()
 
                 #load data
-                if expcf.look_small:
-                    inputs, labels, _ = data
-                else:
-                    inputs, labels = data
+                inputs, labels = data
 
                 
                 
@@ -176,23 +159,12 @@ class MATrain(Train):
         return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        # outputs = torch.argmax(outputs.cpu(), 1).short().to(self.device)
-        # outputs = torch.argmax(outputs.half(), 1).short()
-        outputs = outputs.argmax(dim = 1).short()
-        # print('out unique',np.unique(outputs.cpu().numpy()))
-        
-        masks, smallmasks = [], []
+        outputs = outputs.argmax(dim = 1)    
+        masks = []
+        labels = labels.argmax(dim = 1)
+        label_masks = []
 
-
-        # labels = torch.argmax(labels.cpu(), 1).short().to(self.device)
-        # labels = torch.argmax(labels, 1).short()
-        labels = labels.argmax(dim = 1).short()
-        # print('lab unique',np.unique(labels.cpu().numpy()))
-
-        if expcf.look_small:
-            smalllabels = torch.argmax(smalllabels, 1)
-        label_masks, smalllabel_masks = [], []
-
+        print('outputs.shape :', outputs.shape)
 
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
@@ -204,49 +176,32 @@ class MATrain(Train):
         
     def validate(self, epoch):
         expcf = self.expconfig
-        
         startTime = time.time()
 
 
         with torch.no_grad():
             expcf.net.eval()
             dice = []
-            smalldice = []
-
-            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):#enumerate(self.valDataLoader):
-               
+            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
                 inputs, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = expcf.net(inputs)
-                # self.save_pred(inputs.cpu().numpy(), labels.cpu().numpy(), outputs.cpu().numpy())
-                smalldice, smalllabels, smalloutputs = None, None, None
                 del inputs
                 
-                self.valide_step(expcf, outputs, labels, dice, smalldice = smalldice, smalllabels = smalllabels, smalloutputs = smalloutputs)
+                self.valide_step(expcf, outputs, labels, dice)
                 del labels, outputs
-                
-             
 
-            meanDices, smallmeanDices = [], []
+            meanDices = []
             for i in range(self.classes):
                 meanDices.append(np.mean(dice[i]))
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
 
-                if expcf.look_small:
-                    smallmeanDices.append(np.mean(smalldice[i]))
-                    self.save_dict['small'][self.expconfig.classes_name[i]] = smallmeanDices[i]
-
             self.meanDice = np.mean([j for j in meanDices])
             self.save_dict['meanDice'] =  self.meanDice 
-
-            if expcf.look_small:
-                self.smallmeanDice = np.mean([j for j in smallmeanDices])
-                self.save_dict['smallmeanDice'] =  self.smallmeanDice 
 
             self.save_dict['epoch'] = epoch
             self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
             self.save_dict['training_time'] =  time.time() - self.startingTime
-
 
 
         self.save_results()

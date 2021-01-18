@@ -2,6 +2,7 @@ import numpy
 from torch.utils.data import DataLoader
 from pancreasCTDataset import SplitTCIA3DDataset
 from tqdm import tqdm
+from models.revunet_3D import Revunet_3D
 
 import torch
 
@@ -37,36 +38,9 @@ class PTrain(object):
 
     def train_one_split(self, arguments, data_splits, n_split = 0):
 
-        # Parse input arguments
-        # json_filename = arguments.config
-        # network_debug = arguments.debug
-
-        # Load options
-        # json_opts = json_file_to_pyobj(json_filename)
-        # train_opts = json_opts.training
-
-        # Architecture type
-        # arch_type = train_opts.arch_type
-
-        # Setup Dataset and Augmentation
-        # ds_class = get_dataset(arch_type)
-        # ds_path  = get_dataset_path(arch_type, json_opts.data_path)
-        # ds_transform = get_dataset_transformation(arch_type, opts=json_opts.augmentation)
-
-        # Setup the NN Model
-        # model = get_model(json_opts.model, im_dim = train_opts.im_dim, split=n_split)
-        # if network_debug:
-        #     print('# of pars: ', model.get_number_parameters())
-        #     print('fp time: {0:.3f} sec\tbp time: {1:.3f} sec per sample'.format(*model.get_fp_bp_time()))
-        #     exit()
-
         
-
-        # Visualisation Parameters
-        visualizer = Visualiser(json_opts.visualisation, save_dir=model.save_dir)
-        error_logger = ErrorLogger()
-
         # Training Function
+        model = Revunet_3D(inchannels = 1, channels = [i/4 for i in [1024, 512,256,128,64]], out_size = 2, depth = 1)
         model.set_scheduler(train_opts)
         for epoch in range(model.which_epoch, train_opts.n_epochs):
             print('(epoch: %d, total # iters: %d)' % (epoch, len(train_loader)))
@@ -80,7 +54,7 @@ class PTrain(object):
 
                 # Error visualisation
                 errors = model.get_current_errors()
-                error_logger.update(errors, split='train')
+                # error_logger.update(errors, split='train')
 
                 del images, labels
 
@@ -95,19 +69,19 @@ class PTrain(object):
                 # Error visualisation
                 errors = model.get_current_errors()
                 stats = model.get_segmentation_stats()
-                error_logger.update({**errors, **stats}, split=split)
+                # error_logger.update({**errors, **stats}, split=split)
 
                 # Visualise predictions
                 visuals = model.get_current_visuals()
-                visualizer.display_current_results(visuals, epoch=epoch, save_result=False)
+                # visualizer.display_current_results(visuals, epoch=epoch, save_result=False)
 
                 del images, labels
 
             # Update the plots
-            for split in ['train', 'test']:
-                visualizer.plot_current_errors(epoch, error_logger.get_errors(split), split_name=split)
-                visualizer.print_current_errors(epoch, error_logger.get_errors(split), split_name=split)
-            error_logger.reset()
+            # for split in ['train', 'test']:
+                # visualizer.plot_current_errors(epoch, error_logger.get_errors(split), split_name=split)
+                # visualizer.print_current_errors(epoch, error_logger.get_errors(split), split_name=split)
+            # error_logger.reset()
             print("Memory Usage :", convert_bytes(torch.cuda.max_memory_allocated()))
             print("Number of parameters :", model.get_number_parameters())
 

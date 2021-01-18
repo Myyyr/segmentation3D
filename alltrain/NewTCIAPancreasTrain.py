@@ -4,7 +4,8 @@ from torch.utils.tensorboard import SummaryWriter
 import time
 # import alltrain.bratsUtils as bratsUtils
 import alltrain.atlasUtils as atlasUtils
-from multiatlasDataset import *
+# from multiatlasDataset import *
+from pancreasCTDataset import SplitTCIA3DDataset
 
 from tqdm import tqdm
 
@@ -13,10 +14,10 @@ from torch.utils.data import DataLoader
 import json
 import os
 
-class MATrain(Train):
+class TCIA(Train):
 
     def __init__(self, expconfig, split = 0):
-        super(MATrain, self).__init__(expconfig)
+        super(TCIA, self).__init__(expconfig)
         self.expconfig = expconfig
         self.startingTime = time.time()
 
@@ -31,10 +32,16 @@ class MATrain(Train):
         self.meanDice = 0
         self.smallmeanDice = 0
 
-        trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
-        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
+        # trainDataset = MultiAtlasDataset(expconfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        # validDataset = MultiAtlasDataset(expconfig, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        # self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=True)
+        # self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=expconfig.batchsize, shuffle=False)
+
+
+        train_dataset = SplitTCIA3DDataset(ds_path, split='train', data_splits = data_splits['train'], im_dim=train_opts.im_dim, transform=ds_transform['train'], preload_data=train_opts.preloadData)
+        test_dataset  = SplitTCIA3DDataset(ds_path, split='test',  data_splits = data_splits['test'],  im_dim=train_opts.im_dim, transform=ds_transform['valid'], preload_data=train_opts.preloadData)
+        train_loader = DataLoader(dataset=train_dataset, num_workers=2, batch_size=train_opts.batchSize, shuffle=True)
+        test_loader  = DataLoader(dataset=test_dataset,  num_workers=2, batch_size=train_opts.batchSize, shuffle=False)
 
         self.save_dict = {'original':{} ,'small':{}}
         self.split = split
@@ -199,9 +206,16 @@ class MATrain(Train):
             label_mask = atlasUtils.getMask(labels, i)
             dice.append(atlasUtils.dice(mask, label_mask))
             del mask, label_mask
-        del outputs, labels, label_masks, masks
 
-        
+            if expcf.look_small:
+                smallmasks.append(atlasUtils.getMask(smalloutputs, i))                        
+                smalllabel_masks.append(atlasUtils.getMask(smalllabels, i))
+                smalldice.append(atlasUtils.dice(smallmasks[i], smalllabel_masks[i]))
+
+        del outputs, labels, label_masks, masks
+        if expcf.look_small:
+            del smalloutputs, smalllabels, smallmasks, smalllabel_masks
+ 
     def validate(self, epoch):
         expcf = self.expconfig
         

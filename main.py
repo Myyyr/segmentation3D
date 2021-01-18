@@ -139,7 +139,7 @@ def main(config):
 	cfg = importlib.import_module("expconfigs."+config)
 	excfg = cfg.ExpConfig()
 
-	train = alltrain.MATrain(excfg)
+	train = alltrain.alltrain(excfg)
 	train.train()
 
 	return 0

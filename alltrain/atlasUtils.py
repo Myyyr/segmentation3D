@@ -25,14 +25,14 @@ def dice(pred, target):
 def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, nonSquared=nonSquared)
 
-def atlasDiceLoss(outputs, labels, nonSquared=False):
+def atlasDiceLoss(outputs, labels, nonSquared=False, n_classe = 14):
     # print('###IN LOSS###')
     # print('outputs', outputs.sum().cpu().item())
     # print('labels.sum', labels.sum().cpu().item())
     # print('labels.max', labels.max().cpu().item())
     # print('labels.min', labels.min().cpu().item())
     #bring outputs into correct shape
-    n_classe = 14
+    n_classe = n_classe
     chunk = list(outputs.chunk(n_classe, dim=1))
     
     s = chunk[0].shape
