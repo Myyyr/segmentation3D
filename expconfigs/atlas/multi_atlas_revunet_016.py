@@ -3,9 +3,9 @@
 import os
 from models.revunet_3D import RevUnet3D
 from models.utils import get_scheduler
-from bratsDataset import BratsDataset
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
+from multiatlasDataset import *
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
