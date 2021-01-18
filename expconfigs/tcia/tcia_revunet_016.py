@@ -5,7 +5,7 @@ from models.revunet_3D import RevUnet3D
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from multiatlasDataset import *
+from pancreasCTDataset import *
 from torch.utils.data import DataLoader
 
 def count_parameters(model): 
@@ -22,10 +22,8 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-#        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
-        # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_80_80_32_res_0.16.hdf5"
-        self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_80_80_32_res_0.16.hdf5"
+        self.datapath =,"/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/80_80_32/"
+        self.im_dim = (80,80,32)
         
         # GPU
         self.gpu = '0'
@@ -51,6 +49,8 @@ class ExpConfig():
         self.sigma = 10
         self.do_intensity_shift = False
         self.max_intensity_shift = 0.1
+
+        self.split = 0
 
         # Training
         self.train_original_classes = False
@@ -80,11 +80,19 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = MultiAtlasDataset(self, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        validDataset = MultiAtlasDataset(self, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        trainDataset = pancreasCTDataset(self.datapath, self.split, generate_splits('train'), im_dim=self.im_dim )
+        validDataset = pancreasCTDataset(self.datapath, self.split, generate_splits('test'), im_dim=self.im_dim )
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 
+    def generate_splits(self, sets, i = 0):
+        data_splits = {'train':[], 'test':[]}
+        all_splits = ['split_'+str(i+1) for i in range(6)]
+        
+        data_splits['test'] = [all_splits[self.split]]
+        data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
+
+        return data_splits[sets]
     def net_stats(self):
         s = 0
         for p in self.net.parameters():
