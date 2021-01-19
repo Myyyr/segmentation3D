@@ -18,8 +18,6 @@ def softDice(pred, target, smoothing=1, nonSquared=False):
 
 def dice(pred, target):
     predBin = (pred > 0.5).float()
-    # predBin = (pred > 0.5)
-    # predBin = predBin.float()
     return softDice(predBin, target, 0, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
@@ -34,25 +32,16 @@ def atlasDiceLoss(outputs, labels, nonSquared=False, n_classe = 14):
     
 
     for i in range(n_classe):
-        # print('chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
-        # print('view.chunk['+str(i)+'].sum', chunk[i].sum().cpu().item())
-        # print('view.chunk['+str(i)+'].shape', chunk[i].shape)
-        
-
 
     # bring masks into correct shape
     chunkMask = list(labels.chunk(n_classe, dim=1))
-    # print('len(chunkMask)', len(chunkMask))
-    # print('len(chunk)', len(chunk))
     s = chunkMask[0].shape
+    print('s :', s)
+    print('labels :', labels)
     
     for i in range(n_classe):
-        # print('chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
         chunkMask[i] = chunkMask[i].view(s[0], s[2], s[3], s[4])
-        # print('view.chunkMask['+str(i)+'].sum', chunkMask[i].sum().cpu().item())
-        # print('view.chunkMask['+str(i)+'].shape', chunkMask[i].shape)
-        
 
 
     
