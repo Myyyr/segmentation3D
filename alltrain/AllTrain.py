@@ -195,12 +195,13 @@ class AllTrain(Train):
                 
                 self.valide_step(expcf, outputs, labels, dice)
                 del labels, outputs
-
+            print(dice)
+            print(len(dice))
             meanDices = []
             for i in range(self.classes):
                 meanDices.append(np.mean(dice[i]))
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
-
+            print()
             self.meanDice = np.mean([j for j in meanDices])
             self.save_dict['meanDice'] =  self.meanDice 
 
