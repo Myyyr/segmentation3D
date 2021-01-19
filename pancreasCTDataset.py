@@ -25,6 +25,7 @@ class SplitTCIA3DDataset(data.Dataset):
         # list_dir = []
 
         self.image_filenames = []
+        self.target_filenames = []
 
         for i in data_splits:
             # list_dir.append(join(root_dir, i))
