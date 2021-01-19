@@ -7,6 +7,7 @@ import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
 from pancreasCTDataset import *
 from torch.utils.data import DataLoader
+import utils
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
