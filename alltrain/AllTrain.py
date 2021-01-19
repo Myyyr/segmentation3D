@@ -174,7 +174,7 @@ class AllTrain(Train):
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
-            dice.append(atlasUtils.dice(mask, label_mask))
+            dice[i].append(atlasUtils.dice(mask, label_mask))
             del mask, label_mask
         del outputs, labels, label_masks, masks
 
@@ -186,7 +186,7 @@ class AllTrain(Train):
 
         with torch.no_grad():
             expcf.net.eval()
-            dice = []
+            dice = [[] for i in range(self.classes)]
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
                 inputs, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
@@ -202,7 +202,7 @@ class AllTrain(Train):
                 meanDices.append(np.mean(dice[i]))
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
             print()
-            self.meanDice = np.mean([j for j in meanDices])
+            self.meanDice = np.mean(meanDices)
             self.save_dict['meanDice'] =  self.meanDice 
 
             self.save_dict['epoch'] = epoch
