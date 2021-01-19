@@ -3,6 +3,7 @@
 
 import numpy as np
 import cv2
+import torch.nn as nn
 
 def _fast_hist(label_true, label_pred, n_class):
     mask = (label_true >= 0) & (label_true < n_class)
