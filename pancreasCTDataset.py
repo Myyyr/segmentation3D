@@ -12,14 +12,15 @@ import torchsample.transforms as ts
 
 import torch
 
-
+def shape2str(s):
+    return str(s[0])+'_'+str(s[1])+'_'str(s[2])
 
 
 class SplitTCIA3DDataset(data.Dataset):
     def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None):
         super(SplitTCIA3DDataset, self).__init__()
         
-        self.im_dim = im_dim
+        self.im_dim = shape2str(im_dim)
 
         # list_dir = []
 
