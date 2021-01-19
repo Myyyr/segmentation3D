@@ -7,7 +7,7 @@ import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
 from pancreasCTDataset import *
 from torch.utils.data import DataLoader
-import utils
+from utils.metrics import SoftDiceLoss
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -62,7 +62,7 @@ class ExpConfig():
         #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
         # self.loss = loss
 
-        self.loss = utils.metrics.SoftDiceLoss(self.n_classes)
+        self.loss = = SoftDiceLoss(self.n_classes)
 
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
