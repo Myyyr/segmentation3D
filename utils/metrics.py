@@ -165,13 +165,14 @@ class SoftDiceLoss(nn.Module):
         # print("In Loss Sum 0 :",np.sum(input.cpu().detach().numpy()[:,0,...]))
         # print("In Loss Sum 1 :",np.sum(input.cpu().detach().numpy()[:,1,...]))
         input = input.view(batch_size, self.n_classes, -1)
-        print('stats | mean(pred) :', input.mean().item())
+        # print('stats | mean(pred) :', input.mean().item())
+
         
-        print('target before :', target.shape)
-        print('stats | min(targe) :', target.min().item())
-        print('stats | max(targe) :', target.max().item())
+        # print('target before :', target.shape)
+        # print('stats | min(targe) :', target.min().item())
+        # print('stats | max(targe) :', target.max().item())
         target = self.one_hot_encoder(target).contiguous().view(batch_size, self.n_classes, -1)
-        print('target after  :', target.shape)
+        # print('target after  :', target.shape)
         
 
 
