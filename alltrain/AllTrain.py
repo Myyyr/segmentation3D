@@ -169,7 +169,7 @@ class AllTrain(Train):
         label_masks = []
 
         # print('label :', np.unique(labels.cpu().numpy()))
-        print('outpu :', np.unique(outputs.cpu().numpy()))
+        # print('outpu :', np.unique(outputs.cpu().numpy()))
 
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
