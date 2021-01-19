@@ -66,8 +66,8 @@ class SplitTCIA3DDataset(data.Dataset):
         if self.transform:
             input, target = self.transform(input, target )
 
-        input = input[None,:,:,:]
-        target = target[None,:,:,:]
+        input = input[None,:,:,:].float()
+        target = target[None,:,:,:].float()
 
 
         return input, target
