@@ -68,6 +68,7 @@ class SplitTCIA3DDataset(data.Dataset):
 
         input = torch.from_numpy(input[None,:,:,:]).float()
         target = torch.from_numpy(target[None,:,:,:]).float()
+        print(target.shape)
 
 
         return input, target

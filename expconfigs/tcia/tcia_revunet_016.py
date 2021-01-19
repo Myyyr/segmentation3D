@@ -31,14 +31,15 @@ class ExpConfig():
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
+        self.n_classes = 2 
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
+        self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 2 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
         
-        self.n_classes = 14 
+        
         self.nn_augmentation = False
         self.soft_augmentation = False
         self.do_rotate = False
