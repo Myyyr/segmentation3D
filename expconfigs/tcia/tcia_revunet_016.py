@@ -1,4 +1,4 @@
-tcia# More Parameters (depth) to match with classical UNet number of parameters.
+# More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
 from models.revunet_3D import RevUnet3D
