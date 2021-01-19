@@ -10,6 +10,7 @@ from tqdm import tqdm
 import json
 import os
 import numpy as np
+import torch.nn.functional as F
 
 class AllTrain(Train):
 
@@ -186,7 +187,7 @@ class AllTrain(Train):
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
                 inputs, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = torch.nn.functional(expcf.net(inputs), dim=1)
+                outputs = F.softmax(expcf.net(inputs), dim=1)
                 del inputs
                 
                 self.valide_step(expcf, outputs, labels, dice)
