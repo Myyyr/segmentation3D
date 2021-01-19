@@ -5,7 +5,7 @@ from models.revunet_3D import RevUnet3D
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from .pancreasCTDataset import *
+from pancreasCTDataset import *
 from torch.utils.data import DataLoader
 
 def count_parameters(model): 
