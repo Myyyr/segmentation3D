@@ -62,16 +62,10 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         n_classes = self.n_classes
 
 
-        if 1 == 1:
+        if 1 == 0:
             labels = self._toEvaluationOneHot(labels)
-            if self.look_small:
-                smalllabels = self._toEvaluationOneHot(smalllabels)
-
-
             if self.hasMasks: 
                 labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
-                if self.look_small:
-                    smalllabels = np.transpose(smalllabels, (3, 0, 1, 2))  # bring into NCWH format
 
         # to tensor
         #image = image[:, 0:32, 0:32, 0:32]

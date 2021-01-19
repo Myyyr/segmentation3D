@@ -7,6 +7,7 @@ import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
 from multiatlasDataset import *
 from torch.utils.data import DataLoader
+from utils.metrics import SoftDiceLoss
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -17,7 +18,7 @@ class ExpConfig():
         # ID and Name
         self.experiment_name = "atlas_revunet_3D_016"
         self.id = 20
-        self.debug = True
+        self.debug = False
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
@@ -55,9 +56,11 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 2000
-        def loss(outputs, labels):
-            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
-        self.loss = loss
+        # def loss(outputs, labels):
+        #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
+        # self.loss = loss
+        self.loss =  SoftDiceLoss(self.n_classes)
+
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
