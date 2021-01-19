@@ -1,7 +1,7 @@
 # More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
-from models.revunet_3D import RevUnet3D
+from models.unet_3D import unet_3D
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
@@ -29,13 +29,13 @@ class ExpConfig():
         self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_80_80_32_res_0.16.hdf5"
         
         # GPU
-        self.gpu = '2'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
+        self.net = unet_3D(self.channels, n_classes=14, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
