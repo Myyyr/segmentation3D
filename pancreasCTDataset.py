@@ -68,7 +68,7 @@ class SplitTCIA3DDataset(data.Dataset):
 
         target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:,:]).float()
-        target = torch.from_numpy(target[None,:,:,:]).float()
+        target = torch.from_numpy(target[None,:,:,:,:]).float()
          
 
         
@@ -83,7 +83,7 @@ class SplitTCIA3DDataset(data.Dataset):
         shape = labels.shape
         out = np.zeros([2, shape[0], shape[1], shape[2]], dtype=np.float32)
         for i in range(2):
-            out[i, :,:,:] = (labels == i)
+            out[i, ...] = (labels == i)
         return out
 
 
