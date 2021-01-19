@@ -13,7 +13,7 @@ import torchsample.transforms as ts
 import torch
 
 def shape2str(s):
-    return str(s[0])+'_'+str(s[1])+'_'str(s[2])
+    return str(s[0])+'_'+str(s[1])+'_'+str(s[2])
 
 
 class SplitTCIA3DDataset(data.Dataset):
