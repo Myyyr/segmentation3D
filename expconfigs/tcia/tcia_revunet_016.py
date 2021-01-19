@@ -80,8 +80,8 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, generate_splits('train'), im_dim=self.im_dim )
-        validDataset = SplitTCIA3DDataset(self.datapath, self.split, generate_splits('test'), im_dim=self.im_dim )
+        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.im_dim )
+        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim )
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 
