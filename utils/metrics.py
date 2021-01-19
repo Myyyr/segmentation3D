@@ -168,6 +168,9 @@ class SoftDiceLoss(nn.Module):
         print('target before :', target.shape)
         target = self.one_hot_encoder(target).contiguous().view(batch_size, self.n_classes, -1)
         print('target after  :', target.shape)
+        print('stats | mean(pred) :', input.mean().item())
+        print('stats | min(targe) :', target.min().item())
+        print('stats | max(targe) :', target.max().item())
 
         inter = torch.sum(input * target, 2) + smooth
         union = torch.sum(input, 2) + torch.sum(target, 2) + smooth
