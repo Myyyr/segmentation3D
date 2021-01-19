@@ -132,7 +132,7 @@ class RevUnet3D(nn.Module):
 
         x = self.lastConv(x)
 
-        x = F.softmax(x, dim=1)
+        # x = F.softmax(x, dim=1)
         return x
 
     @staticmethod
