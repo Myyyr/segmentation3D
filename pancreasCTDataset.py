@@ -29,9 +29,9 @@ class SplitTCIA3DDataset(data.Dataset):
         for i in data_splits:
             # list_dir.append(join(root_dir, i))
 
-            image_dir = join(root_dir, self.im_dim, i, 'image')
+            image_dir = join(root_dir, i, 'image')
             # print("\n\n\n", image_dir,"\n\n\n")
-            target_dir = join(root_dir, self.im_dim, i, 'label')
+            target_dir = join(root_dir, i, 'label')
 
 
             self.image_filenames  += [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
