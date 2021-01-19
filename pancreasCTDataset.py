@@ -66,12 +66,26 @@ class SplitTCIA3DDataset(data.Dataset):
         if self.transform:
             input, target = self.transform(input, target )
 
+        target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:,:]).float()
         target = torch.from_numpy(target[None,:,:,:]).float()
+         
+
+        
+
         print(target.shape)
 
 
         return input, target
+
+
+    def _toEvaluationOneHot(self, labels):
+        shape = labels.shape
+        out = np.zeros([2, shape[0], shape[1], shape[2]], dtype=np.float32)
+        for i in range(2):
+            out[i, :,:,:] = (labels == i)
+        return out
+
 
     def __len__(self):
         return len(self.image_filenames)
