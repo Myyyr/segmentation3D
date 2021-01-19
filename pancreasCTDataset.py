@@ -66,8 +66,8 @@ class SplitTCIA3DDataset(data.Dataset):
         if self.transform:
             input, target = self.transform(input, target )
 
-        input = input[None,:,:,:].float()
-        target = target[None,:,:,:].float()
+        input = torch.from_numy(input[None,:,:,:]).float()
+        target = torch.from_numy(target[None,:,:,:]).float()
 
 
         return input, target
