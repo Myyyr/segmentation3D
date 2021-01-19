@@ -55,7 +55,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 2000
+        self.epoch = 300
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
         # self.loss = loss
