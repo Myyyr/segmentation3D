@@ -112,7 +112,7 @@ class unet_3D(nn.Module):
         # print("||del maxpool|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||del maxpool|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
 
-        final = F.softmax(self.final(up1), dim=1)
+        final = self.final(up1)
         del up1
         # print("||final|| memory :",convert_bytes(torch.cuda.max_memory_allocated()))
         # print("||final|| cur memory :", convert_bytes(torch.cuda.memory_allocated()))
