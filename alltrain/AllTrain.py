@@ -204,6 +204,7 @@ class AllTrain(Train):
             self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
             self.save_dict['training_time'] =  time.time() - self.startingTime
 
+            print(self.save_dict)
 
         self.save_results()
 
