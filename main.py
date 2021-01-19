@@ -135,7 +135,7 @@ def main(config):
 		train.train()
 
 		return 0
-	
+	print("expconfigs."+config)
 	cfg = importlib.import_module("expconfigs."+config)
 	excfg = cfg.ExpConfig()
 
