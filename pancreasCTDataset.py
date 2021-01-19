@@ -64,10 +64,10 @@ class SplitTCIA3DDataset(data.Dataset):
 
         #check_exceptions(input, target)
         if self.transform:
-            input, _ = self.transform(input, np.ones(input.shape) )
-            _, target = self.transform(np.ones(target.shape), target)
+            input, target = self.transform(input, target )
 
-
+        input = input[:,None,:,:,:]
+        target = target[:,None,:,:,:]
 
 
         return input, target
