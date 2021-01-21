@@ -160,7 +160,7 @@ class SoftDiceLoss(nn.Module):
     def forward(self, input, target):
         smooth = 0.01
         batch_size = input.size(0)
-        print("shapes, input : {} , target : {} ".format(input.shape, target.shape))
+        # print("shapes, input : {} , target : {} ".format(input.shape, target.shape))
 
         input = F.softmax(input, dim=1)
         # print("In Loss Sum 0 :",np.sum(input.cpu().detach().numpy()[:,0,...]))
@@ -198,7 +198,6 @@ class One_Hot(nn.Module):
         X_in = X_in.data.long().view(num_element)
         out = Variable(self.ones.index_select(0, X_in)).view(output_size)
         out = out.permute(0, -1, *range(1, n_dim)).squeeze(dim=2).float()
-        print("     | One hot : {}".format(out.shape))
         return out
     def __repr__(self):
         return self.__class__.__name__ + "({})".format(self.depth)
