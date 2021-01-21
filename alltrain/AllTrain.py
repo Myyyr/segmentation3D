@@ -17,6 +17,7 @@ class AllTrain(Train):
     def __init__(self, expconfig, split = 0):
         super(AllTrain, self).__init__(expconfig)
         self.expconfig = expconfig
+        self.split = split
         self.startingTime = time.time()
 
         self.device = torch.device("cuda")
@@ -36,7 +37,7 @@ class AllTrain(Train):
         self.valDataLoader = self.expconfig.valDataLoader
 
         self.save_dict = {'original':{} ,'small':{}}
-        self.split = split
+        
 
         self.classes = self.expconfig.n_classes
 
