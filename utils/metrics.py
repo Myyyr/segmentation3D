@@ -197,8 +197,9 @@ class One_Hot(nn.Module):
         num_element = X_in.numel()
         X_in = X_in.data.long().view(num_element)
         out = Variable(self.ones.index_select(0, X_in)).view(output_size)
-        return out.permute(0, -1, *range(1, n_dim)).squeeze(dim=2).float()
-
+        out = out.permute(0, -1, *range(1, n_dim)).squeeze(dim=2).float()
+        print("     | One hot : {}".format(out.shape))
+        return out
     def __repr__(self):
         return self.__class__.__name__ + "({})".format(self.depth)
 
