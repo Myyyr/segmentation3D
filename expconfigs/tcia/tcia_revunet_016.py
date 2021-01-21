@@ -78,7 +78,8 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1")
 
         # Other
         self.classes_name = ['background','pancreas']#,'right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
