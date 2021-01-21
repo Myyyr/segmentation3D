@@ -18,7 +18,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.experiment_name = "tcia_revunet_3D_016_split1"
-        self.id = 20
+        self.id = 25
         self.debug = False
 
         # System
@@ -28,7 +28,7 @@ class ExpConfig():
         self.im_dim = (80,80,32)
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '2'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
@@ -53,7 +53,7 @@ class ExpConfig():
         self.do_intensity_shift = False
         self.max_intensity_shift = 0.1
 
-        self.split = 1
+        self.split = 0
 
         # Training
         self.train_original_classes = False
