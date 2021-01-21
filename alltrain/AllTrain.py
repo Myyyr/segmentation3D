@@ -169,7 +169,7 @@ class AllTrain(Train):
         labels = labels.argmax(dim = 1)
         label_masks = []
         print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
-        print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
+        # print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
 
         # print('label :', np.unique(labels.cpu().numpy()))
         # print('outpu :', np.unique(outputs.cpu().numpy()))
@@ -178,7 +178,7 @@ class AllTrain(Train):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
             print(" | mask {}, label_mask {}".format(mask.shape, label_mask.shape))
-            print(" | unique : mask {}, labmask {}".format(np.unique(mask.detach().cpu().numpy(),np.unique(label_mask.detach().cpu().numpy()))))
+            # print(" | unique : mask {}, labmask {}".format(np.unique(mask.detach().cpu().numpy(),np.unique(label_mask.detach().cpu().numpy()))))
 
             dice[i].append(atlasUtils.dice(mask, label_mask))
             del mask, label_mask
