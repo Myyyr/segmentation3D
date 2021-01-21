@@ -64,7 +64,7 @@ class ExpConfig():
 
         self.loss =  SoftDiceLoss(self.n_classes)
 
-        self.batchsize = 1
+        self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
