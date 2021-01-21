@@ -163,13 +163,13 @@ class AllTrain(Train):
         return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
+        # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
         outputs = outputs.argmax(dim = 1)    
         masks = []
         # labels = labels.argmax(dim = 1)
         label_masks = []
-        print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
-        a = 
+        # print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
+        # a = 
         # print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
 
         # print('label :', np.unique(labels.cpu().numpy()))
@@ -178,7 +178,7 @@ class AllTrain(Train):
         for i in range(self.classes):
             mask = atlasUtils.getMask(outputs, i)
             label_mask = atlasUtils.getMask(labels, i)
-            print(" | mask {}, label_mask {}".format(mask.shape, label_mask.shape))
+            # print(" | mask {}, label_mask {}".format(mask.shape, label_mask.shape))
             # print(" | unique : mask {}, labmask {}".format(np.unique(mask.detach().cpu().numpy(),np.unique(label_mask.detach().cpu().numpy()))))
 
             dice[i].append(atlasUtils.dice(mask, label_mask))
