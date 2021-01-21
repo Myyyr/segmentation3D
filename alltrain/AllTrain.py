@@ -165,7 +165,7 @@ class AllTrain(Train):
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
         outputs = outputs.argmax(dim = 1)    
         masks = []
-        # labels = labels.argmax(dim = 1)
+        labels = labels.argmax(dim = 1)
         label_masks = []
 
         # print('label :', np.unique(labels.cpu().numpy()))

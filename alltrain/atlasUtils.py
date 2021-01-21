@@ -17,7 +17,7 @@ def softDice(pred, target, smoothing=1, nonSquared=False):
     return dice.mean()
 
 def dice(pred, target):
-    predBin = (pred > 0.5).float()
+    # predBin = (pred > 0.5).float()
     return softDice(predBin, target, 0, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
@@ -97,7 +97,7 @@ def getHd95(pred, target):
 
 def getMask(labels, i):
     # return (labels == i).float()
-    return (labels == i).half()
+    return (labels == i)*1
 
 # def getTCMask(labels):
 #     return ((labels != 0) * (labels != 2)).float() #We use multiplication as AND
