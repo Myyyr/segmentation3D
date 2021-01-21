@@ -12,13 +12,13 @@ def softDice(pred, target, smoothing=1, nonSquared=False):
     dice = (2 * intersection + smoothing) / (union + smoothing)
 
     #fix nans
-    dice[dice != dice] = dice.new_tensor([1.0])
+    #dice[dice != dice] = dice.new_tensor([1.0])
 
     return dice.mean()
 
 def dice(pred, target):
     # predBin = (pred > 0.5).float()
-    return softDice(pred.float(), target, 0, True).item()
+    return softDice(pred.float(), target, 0.01, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, nonSquared=nonSquared)
