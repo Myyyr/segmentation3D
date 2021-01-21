@@ -166,9 +166,10 @@ class AllTrain(Train):
         print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
         outputs = outputs.argmax(dim = 1)    
         masks = []
-        labels = labels.argmax(dim = 1)
+        # labels = labels.argmax(dim = 1)
         label_masks = []
         print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
+        a = 
         # print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
 
         # print('label :', np.unique(labels.cpu().numpy()))
