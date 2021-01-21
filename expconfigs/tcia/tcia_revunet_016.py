@@ -28,7 +28,7 @@ class ExpConfig():
         self.im_dim = (80,80,32)
         
         # GPU
-        self.gpu = '0'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
