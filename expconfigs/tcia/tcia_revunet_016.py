@@ -53,7 +53,7 @@ class ExpConfig():
         self.do_intensity_shift = False
         self.max_intensity_shift = 0.1
 
-        self.split = 0
+        self.split = 2
 
         # Training
         self.train_original_classes = False
