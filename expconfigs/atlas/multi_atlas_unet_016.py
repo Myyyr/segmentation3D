@@ -17,7 +17,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.experiment_name = "atlas_revunet_3D_016"
-        self.id = 21
+        self.id = 23
         self.debug = False
 
         # System
@@ -29,7 +29,7 @@ class ExpConfig():
         self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_80_80_32_res_0.16.hdf5"
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '2'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
