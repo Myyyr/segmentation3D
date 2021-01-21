@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "tcia_revunet_3D_016_split0"
-        self.id = 25
+        self.experiment_name = "tcia_revunet_small_3D_016_split0"
+        self.id = 31
         self.debug = False
 
         # System
@@ -34,8 +34,8 @@ class ExpConfig():
         # Model
         self.n_classes = 2 
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 2 ,interpolation = None)#(512,512,198))
+        self.channels = [int(x//16) for x in self.channels]
+        self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 1 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
@@ -57,7 +57,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 300
+        self.epoch = 100
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
         # self.loss = loss
@@ -79,7 +79,7 @@ class ExpConfig():
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
-        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1")
+        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 
         # Other
         self.classes_name = ['background','pancreas']#,'right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
