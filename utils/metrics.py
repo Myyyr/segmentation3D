@@ -160,6 +160,7 @@ class SoftDiceLoss(nn.Module):
     def forward(self, input, target):
         smooth = 0.01
         batch_size = input.size(0)
+        print("shapes, input : {} , target : {} ".format(input.shape, target.shape))
 
         input = F.softmax(input, dim=1)
         # print("In Loss Sum 0 :",np.sum(input.cpu().detach().numpy()[:,0,...]))
