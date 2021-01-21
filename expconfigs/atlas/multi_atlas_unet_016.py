@@ -34,7 +34,7 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x//16) for x in self.channels]
+        self.channels = [int(x//8) for x in self.channels]
         self.net = unet_3D(self.channels, n_classes=14, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
@@ -75,8 +75,8 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
-        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
-        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
