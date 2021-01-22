@@ -158,7 +158,7 @@ class SoftDiceLoss(nn.Module):
         self.n_classes = n_classes
 
     def forward(self, input, target):
-        smooth = 0.01
+        smooth = 0.0001
         batch_size = input.size(0)
         # print("shapes, input : {} , target : {} ".format(input.shape, target.shape))
 
