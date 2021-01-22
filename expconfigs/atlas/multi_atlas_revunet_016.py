@@ -34,7 +34,7 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x//16) for x in self.channels]
+        self.channels = [int(x) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
@@ -58,13 +58,13 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 100
-        # def loss(outputs, labels):
-        #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
-        # self.loss = loss
-        self.hot = 0
-        self.loss =  SoftDiceLoss(self.n_classes)
+        def loss(outputs, labels):
+            return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
+        self.loss = loss
+        self.hot = 1
+        # self.loss =  SoftDiceLoss(self.n_classes)
 
-        self.batchsize = 2
+        self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
@@ -72,14 +72,14 @@ class ExpConfig():
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
         self.lr_rate = 1
-        # self.optimizer = optim.SGD(self.net.parameters(),
-        #                             lr=self.lr_rate)
-
         self.optimizer = optim.SGD(self.net.parameters(),
-                                  lr=self.lr_rate,
-                                  momentum=0.9,
-                                  nesterov=True,
-                                  weight_decay=5e-4)
+                                    lr=self.lr_rate)
+
+        # self.optimizer = optim.SGD(self.net.parameters(),
+        #                           lr=self.lr_rate,
+        #                           momentum=0.9,
+        #                           nesterov=True,
+        #                           weight_decay=5e-4)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
