@@ -2,6 +2,7 @@ import medpy.metric.binary as medpyMetrics
 import numpy as np
 import math
 import torch
+import torch.nn.functional as F
 
 def softDice(pred, target, smoothing=1, nonSquared=False):
     intersection = (pred * target).sum(dim=(1, 2, 3))
@@ -28,6 +29,7 @@ def diceLoss(pred, target, nonSquared=False):
 
 def atlasDiceLoss(outputs, labels, nonSquared=False, n_classe = 14):
     #bring outputs into correct shape
+    outputs = F.softmax(outputs, dim=1)
     chunk = list(outputs.chunk(n_classe, dim=1))
     s = chunk[0].shape
     for i in range(n_classe):
