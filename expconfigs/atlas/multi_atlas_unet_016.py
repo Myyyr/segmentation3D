@@ -16,7 +16,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 26
+        self.id = 45
         self.experiment_name = "atlas_unet_3D_016_id{}".format(self.id)
         self.debug = False
 
@@ -57,7 +57,7 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 300
         def loss(outputs, labels):
-            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
+            return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         self.loss = loss
         # self.loss =  SoftDiceLoss(self.n_classes)
         self.hot = 1
