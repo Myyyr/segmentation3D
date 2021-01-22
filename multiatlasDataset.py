@@ -8,7 +8,7 @@ import random
 
 class MultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
-    def __init__(self, expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = 0):
+    def __init__(self, expConfig, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = 0, hot = 0):
         super(MultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
         self.labelPath = expConfig.labelpath
@@ -35,6 +35,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
 
         self.look_small = expConfig.look_small
         self.split = split
+        self.hot = hot
 
 
         self.n_classes = 14
@@ -62,7 +63,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         n_classes = self.n_classes
 
 
-        if 1 == 1:
+        if 1 == self.hot:
             labels = self._toEvaluationOneHot(labels)
             if self.hasMasks: 
                 labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
