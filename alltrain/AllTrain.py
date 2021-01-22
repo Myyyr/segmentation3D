@@ -179,7 +179,7 @@ class AllTrain(Train):
 
         for i in range(self.classes):
             btch_dice = []
-            for b in range(self.expconfig.batchsize):
+            for b in range(labels.shape[0]):
                 mask = atlasUtils.getMask(outputs[b,...][None,...], i)
                 label_mask = atlasUtils.getMask(labels[b,...][None,...], i)
                 btch_dice.append(atlasUtils.dice(mask, label_mask))
