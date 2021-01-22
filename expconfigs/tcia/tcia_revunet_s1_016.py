@@ -40,6 +40,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         self.model_path = './checkpoints/models/80_80_32_d16.pth'
         
+        self.load_model()
         
         self.nn_augmentation = False
         self.soft_augmentation = False
