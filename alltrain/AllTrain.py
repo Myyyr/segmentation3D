@@ -164,13 +164,13 @@ class AllTrain(Train):
         return ret
 
     def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
+        print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
         outputs = outputs.argmax(dim = 1)    
         masks = []
         if labels.shape[1] == self.classes:
             labels = labels.argmax(dim = 1)
         label_masks = []
-        # print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
+        print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
         # a = 
         # print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
 
