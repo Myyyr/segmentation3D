@@ -28,7 +28,7 @@ class ExpConfig():
         self.im_dim = (80,80,32)
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '2'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
@@ -38,7 +38,7 @@ class ExpConfig():
         self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 1 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
-
+        self.model_path = './checkpoints/models/80_80_32_d16.pth'
         
         
         self.nn_augmentation = False
@@ -71,9 +71,14 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
-        self.lr_rate = 5e-3
+        self.lr_rate = 1
         self.optimizer = optim.SGD(self.net.parameters(),
                                     lr=self.lr_rate)
+        self.optimizer = optim.SGD(self.net.parameters(),
+                                  lr=self.lr_rate,
+                                  momentum=0.9,
+                                  nesterov=True,
+                                  weight_decay=5e-4)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
@@ -84,6 +89,8 @@ class ExpConfig():
         # Other
         self.classes_name = ['background','pancreas']#,'right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
         self.look_small = False
+
+
         
     def set_data(self, split = 0):
         # Data
@@ -91,6 +98,12 @@ class ExpConfig():
         validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim )
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
+
+    def load_model(self):
+        if not os.path.exists(self.model_path):
+            torch.save(self.net.state_dict(), self.model_path)
+        else:
+            self.net.load_state_dict(torch.load(self.model_path))
 
     def generate_splits(self, sets, i = 0):
         data_splits = {'train':[], 'test':[]}
