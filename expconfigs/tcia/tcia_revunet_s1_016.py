@@ -41,7 +41,7 @@ class ExpConfig():
         self.model_path = './checkpoints/models/80_80_32_d16.pth'
         
         self.load_model()
-        
+
         self.nn_augmentation = False
         self.soft_augmentation = False
         self.do_rotate = False
@@ -101,6 +101,7 @@ class ExpConfig():
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 
     def load_model(self):
+        print('LOAD MODEL ...')
         if not os.path.exists(self.model_path):
             torch.save(self.net.state_dict(), self.model_path)
         else:
