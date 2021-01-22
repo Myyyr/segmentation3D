@@ -167,7 +167,8 @@ class AllTrain(Train):
         # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
         outputs = outputs.argmax(dim = 1)    
         masks = []
-        # labels = labels.argmax(dim = 1)
+        if labels.shape[1] == self.classes:
+            labels = labels.argmax(dim = 1)
         label_masks = []
         # print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
         # a = 

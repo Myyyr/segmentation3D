@@ -23,14 +23,13 @@ def dice(pred, target):
 def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, nonSquared=nonSquared)
 
+
+
+
 def atlasDiceLoss(outputs, labels, nonSquared=False, n_classe = 14):
     #bring outputs into correct shape
-    n_classe = n_classe
     chunk = list(outputs.chunk(n_classe, dim=1))
-    
     s = chunk[0].shape
-    
-
     for i in range(n_classe):
         chunk[i] = chunk[i].view(s[0], s[2], s[3], s[4])
 
