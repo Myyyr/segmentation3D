@@ -62,7 +62,7 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         n_classes = self.n_classes
 
 
-        if 1 == 0:
+        if 1 == 1:
             labels = self._toEvaluationOneHot(labels)
             if self.hasMasks: 
                 labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
