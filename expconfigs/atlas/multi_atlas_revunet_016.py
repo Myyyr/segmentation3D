@@ -71,7 +71,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
-        self.lr_rate = 5e-3
+        self.lr_rate = 0.01#5e-3
         self.optimizer = optim.SGD(self.net.parameters(),
                                     lr=self.lr_rate)
 
