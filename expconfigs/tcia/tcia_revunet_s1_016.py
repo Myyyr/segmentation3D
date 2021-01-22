@@ -38,7 +38,7 @@ class ExpConfig():
         self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 1 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
-        self.model_path = './checkpoints/models/80_80_32_d16.pth'
+        self.model_path = './checkpoints/models/80_80_32.pth'
         
         self.load_model()
 
@@ -54,7 +54,7 @@ class ExpConfig():
         self.do_intensity_shift = False
         self.max_intensity_shift = 0.1
 
-        self.split = 3
+        self.split = 0
 
         # Training
         self.train_original_classes = False
