@@ -177,12 +177,17 @@ class AllTrain(Train):
         # print('outpu :', np.unique(outputs.cpu().numpy()))
 
         for i in range(self.classes):
-            mask = atlasUtils.getMask(outputs, i)
-            label_mask = atlasUtils.getMask(labels, i)
+            btch_dice = []
+            for b in range(self.batchsize):
+                mask = atlasUtils.getMask(outputs[b,...][None,...], i)
+                label_mask = atlasUtils.getMask(labels[b,...][None,...], i)
+                btch_dice.append(atlasUtils.dice(mask, label_mask))
+
             # print(" | mask {}, label_mask {}".format(mask.shape, label_mask.shape))
             # print(" | unique : mask {}, labmask {}".format(np.unique(mask.detach().cpu().numpy(),np.unique(label_mask.detach().cpu().numpy()))))
 
-            dice[i].append(atlasUtils.dice(mask, label_mask))
+            # dice[i].append(atlasUtils.dice(mask, label_mask))
+            dice[i].append(np.mean(btch_dice))
             del mask, label_mask
         del outputs, labels, label_masks, masks
 
