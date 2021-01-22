@@ -235,6 +235,8 @@ class AllTrain(Train):
 
     def saveToDisk(self, epoch):
 
+        print("SAVE MODEL ...")
+
         #gather things to save
         saveDict = {"net_state_dict": self.expconfig.net.state_dict(),
                     "optimizer_state_dict": self.expconfig.optimizer.state_dict(),
