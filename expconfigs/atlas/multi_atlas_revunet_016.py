@@ -40,7 +40,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
 
         self.model_path = './checkpoints/models/atlas_80_80_32_d16.pth'
-
+        self.load_model()
 
         self.n_classes = 14 
         self.nn_augmentation = False
