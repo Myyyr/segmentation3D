@@ -58,11 +58,11 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 100
-        def loss(outputs, labels):
-            return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
-        self.loss = loss
-        self.hot = 1
-        # self.loss =  SoftDiceLoss(self.n_classes)
+        # def loss(outputs, labels):
+        #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
+        # self.loss = loss
+        self.hot = 0
+        self.loss =  SoftDiceLoss(self.n_classes)
 
         self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),
