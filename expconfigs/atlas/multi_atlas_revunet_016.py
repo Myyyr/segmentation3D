@@ -57,7 +57,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 100
+        self.epoch = 300
         def loss(outputs, labels):
             return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         self.loss = loss
@@ -71,7 +71,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
-        self.lr_rate = 1
+        self.lr_rate = 5e-3
         self.optimizer = optim.SGD(self.net.parameters(),
                                     lr=self.lr_rate)
 
@@ -84,8 +84,8 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
-        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
-        self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
