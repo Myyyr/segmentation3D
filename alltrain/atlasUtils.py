@@ -30,7 +30,7 @@ def diceLoss(pred, target, nonSquared=False):
 def atlasDiceLoss(outputs, labels, nonSquared=False, n_classe = 14):
     #bring outputs into correct shape
     outputs = F.softmax(outputs, dim=1)
-    print(np.unique(outputs.argmax(dim = 1).detach().cpu().numpy()))
+    # print(np.unique(outputs.argmax(dim = 1).detach().cpu().numpy()))
     chunk = list(outputs.chunk(n_classe, dim=1))
     s = chunk[0].shape
     for i in range(n_classe):
