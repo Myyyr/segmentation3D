@@ -56,10 +56,11 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 300
-        # def loss(outputs, labels):
-            # return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
-        # self.loss = loss
-        self.loss =  SoftDiceLoss(self.n_classes)
+        def loss(outputs, labels):
+            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
+        self.loss = loss
+        # self.loss =  SoftDiceLoss(self.n_classes)
+        self.hot = 1
 
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
@@ -84,8 +85,8 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = MultiAtlasDataset(self, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
-        validDataset = MultiAtlasDataset(self, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split)
+        trainDataset = MultiAtlasDataset(self, mode="train", randomCrop=None, hasMasks=True, returnOffsets=False, split = split, hot=self.hot)
+        validDataset = MultiAtlasDataset(self, mode="validation", randomCrop=None, hasMasks=True, returnOffsets=False, split = split, hot=self.hot)
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 

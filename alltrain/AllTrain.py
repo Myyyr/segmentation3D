@@ -214,7 +214,7 @@ class AllTrain(Train):
             meanDices = []
             for i in range(self.classes):
                 meanDices.append(np.mean(dice[i]))
-                print(meanDices)
+                # print(meanDices)
                 self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
             print()
             self.meanDice = np.mean(meanDices)
