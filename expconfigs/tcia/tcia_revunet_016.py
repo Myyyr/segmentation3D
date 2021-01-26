@@ -17,7 +17,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "tcia_revunet_small_3D_016_split2"
+        self.experiment_name = "tcia_revunet_small_3D_016_split3_confune"
         self.id = 32
         self.debug = False
 
@@ -53,16 +53,16 @@ class ExpConfig():
         self.do_intensity_shift = False
         self.max_intensity_shift = 0.1
 
-        self.split = 2
-
+        self.split = 3
+        self.hot = 1
         # Training
         self.train_original_classes = False
         self.epoch = 100
-        # def loss(outputs, labels):
-        #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
-        # self.loss = loss
+        def loss(outputs, labels):
+            return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
+        self.loss = loss
 
-        self.loss =  SoftDiceLoss(self.n_classes)
+        # self.loss =  SoftDiceLoss(self.n_classes)
 
         self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),
@@ -73,7 +73,10 @@ class ExpConfig():
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
         self.lr_rate = 5e-3
         self.optimizer = optim.SGD(self.net.parameters(),
-                                    lr=self.lr_rate)
+                                  lr=self.lr_rate,
+                                  momentum=0.9,
+                                  nesterov=True,
+                                  weight_decay=5e-4)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
@@ -87,8 +90,8 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.im_dim )
-        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim )
+        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.im_dim , hot = self.hot)
+        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim , hot = self.hot)
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 

@@ -17,10 +17,11 @@ def shape2str(s):
 
 
 class SplitTCIA3DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None):
+    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0):
         super(SplitTCIA3DDataset, self).__init__()
         
         self.im_dim = shape2str(im_dim)
+        self.hot = hot
 
         # list_dir = []
 
@@ -66,7 +67,8 @@ class SplitTCIA3DDataset(data.Dataset):
         if self.transform:
             input, target = self.transform(input, target )
 
-        # target = self._toEvaluationOneHot(target)
+        if self.hot == 1:
+            target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:,:]).float()
         target = torch.from_numpy(target).float()
          
