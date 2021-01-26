@@ -22,7 +22,7 @@ def dice(pred, target):
     return softDice(pred.float(), target, 1e-7, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
-    return 1 - softDice(pred, target, nonSquared=nonSquared)
+    return 1 - softDice(pred, target, smoothing=0.0001, nonSquared=nonSquared)
 
 
 
