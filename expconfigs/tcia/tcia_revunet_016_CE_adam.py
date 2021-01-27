@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "tcia_revunet_small_3D_016_split3_CE"
-        self.id = 51
+        self.experiment_name = "tcia_revunet_small_3D_016_split3_CE_adam"
+        self.id = 62
         self.debug = False
 
         # System
