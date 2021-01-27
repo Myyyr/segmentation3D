@@ -34,7 +34,7 @@ class ExpConfig():
         # Model
         self.n_classes = 2 
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x//16) for x in self.channels]
+        self.channels = [int(x) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, self.n_classes, depth = 1 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
@@ -74,10 +74,7 @@ class ExpConfig():
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
         self.lr_rate = 5e-3
         self.optimizer = optim.SGD(self.net.parameters(),
-                                  lr=self.lr_rate,
-                                  momentum=0.9,
-                                  nesterov=True,
-                                  weight_decay=5e-4)
+                                  lr=self.lr_rate)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
