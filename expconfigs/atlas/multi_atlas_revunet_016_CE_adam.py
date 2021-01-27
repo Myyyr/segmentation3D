@@ -16,7 +16,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 63
+        self.id = 65
         self.experiment_name = "atlas_revunet_3D_016_d2_E_adam_id{}".format(self.id)
         self.debug = False
 
@@ -39,7 +39,7 @@ class ExpConfig():
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
 
-        self.model_path = './checkpoints/models/atlas_80_80_32_d1.pth'
+        self.model_path = './checkpoints/models/atlas_80_80_32_d2.pth'
         self.load_model()
 
         self.n_classes = 14 
