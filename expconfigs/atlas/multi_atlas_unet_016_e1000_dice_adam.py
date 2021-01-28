@@ -58,12 +58,12 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 1000
-        # def loss(outputs, labels):
-        #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
-        # self.loss = loss
+        def loss(outputs, labels):
+            return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
+        self.loss = loss
         # self.loss =  SoftDiceLoss(self.n_classes)
-        self.loss = torch.nn.CrossEntropyLoss()
-        self.hot = 0
+        # self.loss = torch.nn.CrossEntropyLoss()
+        self.hot = 1
 
         self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
