@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 71
-        self.experiment_name = "multi_atlas_unet_016_e1000_CE_adam_id{}".format(self.id)
+        self.id = 90
+        self.experiment_name = "multi_atlas_unet_016_e1000_dice_adam_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -30,7 +30,7 @@ class ExpConfig():
         self.datapath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_80_80_32_res_0.16.hdf5"
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
