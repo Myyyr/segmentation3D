@@ -17,7 +17,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 70
-        self.experiment_name = "multi_atlas_revunet_016_d2_e1000_CE_adam_id{}".format(self.id)
+        self.experiment_name = "multi_atlas_revunet_016_d3_e1000_CE_adam_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -35,7 +35,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 2 ,interpolation = None)#(512,512,198))
+        self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
