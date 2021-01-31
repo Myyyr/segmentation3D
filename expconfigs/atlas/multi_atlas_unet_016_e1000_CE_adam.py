@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 71
-        self.experiment_name = "multi_atlas_unet_016_e1000_CE_adam_id{}".format(self.id)
+        self.id = 72
+        self.experiment_name = "multi_atlas_unet_016_e1000_CE_adam_wd6_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -72,7 +72,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         self.lr_rate = 5e-4
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-6)
         
         # self.optimizer = optim.SGD(self.net.parameters(),
         #                             lr=self.lr_rate)
