@@ -36,7 +36,8 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
+        self.n_classes = 2
+        self.net = RevUnet3D(1, self.channels, self.n_classes , depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
@@ -44,9 +45,8 @@ class ExpConfig():
         self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3.pth'
         self.load_model()
         self.split = 0
-        self.n_classes = 14 
+         
         
-        self.n_classes = 14
         max_displacement = 5,5,5
         deg = (0,5,10)
         scales = 0
