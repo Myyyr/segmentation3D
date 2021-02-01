@@ -4,6 +4,7 @@ import h5py
 import numpy as np
 import time
 import random
+import torchio as tio
 # import dataProcessing.augmentation as aug
 
 class MultiAtlasDataset(torch.utils.data.Dataset):
@@ -21,21 +22,12 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         self.returnOffsets = returnOffsets
 
         #augmentation settings
-        self.nnAugmentation = expConfig.nn_augmentation
-        self.softAugmentation = expConfig.soft_augmentation
-        self.doRotate = expConfig.do_rotate
-        self.rotDegrees =  expConfig.rot_degrees
-        self.doScale = expConfig.do_scale
-        self.scaleFactor = expConfig.scale_factor
-        self.doFlip = expConfig.do_flip
-        self.doElasticAug = expConfig.do_elastic_aug
-        self.sigma = expConfig.sigma
-        self.doIntensityShift = expConfig.do_intensity_shift
-        self.maxIntensityShift = expConfig.max_intensity_shift
+        
 
-        self.look_small = expConfig.look_small
         self.split = split
         self.hot = hot
+
+        self.transform = expConfig.transform
 
 
         self.n_classes = 14
@@ -52,24 +44,23 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
         image = self.file["images_" + 'train'][index, ...]
         if self.hasMasks: 
             labels = self.labelFile["masks_" + 'train'][index, ...]
-            # print( 'np.sum(labels)' ,np.sum(labels))
-            # print( 'np.prod(labels.shape)' ,np.prod(labels.shape))
-        if self.look_small: 
-            smalllabels = self.file["masks_" + 'train'][index, ...]
-        else:
-            smalllabels = None
+            
 
         #Prepare data depeinding on soft/hard augmentation scheme
         n_classes = self.n_classes
 
 
+        if self.transform != None and self.mode=="train":
+            sub = tio.Subject(image = tio.ScalarImage(tensor = image[None, :,:,:]), 
+                              labels = tio.LabelMap(tensor = labels[None, :,:,:]))
+            sub = self.transform(sub)
+            image = np.array(sub['image'][0,...])
+            labels = np.array(sub['labels'][0,...])
+
         if 1 == self.hot:
             labels = self._toEvaluationOneHot(labels)
             if self.hasMasks: 
                 labels = np.transpose(labels, (3, 0, 1, 2))  # bring into NCWH format
-
-        # to tensor
-        #image = image[:, 0:32, 0:32, 0:32]
 
         image = torch.from_numpy(image)
         image = image.expand(1,-1,-1,-1)
@@ -79,15 +70,9 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
                 labels = torch.from_numpy(labels).long()
                 
 
-        #get pid
-        # pid = self.file["pids_" + self.mode][index]
 
-
-        # print('labels.sum().item()' ,labels.sum().item())
-        # print('np.prod(labels.shape)', np.prod(labels.shape))
-        if self.hasMasks and self.look_small:
-            return image, labels, smalllabels
-        elif self.hasMasks:
+        
+        if self.hasMasks:
             return image, labels
         else:
             return image
