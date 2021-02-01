@@ -46,7 +46,7 @@ class ExpConfig():
         self.model_path = './checkpoints/models/unet_tcia_160_160_64_d3.pth'
         self.load_model()
 
-        
+        self.split = 0
         max_displacement = 5,5,5
         deg = (0,5,10)
         scales = 0

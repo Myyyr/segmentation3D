@@ -41,7 +41,7 @@ class ExpConfig():
 
         self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3.pth'
         self.load_model()
-
+        self.split = 0
         self.n_classes = 14 
         
         self.n_classes = 14
@@ -57,32 +57,13 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 1000
-        # def loss(outputs, labels):
-        #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
-        # self.loss = loss
+
         self.loss = torch.nn.CrossEntropyLoss()
 
         self.hot = 0
-        # self.loss =  SoftDiceLoss(self.n_classes)
-
         self.batchsize = 1
-        # self.optimizer = optim.Ada(self.net.parameters(),
-        #                       lr= 0.01, #to do
-        #                       momentum=0.9,
-        #                       nesterov=True,
-        #                       weight_decay=1e-5) #todo
-        # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
         self.lr_rate = 5e-5
-        # self.optimizer = optim.SGD(self.net.parameters(),
-        #                             lr=self.lr_rate)
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-6)
-
-
-        # self.optimizer = optim.SGD(self.net.parameters(),
-        #                           lr=self.lr_rate,
-        #                           momentum=0.9,
-        #                           nesterov=True,
-        #                           weight_decay=5e-4)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
