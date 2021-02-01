@@ -64,8 +64,12 @@ class SplitTCIA3DDataset(data.Dataset):
         
 
         #check_exceptions(input, target)
-        if self.transform:
-            input, target = self.transform(input, target )
+        if self.transform != None:
+            sub = tio.Subject(input = tio.ScalarImage(tensor = input[None, :,:,:]), 
+                              target = tio.LabelMap(tensor = target[None, :,:,:]))
+            sub = self.transform(sub)
+            input = np.array(sub['input'])[0,...]
+            target = np.array(sub['target'])[0,...]
 
         if self.hot == 1:
             target = self._toEvaluationOneHot(target)
