@@ -42,7 +42,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        
+        self.n_classes = 14
         max_displacement = 5,5,5
         deg = (0,5,10)
         scales = 0
