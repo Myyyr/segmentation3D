@@ -54,8 +54,8 @@ class MultiAtlasDataset(torch.utils.data.Dataset):
             sub = tio.Subject(image = tio.ScalarImage(tensor = image[None, :,:,:]), 
                               labels = tio.LabelMap(tensor = labels[None, :,:,:]))
             sub = self.transform(sub)
-            image = np.array(sub['image'][0,...])
-            labels = np.array(sub['labels'][0,...])
+            image = np.array(sub['image'])[0,...]
+            labels = np.array(sub['labels'])[0,...]
 
         if 1 == self.hot:
             labels = self._toEvaluationOneHot(labels)
