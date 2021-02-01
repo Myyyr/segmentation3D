@@ -104,4 +104,4 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 
 if __name__ == '__main__':
-	main("/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/TCIA_torch/", "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/80_80_32", 6, (80,80,32))
+	main("/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/TCIA_torch/", "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/160_160_64", 6, (160,160,64))
