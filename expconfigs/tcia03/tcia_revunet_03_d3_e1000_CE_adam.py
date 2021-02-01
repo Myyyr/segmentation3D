@@ -92,7 +92,8 @@ class ExpConfig():
         data_splits['test'] = [all_splits[self.split]]
         data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
 
-
+        return data_splits[sets]
+        
     def load_model(self):
         print('LOAD MODEL ...')
         if not os.path.exists(self.model_path):

@@ -115,6 +115,9 @@ class ExpConfig():
         data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
 
         return data_splits[sets]
+
+
+        
     def net_stats(self):
         s = 0
         for p in self.net.parameters():
