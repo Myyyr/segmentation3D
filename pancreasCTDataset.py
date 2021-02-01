@@ -11,6 +11,8 @@ import skimage.transform
 import torchsample.transforms as ts
 
 import torch
+import torchio as tio
+
 
 def shape2str(s):
     return str(s[0])+'_'+str(s[1])+'_'+str(s[2])
