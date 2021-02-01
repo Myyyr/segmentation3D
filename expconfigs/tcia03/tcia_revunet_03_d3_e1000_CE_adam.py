@@ -26,6 +26,8 @@ class ExpConfig():
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
         self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/PANCREAS_MULTI_RES/160_160_64/"
         self.datapath = self.labelpath
+        self.im_dim = (160,160,64)
+
         
         # GPU
         self.gpu = '0'
