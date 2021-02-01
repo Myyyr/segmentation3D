@@ -24,7 +24,7 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/PANCREAS_MULTI_RES/160_160_64/"
+        self.labelpath = "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/160_160_64/"
         self.datapath = self.labelpath
         self.im_dim = (160,160,64)
 
@@ -93,7 +93,7 @@ class ExpConfig():
         data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
 
         return data_splits[sets]
-        
+
     def load_model(self):
         print('LOAD MODEL ...')
         if not os.path.exists(self.model_path):
