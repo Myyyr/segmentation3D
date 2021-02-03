@@ -64,8 +64,8 @@ class ExpConfig():
 
         self.hot = 0
         self.batchsize = 1
-        self.lr_rate = 5e-5
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-6)
+        self.lr_rate = 1e-2 #5e-5
+        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
