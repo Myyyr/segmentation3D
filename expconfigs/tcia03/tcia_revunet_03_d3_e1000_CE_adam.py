@@ -18,7 +18,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 200
-        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd6_da_id{}".format(self.id)
+        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd6_da_f16_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -42,7 +42,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3.pth'
+        self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3_f16.pth'
         self.load_model()
         self.split = 0
          

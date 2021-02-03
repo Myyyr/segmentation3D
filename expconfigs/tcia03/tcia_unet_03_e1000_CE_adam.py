@@ -18,7 +18,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 201
-        self.experiment_name = "tcia_unet_03_e1000_CE_adam_wd6_da_id_f16{}".format(self.id)
+        self.experiment_name = "tcia_unet_03_e1000_CE_adam_wd6_da_f16_id{}".format(self.id)
         self.debug = False
 
         # System
