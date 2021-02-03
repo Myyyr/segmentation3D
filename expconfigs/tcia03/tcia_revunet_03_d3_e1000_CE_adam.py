@@ -35,7 +35,7 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x) for x in self.channels]
+        self.channels = [int(x/16) for x in self.channels]
         self.n_classes = 2
         self.net = RevUnet3D(1, self.channels, self.n_classes , depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))

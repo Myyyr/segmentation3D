@@ -18,7 +18,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 201
-        self.experiment_name = "tcia_unet_03_e1000_CE_adam_wd6_da_id{}".format(self.id)
+        self.experiment_name = "tcia_unet_03_e1000_CE_adam_wd6_da_id_f16{}".format(self.id)
         self.debug = False
 
         # System
@@ -38,13 +38,13 @@ class ExpConfig():
         # Model
         self.n_classes = 2
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x) for x in self.channels]
+        self.channels = [int(x/16) for x in self.channels]
         self.net = unet_3D(self.channels, n_classes=self.n_classes, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/unet_tcia_160_160_64_d3.pth'
+        self.model_path = './checkpoints/models/unet_tcia_160_160_64_d3_f16.pth'
         self.load_model()
 
         self.split = 0
