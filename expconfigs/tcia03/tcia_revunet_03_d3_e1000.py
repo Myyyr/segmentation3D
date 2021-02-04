@@ -1,7 +1,7 @@
 # More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
-from models.unet_3D import unet_3D
+from models.revunet_3D import RevUnet3D
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 201
-        self.experiment_name = "tcia_unet_03_e1000_dice_adam_wd6_da_f16_id{}".format(self.id)
+        self.id = 210
+        self.experiment_name = "tcia_revunet_03_d3_e1000_dice_sgd_wd6_da_f16_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -28,27 +28,26 @@ class ExpConfig():
         self.labelpath = "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/160_160_64/"
         self.datapath = self.labelpath
         self.im_dim = (160,160,64)
+
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
-
-
-
         # Model
-        self.n_classes = 2
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x/16) for x in self.channels]
-        self.net = unet_3D(self.channels, n_classes=self.n_classes, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
+        self.n_classes = 2
+        self.net = RevUnet3D(1, self.channels, self.n_classes , depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/unet_tcia_160_160_64_d3_f16.pth'
+        self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3_f16.pth'
         self.load_model()
-
         self.split = 1
+         
+        
         max_displacement = 5,5,5
         deg = (0,5,10)
         scales = 0
@@ -61,17 +60,23 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.epoch = 1000
+
         # self.loss = torch.nn.CrossEntropyLoss()
         self.loss =  SoftDiceLoss(self.n_classes)
+
         self.hot = 0
         self.batchsize = 2
-        self.lr_rate = 1e-2 #5e-4
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
-        
-
+        self.lr_rate = 1e-2 #5e-5
+        # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
+        self.optimizer = optim.SGD(self.net.parameters(),
+                                  lr=self.lr_rate,
+                                  momentum=0.9,
+                                  nesterov=True,
+                                  weight_decay=5e-4)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
-
+        # Scheduler list : [lambdarule_1]
+        # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
         self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
         # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 

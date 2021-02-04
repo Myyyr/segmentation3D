@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 201
-        self.experiment_name = "tcia_unet_03_e1000_dice_adam_wd6_da_f16_id{}".format(self.id)
+        self.id = 211
+        self.experiment_name = "tcia_unet_03_e1000_dice_sgd_wd6_da_f16_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -66,7 +66,12 @@ class ExpConfig():
         self.hot = 0
         self.batchsize = 2
         self.lr_rate = 1e-2 #5e-4
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
+        # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
+        self.optimizer = optim.SGD(self.net.parameters(),
+                                  lr=self.lr_rate,
+                                  momentum=0.9,
+                                  nesterov=True,
+                                  weight_decay=5e-4)
         
 
         self.optimizer.zero_grad()

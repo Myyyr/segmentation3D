@@ -45,7 +45,7 @@ class ExpConfig():
 
         self.model_path = './checkpoints/models/revunet_tcia_160_160_64_d3_f16.pth'
         self.load_model()
-        self.split = 0
+        self.split = 1
          
         
         max_displacement = 5,5,5
