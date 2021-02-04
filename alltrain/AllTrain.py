@@ -251,12 +251,14 @@ class AllTrain(Train):
         #save dict
         basePath = self.expconfig.checkpointsBasePathMod + "{}".format(self.expconfig.id)
         path = basePath + "/mod.pt".format(epoch)
-        with open(os.path.join(basePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
-            json.dump(self.save_dict, f)
+        
 
         if not os.path.exists(basePath):
             os.makedirs(basePath)
         torch.save(saveDict, path)
+
+        with open(os.path.join(basePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
+            json.dump(self.save_dict, f)
 
 
 
