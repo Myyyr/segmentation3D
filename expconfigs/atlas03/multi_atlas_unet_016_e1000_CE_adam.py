@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 111
-        self.experiment_name = "multi_atlas_unet_03_e1000_CE_adam_wd6_da_id{}".format(self.id)
+        self.id = 121
+        self.experiment_name = "multi_atlas_unet_03_e1000_CE_adam_wd6_bs2_da_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -65,7 +65,7 @@ class ExpConfig():
         self.loss = torch.nn.CrossEntropyLoss()
         self.hot = 0
 
-        self.batchsize = 1
+        self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,

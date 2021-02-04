@@ -16,8 +16,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 110
-        self.experiment_name = "multi_atlas_revunet_03_d3_e1000_CE_adam_wd6_da_id{}".format(self.id)
+        self.id = 120
+        self.experiment_name = "multi_atlas_revunet_03_d3_e1000_CE_adam_wd6_bs2_da_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -66,7 +66,7 @@ class ExpConfig():
         self.hot = 0
         # self.loss =  SoftDiceLoss(self.n_classes)
 
-        self.batchsize = 1
+        self.batchsize = 2
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,

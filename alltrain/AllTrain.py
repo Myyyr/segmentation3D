@@ -82,6 +82,7 @@ class AllTrain(Train):
         print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
         self.save_dict['first_batch_memory'] = ""
+        min_loss = 1e10
 
         for epoch in range(expcf.epoch):
             startTime = time.time()
@@ -89,6 +90,7 @@ class AllTrain(Train):
 
 
             total_loss = 0
+            self.save_dict['epoch'] = epoch
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
 
@@ -140,10 +142,10 @@ class AllTrain(Train):
                                                                             self.convert_time(total_time)) )
 
 
-
-
-
-        self.saveToDisk(epoch)
+            TL =total_loss//int(len(self.trainDataLoader)) 
+            if TL < min_loss:
+                min_loss = TL
+                self.saveToDisk(epoch)
 
         self.tb.close()
 
@@ -248,10 +250,14 @@ class AllTrain(Train):
 
         #save dict
         basePath = self.expconfig.checkpointsBasePathMod + "{}".format(self.expconfig.id)
-        path = basePath + "/e_{}.pt".format(epoch)
+        path = basePath + "/mod.pt".format(epoch)
+        with open(os.path.join(basePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
+            json.dump(self.save_dict, f)
+
         if not os.path.exists(basePath):
             os.makedirs(basePath)
         torch.save(saveDict, path)
+
 
 
     def save_results(self):

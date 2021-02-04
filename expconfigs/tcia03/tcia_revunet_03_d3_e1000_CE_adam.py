@@ -18,7 +18,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 200
-        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd6_da_f16_id{}".format(self.id)
+        self.experiment_name = "tcia_revunet_03_d3_e1000_dice_adam_wd6_da_f16_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -60,10 +60,11 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 1000
 
-        self.loss = torch.nn.CrossEntropyLoss()
+        # self.loss = torch.nn.CrossEntropyLoss()
+        self.loss =  SoftDiceLoss(self.n_classes)
 
         self.hot = 0
-        self.batchsize = 1
+        self.batchsize = 2
         self.lr_rate = 1e-2 #5e-5
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-5)
         self.optimizer.zero_grad()
