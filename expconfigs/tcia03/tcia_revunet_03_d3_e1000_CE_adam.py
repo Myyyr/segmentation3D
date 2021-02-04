@@ -9,6 +9,7 @@ from pancreasCTDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchio as tio
+from utils.metrics import SoftDiceLoss
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
