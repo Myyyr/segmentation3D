@@ -17,7 +17,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 120
-        self.experiment_name = "multi_atlas_revunet_03_d3_e1000_CE_adam_wd6_bs2_da_id{}".format(self.id)
+        self.experiment_name = "multi_atlas_revunet_03_d3_e1000_CE_adam_wd0_bs1_da_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -66,7 +66,7 @@ class ExpConfig():
         self.hot = 0
         # self.loss =  SoftDiceLoss(self.n_classes)
 
-        self.batchsize = 2
+        self.batchsize = 1
         # self.optimizer = optim.Ada(self.net.parameters(),
         #                       lr= 0.01, #to do
         #                       momentum=0.9,
@@ -76,7 +76,7 @@ class ExpConfig():
         self.lr_rate = 5e-5
         # self.optimizer = optim.SGD(self.net.parameters(),
         #                             lr=self.lr_rate)
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-6)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
 
 
         # self.optimizer = optim.SGD(self.net.parameters(),
