@@ -61,12 +61,12 @@ class ExpConfig():
         self.train_original_classes = False
         self.epoch = 1000
 
-        # self.loss = torch.nn.CrossEntropyLoss()
-        self.loss =  SoftDiceLoss(self.n_classes)
+        self.loss = torch.nn.CrossEntropyLoss()
+        # self.loss =  SoftDiceLoss(self.n_classes)
 
         self.hot = 0
         self.batchsize = 2
-        self.lr_rate = 1e-2 #5e-5
+        self.lr_rate = 5e-3 # 1e-2 #5e-5
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
