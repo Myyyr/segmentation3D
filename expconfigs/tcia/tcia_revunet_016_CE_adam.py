@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "tcia_revunet_small_3D_016_split3_CE_adam"
-        self.id = 62
+        self.experiment_name = "tcia_revunet_small_3D_016_split3_wd0_CE_adam"
+        self.id = 300
         self.debug = False
 
         # System
@@ -57,7 +57,7 @@ class ExpConfig():
         self.hot = 0
         # Training
         self.train_original_classes = False
-        self.epoch = 100
+        self.epoch = 1000
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, nonSquared=True, n_classe = self.n_classes)
         # self.loss = loss
@@ -75,7 +75,7 @@ class ExpConfig():
         self.lr_rate = 5e-4
         # self.optimizer = optim.SGD(self.net.parameters(),
         #                           lr=self.lr_rate)
-        self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=0)
 
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1

@@ -142,7 +142,7 @@ class AllTrain(Train):
                                                                             self.convert_time(total_time)) )
 
 
-            TL =total_loss//int(len(self.trainDataLoader)) 
+            TL = total_loss
             if TL < min_loss:
                 min_loss = TL
                 self.saveToDisk(epoch)
