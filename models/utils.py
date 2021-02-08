@@ -34,6 +34,13 @@ def get_scheduler(optimizer, opt, lr):
     if opt == "multistep":
     
         scheduler = lr_scheduler.MultiStepLR(optimizer, [250, 500, 750], 0.2) 
+    
+
+    if opt == "constant":
+        def lambda_rule(epoch):
+            #print(epoch)
+            return lr
+        scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
     return scheduler
 
