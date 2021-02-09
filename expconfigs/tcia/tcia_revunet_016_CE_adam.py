@@ -17,8 +17,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.experiment_name = "tcia_revunet_small_3D_016_split3_wd0_CE_adam"
-        self.id = 300
+        self.id = 301
+        self.experiment_name = "tcia_revunet_small_3D_016_split3_wd0_CE_adam_lr5_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -72,7 +72,7 @@ class ExpConfig():
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
         # self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=1e-5)
-        self.lr_rate = 5e-4
+        self.lr_rate = 5e-5
         # self.optimizer = optim.SGD(self.net.parameters(),
         #                           lr=self.lr_rate)
         self.optimizer = optim.Adam(self.net.parameters(), lr = 5e-4, weight_decay=0)
