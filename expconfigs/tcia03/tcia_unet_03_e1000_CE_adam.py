@@ -65,7 +65,7 @@ class ExpConfig():
         # self.loss =  SoftDiceLoss(self.n_classes)
         self.hot = 0
         self.batchsize = 2
-        self.lr_rate = 5e-3
+        self.lr_rate = 5e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         
 
