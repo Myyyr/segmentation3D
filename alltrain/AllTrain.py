@@ -12,6 +12,20 @@ import os
 import numpy as np
 import torch.nn.functional as F
 
+def optimizer_to(optim, device):
+    for param in optim.state.values():
+        # Not sure there are any global tensors in the state dict
+        if isinstance(param, torch.Tensor):
+            param.data = param.data.to(device)
+            if param._grad is not None:
+                param._grad.data = param._grad.data.to(device)
+        elif isinstance(param, dict):
+            for subparam in param.values():
+                if isinstance(subparam, torch.Tensor):
+                    subparam.data = subparam.data.to(device)
+                    if subparam._grad is not None:
+                        subparam._grad.data = subparam._grad.data.to(device)
+
 class AllTrain(Train):
 
     def __init__(self, expconfig, split = 0):
@@ -22,7 +36,8 @@ class AllTrain(Train):
 
         self.device = torch.device("cuda")
         self.expconfig.net = expconfig.net.to(self.device)
-        self.expconfig.net = self.expconfig.net.cuda()
+        # self.expconfig.net = self.expconfig.net.cuda()
+        optimizer_to(self.expconfig.optimizer, device)
 
 
         self.tb = SummaryWriter(comment=expconfig.experiment_name)
