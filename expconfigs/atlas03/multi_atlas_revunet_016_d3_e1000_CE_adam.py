@@ -100,6 +100,7 @@ class ExpConfig():
 
         self.load_model()
         self.optimizer.zero_grad()
+        self.net = net.cuda()
         
     def set_data(self, split = 0):
         # Data
@@ -119,7 +120,7 @@ class ExpConfig():
             a = torch.load(self.model_path)
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
-            # self.optimizer.load_state_dict(a['optimizer_state_dict'])
+            self.optimizer.load_state_dict(a['optimizer_state_dict'])
 
 
     def net_stats(self):
