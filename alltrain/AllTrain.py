@@ -22,6 +22,7 @@ class AllTrain(Train):
 
         self.device = torch.device("cuda")
         self.expconfig.net = expconfig.net.to(self.device)
+        self.expconfig.net = self.expconfig.net.cuda()
 
 
         self.tb = SummaryWriter(comment=expconfig.experiment_name)
