@@ -33,7 +33,7 @@ class ExpConfig():
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
-        self.start_epoch = 985
+        self.start_epoch = 986
         self.epoch = 2000
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
@@ -118,6 +118,7 @@ class ExpConfig():
         else:
             a = torch.load(self.model_path)
             self.net.load_state_dict(a['net_state_dict'])
+            self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
 
 
