@@ -40,7 +40,8 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_atlas_160_160_64_d3.pth'
+        # self.model_path = './checkpoints/models/revunet_atlas_160_160_64_d3.pth'
+        self.model_path = './checkpoints/models/130/mod.pt'
         self.load_model()
 
         self.n_classes = 14 
@@ -57,7 +58,8 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 1000
+        self.start_epoch = 986
+        self.epoch = 2000
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         # self.loss = loss

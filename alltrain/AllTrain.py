@@ -84,7 +84,7 @@ class AllTrain(Train):
         self.save_dict['first_batch_memory'] = ""
         min_loss = 1e10
 
-        for epoch in range(expcf.epoch):
+        for epoch in range(expcf.start_epoch, expcf.epoch):
             startTime = time.time()
             expcf.net.train()
 
