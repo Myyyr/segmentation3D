@@ -101,8 +101,10 @@ class ExpConfig():
         print('LOAD MODEL ...')
         if not os.path.exists(self.model_path):
             torch.save(self.net.state_dict(), self.model_path)
-        else:
+        elif self.start_epoch != 0:
             self.net.load_state_dict(torch.load(self.model_path))
+        else:
+            self.net.load_state_dict(torch.load(self.model_path)['net_state_dict'])
 
     def net_stats(self):
         s = 0
