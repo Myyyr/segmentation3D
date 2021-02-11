@@ -100,7 +100,7 @@ class ExpConfig():
 
         self.load_model()
         self.optimizer.zero_grad()
-        self.net = net.cuda()
+        self.net = self.net.cuda()
         
     def set_data(self, split = 0):
         # Data
