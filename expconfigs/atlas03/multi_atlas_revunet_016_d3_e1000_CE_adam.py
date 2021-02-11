@@ -33,6 +33,8 @@ class ExpConfig():
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
+        self.start_epoch = 985
+        self.epoch = 2000
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
@@ -58,8 +60,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.start_epoch = 985
-        self.epoch = 2000
+        
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         # self.loss = loss
