@@ -30,7 +30,7 @@ class ExpConfig():
         self.im_dim = (160,160,64)
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '2'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
 
@@ -60,7 +60,8 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.epoch = 1000
+        self.start_epoch = 0
+        self.epoch = 300
         self.loss = torch.nn.CrossEntropyLoss()
         # self.loss =  SoftDiceLoss(self.n_classes)
         self.hot = 0
