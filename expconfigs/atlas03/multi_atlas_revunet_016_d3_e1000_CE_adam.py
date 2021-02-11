@@ -44,7 +44,7 @@ class ExpConfig():
 
         # self.model_path = './checkpoints/models/revunet_atlas_160_160_64_d3.pth'
         self.model_path = './checkpoints/models/130/mod.pt'
-        self.load_model()
+        
 
         self.n_classes = 14 
         
@@ -87,7 +87,7 @@ class ExpConfig():
         #                           momentum=0.9,
         #                           nesterov=True,
         #                           weight_decay=5e-4)
-        self.optimizer.zero_grad()
+        
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
@@ -97,6 +97,9 @@ class ExpConfig():
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
         self.look_small = False
+
+        self.load_model()
+        self.optimizer.zero_grad()
         
     def set_data(self, split = 0):
         # Data
