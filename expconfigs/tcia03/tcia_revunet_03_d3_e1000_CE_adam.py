@@ -18,7 +18,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 400
+        self.id = 202
         self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr4_id{}".format(self.id)
         self.debug = False
 
@@ -59,6 +59,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
+        self.start_epoch = 0
         self.epoch = 1000
 
         self.loss = torch.nn.CrossEntropyLoss()
