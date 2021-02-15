@@ -19,7 +19,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 202
-        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr4_id{}".format(self.id)
+        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr3_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -67,7 +67,7 @@ class ExpConfig():
 
         self.hot = 0
         self.batchsize = 2
-        self.lr_rate = 5e-4 # 1e-2 #5e-5
+        self.lr_rate = 5e-3 #5e-4 # 1e-2 #5e-5
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
