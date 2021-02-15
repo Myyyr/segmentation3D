@@ -40,7 +40,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_atlas_256_256_112_d3.pth'
+        self.model_path = './checkpoints/models/revunet_atlas_256_256_112_d3_f2.pth'
         self.load_model()
 
         self.n_classes = 14 
