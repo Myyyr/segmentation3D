@@ -29,7 +29,7 @@ class ExpConfig():
         self.datapath = self.labelpath
         
         # GPU
-        self.gpu = '0'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
@@ -57,6 +57,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
+        self.start_epoch = 0
         self.epoch = 2000
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
