@@ -34,6 +34,10 @@ def get_scheduler(optimizer, opt, lr):
     if opt == "multistep":
     
         scheduler = lr_scheduler.MultiStepLR(optimizer, [250, 500, 750], 0.2) 
+
+    if opt == "multistep1000":
+    
+        scheduler = lr_scheduler.MultiStepLR(optimizer, [1000, 1500], 0.2) 
     
 
     if opt == "constant":
