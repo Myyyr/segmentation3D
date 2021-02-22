@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 510
-        self.experiment_name = "multi_atlas_unet_05_e2000_CE_adam_df1_wd0_bs1_da_lrm_id{}".format(self.id)
+        self.id = 520
+        self.experiment_name = "multi_atlas_unet_05_e2000_CE_adam_df1_wd0_bs1_da_lr3_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -72,7 +72,7 @@ class ExpConfig():
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.lr_rate = 5e-4
+        self.lr_rate = 5e-3
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         
         # self.optimizer = optim.SGD(self.net.parameters(),
@@ -81,7 +81,7 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep1000", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
         # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 
         # Other
