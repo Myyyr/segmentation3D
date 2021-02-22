@@ -18,7 +18,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 203
+        self.id = 204
         self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr5_gr4_id{}".format(self.id)
         self.debug = False
 
@@ -69,12 +69,12 @@ class ExpConfig():
         self.hot = 0
         self.batchsize = 2
         self.lr_rate = 5e-5 #5e-4 # 1e-2 #5e-5
-        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=1e-7)
+        self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
-        self.lr_scheduler = get_scheduler(self.optimizer, "multistep", self.lr_rate)
+        self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
         # self.lr_scheduler = get_scheduler(self.optimizer, "lambdarule_1", self.lr_rate)
 
         # Other
