@@ -38,6 +38,7 @@ class AllTrain(Train):
         self.expconfig.net = expconfig.net.to(self.device)
         # self.expconfig.net = self.expconfig.net.cuda()
         optimizer_to(self.expconfig.optimizer, self.device)
+        torch.cuda.empty_cache()
 
 
         self.tb = SummaryWriter(comment=expconfig.experiment_name)
@@ -121,6 +122,7 @@ class AllTrain(Train):
                 del inputs, labels
                 self.back_step(expcf, loss)
                 del loss
+                # torch.cuda.empty_cache()
 
             if self.save_dict['first_batch_memory'] == "":
                 self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
