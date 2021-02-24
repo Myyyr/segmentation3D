@@ -34,9 +34,9 @@ class AllTrain(Train):
         self.split = split
         self.startingTime = time.time()
         self.device = torch.device("cuda")
-        if self.expconfig.start_epoch == 0:
-            self.expconfig.net = expconfig.net.to(self.device)
-            # optimizer_to(self.expconfig.optimizer, self.device)
+        # if self.expconfig.start_epoch == 0:
+        self.expconfig.net = expconfig.net.to(self.device)
+        # optimizer_to(self.expconfig.optimizer, self.device)
         torch.cuda.empty_cache()
 
 
