@@ -36,8 +36,7 @@ class AllTrain(Train):
 
         self.device = torch.device("cuda")
         self.expconfig.net = expconfig.net.to(self.device)
-        # self.expconfig.net = self.expconfig.net.cuda()
-        optimizer_to(self.expconfig.optimizer, self.device)
+        # optimizer_to(self.expconfig.optimizer, self.device)
         torch.cuda.empty_cache()
 
 
