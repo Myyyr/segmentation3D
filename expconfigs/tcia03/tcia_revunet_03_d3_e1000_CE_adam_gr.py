@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 205
-        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr5_gr8_id{}".format(self.id)
+        self.id = 206
+        self.experiment_name = "tcia_revunet_03_d3_e1000_CE_adam_wd0_da_f1_lr5_gr1_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -38,7 +38,7 @@ class ExpConfig():
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
         self.n_classes = 2
-        self.n_groups = 8
+        self.n_groups = 1
         self.net = RevUnet3D(1, self.channels, self.n_classes , depth = 3 ,interpolation = None, groups = self.n_groups)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
