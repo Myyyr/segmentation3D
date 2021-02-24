@@ -47,7 +47,7 @@ class ExpConfig():
         self.model_path = 'checkpoints/models/500/mod.pt'
         self.start_epoch = 980
         self.epoch = 2000
-        self.load_model()
+        
 
         self.n_classes = 14
         max_displacement = 5,5,5
@@ -77,7 +77,7 @@ class ExpConfig():
         #                       weight_decay=1e-5) #todo
         self.lr_rate = 5e-6
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
-        
+        self.load_model()
         # self.optimizer = optim.SGD(self.net.parameters(),
         #                             lr=self.lr_rate)
         self.optimizer.zero_grad()
