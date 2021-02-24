@@ -108,7 +108,7 @@ class ExpConfig():
         elif self.start_epoch == 0:
             self.net.load_state_dict(torch.load(self.model_path))
         else:
-            a = torch.load(self.model_path)
+            a = torch.load(self.model_path, map_location=torch.device('cpu'))
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
