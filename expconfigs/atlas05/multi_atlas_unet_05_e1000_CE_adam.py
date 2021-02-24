@@ -18,7 +18,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 500
+        self.id = 530
         self.experiment_name = "multi_atlas_unet_05_e1000_CE_adam_df1_wd0_bs1_da_id{}".format(self.id)
         self.debug = False
 
@@ -58,7 +58,7 @@ class ExpConfig():
         # Training
         self.train_original_classes = False
         self.start_epoch = 0
-        self.epoch = 1000
+        self.epoch = 2000
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         # self.loss = loss
