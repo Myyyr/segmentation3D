@@ -18,7 +18,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 520
+        self.id = 521
         self.experiment_name = "multi_atlas_unet_05_e2000_CE_adam_df1_wd0_bs1_da_lr4_id{}".format(self.id)
         self.debug = False
 
@@ -37,12 +37,14 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x//2) for x in self.channels]
+        # self.groups = 1
         self.net = unet_3D(self.channels, n_classes=14, is_batchnorm=False, in_channels=1, interpolation = None)#1, self.channels, 12, interpolation = (512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
+        # self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
+        self.model_path = 'checkpoints/models/500/mod.pt'
         self.load_model()
 
         self.n_classes = 14
@@ -57,7 +59,7 @@ class ExpConfig():
 
         # Training
         self.train_original_classes = False
-        self.start_epoch = 0
+        self.start_epoch = 980
         self.epoch = 2000
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
@@ -72,7 +74,7 @@ class ExpConfig():
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.lr_rate = 5e-4
+        self.lr_rate = 5e-6
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         
         # self.optimizer = optim.SGD(self.net.parameters(),
