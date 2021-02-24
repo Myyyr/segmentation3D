@@ -45,6 +45,8 @@ class ExpConfig():
 
         # self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
         self.model_path = 'checkpoints/models/500/mod.pt'
+        self.start_epoch = 980
+        self.epoch = 2000
         self.load_model()
 
         self.n_classes = 14
@@ -58,9 +60,8 @@ class ExpConfig():
 
 
         # Training
-        self.train_original_classes = False
-        self.start_epoch = 980
-        self.epoch = 2000
+        # self.train_original_classes = False
+        
         # def loss(outputs, labels):
         #     return atlasUtils.atlasDiceLoss(outputs, labels, n_classe = self.n_classes)
         # self.loss = loss
