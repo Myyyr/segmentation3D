@@ -110,7 +110,7 @@ class ExpConfig():
         else:
             print('---> Continue trianing at epoch {} ...'.format(self.start_epoch))
             print('memory : {}'.format(torch.cuda.max_memory_allocated()))
-            a = torch.load(self.model_path, map_location=torch.device('cpu'))
+            a = torch.load(self.model_path, map_location=torch.device('cuda'))
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
