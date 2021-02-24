@@ -77,10 +77,7 @@ class ExpConfig():
         #                       weight_decay=1e-5) #todo
         self.lr_rate = 5e-6
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
-        self.load_model()
-        # self.optimizer = optim.SGD(self.net.parameters(),
-        #                             lr=self.lr_rate)
-        self.optimizer.zero_grad()
+        
         self.validate_every_k_epochs = 1
         # Scheduler list : [lambdarule_1]
         # self.lr_scheduler = get_scheduler(self.optimizer, "multistep")
@@ -90,6 +87,9 @@ class ExpConfig():
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
         self.look_small = False
+
+        self.load_model()
+        self.optimizer.zero_grad()
         
     def set_data(self, split = 0):
         # Data
