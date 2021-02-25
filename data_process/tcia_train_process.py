@@ -7,6 +7,18 @@ import torch.nn.functional as F
 import torch
 import torch.nn as nn
 
+
+def normalise_image(image):
+    '''
+    standardize based on nonzero pixels
+    '''
+    m = np.nanmean(np.where(image == 0, np.nan, image), axis=(0, 1, 2)).astype(np.float32)
+    s = np.nanstd(np.where(image == 0, np.nan, image), axis=(0,1,2)).astype(np.float32)
+    normalized = np.divide((image - m), s)
+    image = np.where(image == 0, 0, normalized)
+    return image
+
+
 def file_list(path):
 	return [f for f in os.listdir(path) if os.path.isfile(os.path.join(path, f))]
 
@@ -84,6 +96,7 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 
 			npyimg = load_npy(os.path.join(root_path, split, f))
+			npyimg = normalise_image(npyimg)
 			# change size
 			if split == 'images':
 				npyimg = transform_size(npyimg, size)
