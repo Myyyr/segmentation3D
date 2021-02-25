@@ -96,9 +96,10 @@ def main(root_path, out_dir, n_split = 6, size = None):
 
 
 			npyimg = load_npy(os.path.join(root_path, split, f))
-			npyimg = normalise_image(npyimg)
+			
 			# change size
 			if split == 'images':
+				npyimg = normalise_image(npyimg)
 				npyimg = transform_size(npyimg, size)
 			else:
 				npyimg = rescale_labels(npyimg, size, c = 2)
