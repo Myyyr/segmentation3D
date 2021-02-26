@@ -43,8 +43,8 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        # self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
-        self.model_path = 'checkpoints/models/500/mod.pt'
+        self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
+        # self.model_path = 'checkpoints/models/500/mod.pt'
         self.start_epoch = 0
         self.epoch = 2000
         
