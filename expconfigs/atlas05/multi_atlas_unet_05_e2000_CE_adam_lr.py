@@ -18,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 521
-        self.experiment_name = "multi_atlas_unet_05_e2000_CE_adam_df1_wd0_bs1_da_lr5_6_id{}".format(self.id)
+        self.id = 522
+        self.experiment_name = "multi_atlas_unet_05_e2000_CE_adam_df1_wd0_bs1_da_lr4_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -45,7 +45,7 @@ class ExpConfig():
 
         # self.model_path = './checkpoints/models/unet_atlas_256_256_112_f2.pth'
         self.model_path = 'checkpoints/models/500/mod.pt'
-        self.start_epoch = 980
+        self.start_epoch = 0
         self.epoch = 2000
         
 
@@ -75,7 +75,7 @@ class ExpConfig():
         #                       momentum=0.9,
         #                       nesterov=True,
         #                       weight_decay=1e-5) #todo
-        self.lr_rate = 5e-6
+        self.lr_rate = 5e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         
         self.validate_every_k_epochs = 1
