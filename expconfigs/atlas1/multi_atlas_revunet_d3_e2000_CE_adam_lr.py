@@ -17,7 +17,7 @@ class ExpConfig():
     def __init__(self):
         # ID and Name
         self.id = 700
-        self.experiment_name = "multi_atlas_revunet_1_d3_e2000_CE_adam_wd0_bs1_da_lr5_id{}".format(self.id)
+        self.experiment_name = "multi_atlas_revunet_1_d3_e2000_CE_adam_wd0_bs1_da_lr5_gr1_id{}".format(self.id)
         self.debug = False
 
         # System
@@ -35,12 +35,12 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x//32) for x in self.channels]
-        self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
+        self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None, groups=1)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_atlas_512_512_208_d3_f32.pth'
+        self.model_path = './checkpoints/models/revunet_atlas_512_512_208_d3_f32_gr1.pth'
         self.load_model()
 
         self.n_classes = 14 
