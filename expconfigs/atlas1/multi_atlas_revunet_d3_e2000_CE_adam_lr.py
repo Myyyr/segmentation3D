@@ -25,7 +25,7 @@ class ExpConfig():
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
 #        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_112_res_0.5.hdf5"
+        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_208_res_1.hdf5"
         self.datapath = self.labelpath
         
         # GPU
@@ -40,7 +40,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_atlas_256_256_112_d3_f2.pth'
+        self.model_path = './checkpoints/models/revunet_atlas_512_512_208_d3_f16.pth'
         self.load_model()
 
         self.n_classes = 14 
