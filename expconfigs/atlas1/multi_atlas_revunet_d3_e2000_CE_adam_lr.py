@@ -34,13 +34,13 @@ class ExpConfig():
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
-        self.channels = [int(x//16) for x in self.channels]
+        self.channels = [int(x//32) for x in self.channels]
         self.net = RevUnet3D(1, self.channels, 14, depth = 3 ,interpolation = None)#(512,512,198))
         # self.net = RevUnet3D(1, self.channels, 12, interpolation = (256,256,99))
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/revunet_atlas_512_512_208_d3_f16.pth'
+        self.model_path = './checkpoints/models/revunet_atlas_512_512_208_d3_f32.pth'
         self.load_model()
 
         self.n_classes = 14 
