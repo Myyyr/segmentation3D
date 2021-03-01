@@ -31,14 +31,18 @@ class ResidualInner(nn.Module):
         # self.gn = nn.BatchNorm3d(channels)
         self.groups = groups
         # if self.groups != 1:
-        self.gn = nn.GroupNorm(self.groups, channels)
+        if self.groups != None:
+            self.gn = nn.GroupNorm(self.groups, channels)
         self.conv = nn.Conv3d(channels, channels, 3, padding=1, bias=False)
 
         for m in self.children():
             init_weights(m, init_type='kaiming')
 
     def forward(self, x):
-        return self.gn(F.leaky_relu(self.conv(x), inplace=True))
+        if self.groups != None:
+            return self.gn(F.leaky_relu(self.conv(x), inplace=True))
+        else:
+            return F.leaky_relu(self.conv(x), inplace=True)
 
 
 # class ResidualInner(nn.Module):
