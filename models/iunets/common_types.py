@@ -1,5 +1,5 @@
 from typing import TypeVar, Union, Tuple, Optional
-from torch.nn import Tensor
+from torch import Tensor
 
 # Create some useful type aliases
 
