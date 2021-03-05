@@ -34,12 +34,12 @@ class ExpConfig():
         # Model
         self.archi = [2, 2, 2, 2]
         self.n_classes = 14 
-        self.in_channels = 64
+        self.in_channels = 2
         self.net = iUNet_3D(self.in_channels, self.n_classes, self.archi)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/iunet_atlas_512_512_208_ar2_ic64.pth'
+        self.model_path = './checkpoints/models/iunet_atlas_512_512_208_ar2_ic2.pth'
         self.load_model()
 
        
