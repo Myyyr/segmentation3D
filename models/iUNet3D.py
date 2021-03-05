@@ -2,7 +2,7 @@
 # from models.iunets.layers import create_standard_module
 import torch.nn as nn
 from iunets import iUNet
-class iUNet3D(nn.Module):
+class iUNet_3D(nn.Module):
 	def __init__(self, in_chan, n_classes, architecture):
 		super(iUNet3D,self).__init__()
 		self.first_conv = nn.Conv3d(1,in_chan,1)

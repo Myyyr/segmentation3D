@@ -6,7 +6,7 @@ import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
 from multiatlasDataset import *
 from torch.utils.data import DataLoader
-from models import iUNet3D
+from models import iUNet_3D
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -35,7 +35,7 @@ class ExpConfig():
         self.archi = [2, 2, 2, 2]
         self.n_classes = 14 
         self.in_channels = 64
-        self.net = iUNet3D(self.in_channels, self.n_classes, self.archi)
+        self.net = iUNet_3D(self.in_channels, self.n_classes, self.archi)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
