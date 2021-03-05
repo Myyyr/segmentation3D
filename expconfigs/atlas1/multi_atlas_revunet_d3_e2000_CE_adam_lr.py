@@ -16,7 +16,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 700
+        self.id = 701
         self.experiment_name = "multi_atlas_revunet_1_d3_e2000_CE_adam_wd0_bs1_da_lr5_gr0_id{}".format(self.id)
         self.debug = False
 
@@ -25,7 +25,7 @@ class ExpConfig():
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
 #        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_198_res_1.0_1.0_1.0.hdf5"
         # self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_256_256_99_res_0.5_0.5.hdf5"
-        self.labelpath = "/local/SSD_DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_208_res_1.hdf5"
+        self.labelpath = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas/data_3D_size_512_512_208_res_1.hdf5"
         self.datapath = self.labelpath
         
         # GPU
