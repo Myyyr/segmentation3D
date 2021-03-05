@@ -1,7 +1,7 @@
 # from models.iunets import iUNet
 # from models.iunets.layers import create_standard_module
 import torch.nn as nn
-from iunets import iUNet
+from models.iunets import iUNet
 class iUNet_3D(nn.Module):
 	def __init__(self, in_chan, n_classes, architecture):
 		super(iUNet_3D,self).__init__()

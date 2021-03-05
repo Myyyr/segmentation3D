@@ -3,7 +3,8 @@ from typing import Callable, Union, Iterable, Tuple
 
 import torch
 from torch import nn, Tensor
-from torch.nn.common_types import _size_1_t, _size_2_t, _size_3_t
+# from torch.nn.common_types import _size_1_t, _size_2_t, _size_3_t
+from .common_types import _size_1_t, _size_2_t, _size_3_t
 from torch.nn.modules.utils import _single, _pair, _triple
 import torch.nn.functional as F
 from torch.autograd import Function
