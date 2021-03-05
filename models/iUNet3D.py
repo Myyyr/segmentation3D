@@ -5,7 +5,7 @@ from iunets import iUNet
 class iUNet_3D(nn.Module):
 	def __init__(self, in_chan, n_classes, architecture):
 		super(iUNet_3D,self).__init__()
-		self.first_conv = nn.Conv3d(1,in_chan,1)
+		self.first_conv = nn.Conv3d(1, in_chan, 3, padding=1, bias=False)
 		self.iun = iUNet(in_channels=in_chan,
 					architecture=architecture, 
 					dim=3)
