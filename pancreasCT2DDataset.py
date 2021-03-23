@@ -34,6 +34,7 @@ class SplitTCIA2DDataset(data.Dataset):
                 target_dir = join(root_dir, 'annotations', str(i), str(j))
                 self.image_filenames .append(image_dir)
                 self.target_filenames.append(target_dir)
+            exit(0)
 
 
 
