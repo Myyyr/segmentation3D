@@ -4,7 +4,7 @@ import os
 from models.u_transformers_2D import u_transformers_2D
 from models.utils import get_scheduler
 import torch.optim as optim
-# from 2DpancreasCTDataset import *
+from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
 # import torchio as tio
