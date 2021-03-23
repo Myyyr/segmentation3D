@@ -32,7 +32,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = u_transformers_2D(filters = self.channels, trans_shape = 32, n_classes=2, is_deconv=True, in_channels=1, is_batchnorm=True)
+        self.net = u_transformers_2D(filters = self.channels, trans_shape = (1024,32,32), n_classes=2, is_deconv=True, in_channels=1, is_batchnorm=True)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
