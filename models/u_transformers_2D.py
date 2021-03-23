@@ -34,7 +34,6 @@ class u_transformers_2D(nn.Module):
 
         self.center = UnetConv2(filters[3], filters[4], self.is_batchnorm)
         self.trans = trans(*trans_shape)
-
         # upsampling
         self.up_concat4 = unetUp(filters[4], filters[3], is_batchnorm)
         self.up_concat3 = unetUp(filters[3], filters[2], is_batchnorm)

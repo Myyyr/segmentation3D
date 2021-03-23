@@ -28,8 +28,9 @@ def positionalencoding2d(d_model, height, width):
     return pe
 
 class trans(nn.Module):
-    def __init__(self, d, w, h):
+    def __init__(self, d, w, h, projection = "conv"):
         super(trans, self).__init__()
+
         
         self.n = w*h
         self.w = w
@@ -37,15 +38,23 @@ class trans(nn.Module):
         self.d = d
         
         self.pe = positionalencoding2d(self.d, self.h, self.w)
-        
-        self.wq = nn.Linear(self.n*self.d, self.n*self.d)
-        self.wk = nn.Linear(self.n*self.d, self.n*self.d)
-        self.wv = nn.Linear(self.n*self.d, self.n*self.d)
+        self.projection = projection
+        if self.projection == "linear":
+            self.wq = nn.Linear(self.n*self.d, self.n*self.d)
+            self.wk = nn.Linear(self.n*self.d, self.n*self.d)
+            self.wv = nn.Linear(self.n*self.d, self.n*self.d)
+        else:
+            self.wq = nn.Conv2d(1, 1, (1,1), bias = False)
+            self.wk = nn.Conv2d(1, 1, (1,1), bias = False)
+            self.wv = nn.Conv2d(1, 1, (1,1), bias = False)
         
     def forward(self, x):
         bs = x.shape[0]
         x = x + self.pe.repeat(bs,1,1,1)
-        x = torch.reshape(x, (bs, self.n * self.d))
+        if self.projection == 'linear':
+            x = torch.reshape(x, (bs, self.n * self.d))
+        else:
+            x = torch.reshape(x, (bs, 1, self.n, self.d))
         
         Q = self.wq(x)
         K = self.wk(x)
