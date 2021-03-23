@@ -72,7 +72,7 @@ class SplitTCIA2DDataset(data.Dataset):
             pass
 
         # if self.hot == 1:
-        target = self._toEvaluationOneHot(target)
+        # target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
 
