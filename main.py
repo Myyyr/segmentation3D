@@ -8,8 +8,8 @@ import importlib
 
 def main(config):
 	
-	print("expconfigs."+config)
-	cfg = importlib.import_module("expconfigs."+config)
+	print(config)
+	cfg = importlib.import_module(config)
 	excfg = cfg.ExpConfig()
 
 	train = alltrain.AllTrain(excfg)
