@@ -54,7 +54,7 @@ class ExpConfig():
         self.start_epoch = 0
         self.epoch = 300
         self.loss = torch.nn.CrossEntropyLoss()
-        self.batchsize = 16
+        self.batchsize = 8
         self.lr_rate = 5e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
