@@ -30,8 +30,8 @@ class SplitTCIA2DDataset(data.Dataset):
             for j in listdir(join(root_dir, 'images')):
                 print(i)
                 print(j)
-                image_dir = join(root_dir, 'images', i, j)
-                target_dir = join(root_dir, 'annotations', i, j)
+                image_dir = join(root_dir, 'images', str(i), str(j))
+                target_dir = join(root_dir, 'annotations', str(i), str(j))
                 self.image_filenames .append(image_dir)
                 self.target_filenames.append(target_dir)
 
