@@ -107,28 +107,28 @@ class AllTrain(Train):
             total_loss = 0
             self.save_dict['epoch'] = epoch
 
-            for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
-                pass
-                # expcf.net_stats()
+            # for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
+                
+            #     # expcf.net_stats()
 
-                #load data
-                inputs, labels = data
+            #     #load data
+            #     inputs, labels = data
 
                 
                 
-                loss, total_loss = self.step(expcf, inputs, labels, total_loss)
-                del inputs, labels
-                self.back_step(expcf, loss)
-                del loss
-                # torch.cuda.empty_cache()
+            #     loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+            #     del inputs, labels
+            #     self.back_step(expcf, loss)
+            #     del loss
+            #     # torch.cuda.empty_cache()
 
-            if self.save_dict['first_batch_memory'] == "":
-                self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+            # if self.save_dict['first_batch_memory'] == "":
+            #     self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
 
-            print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
+            # print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
-            epochTime = time.time() - startTime
-            total_time += epochTime
+            # epochTime = time.time() - startTime
+            # total_time += epochTime
             
 
 
