@@ -51,6 +51,7 @@ class ExpConfig():
         self.transform = None
 
         # Training
+        self.start_epoch = 0
         self.epoch = 300
         self.loss = torch.nn.CrossEntropyLoss()
         self.batchsize = 1
