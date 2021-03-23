@@ -48,7 +48,7 @@ class ExpConfig():
         #     tio.RandomElasticDeformation(max_displacement=max_displacement),
         #     tio.RandomAffine(scales=scales, degrees=deg)
         # ])
-
+        self.transform = None
 
         # Training
         self.epoch = 300
