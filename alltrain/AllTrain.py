@@ -40,7 +40,7 @@ class AllTrain(Train):
         torch.cuda.empty_cache()
 
 
-        self.tb = SummaryWriter(comment=expconfig.experiment_name)
+        # self.tb = SummaryWriter(comment=expconfig.experiment_name)
 
         self.bestMeanDice = 0
         self.bestMeanDiceEpoch = 0
@@ -64,7 +64,6 @@ class AllTrain(Train):
         # print('labels.shape :', labels.shape)
         outputs = expcf.net(inputs)
         del inputs
-        print(outputs.shape, labels.shape)
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
         del outputs, labels
@@ -142,14 +141,12 @@ class AllTrain(Train):
                 expcf.lr_scheduler.step()
 
             total_time += validTime
-            self.tb.add_scalar("totalTime", total_time, epoch)
+            # self.tb.add_scalar("totalTime", total_time, epoch)
 
             self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
 
             self.tb.add_scalar("meanDice", self.meanDice, epoch)
-            if expcf.look_small:
-                self.tb.add_scalar("smallmeanDice", self.smallmeanDice, epoch)
-
+            
             if expcf.look_small:
                 print("epoch: {}, meanDice: {}, smallMeanDice: {}".format(epoch, self.meanDice, self.smallmeanDice))
             else:
