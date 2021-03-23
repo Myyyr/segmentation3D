@@ -28,7 +28,7 @@ class SplitTCIA2DDataset(data.Dataset):
 
         for i in data_splits:
             for j in listdir(join(root_dir, 'images')):
-                # print(i, j)
+                print(i, j)
                 # print(j)
                 image_dir = join(root_dir, 'images', str(i), str(j))
                 target_dir = join(root_dir, 'annotations', str(i), str(j))
