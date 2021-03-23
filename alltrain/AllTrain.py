@@ -64,7 +64,7 @@ class AllTrain(Train):
         # print('labels.shape :', labels.shape)
         outputs = expcf.net(inputs)
         del inputs
- 
+        print(outputs.shape, labels.shape)
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
         del outputs, labels
