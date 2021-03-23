@@ -24,6 +24,7 @@ class ExpConfig():
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + self.experiment_name+'/'
         self.datapath = "/local/SSD_DEEPLEARNING/TCIA/"
+        self.split = 0
         
         # GPU
         self.gpu = '1'
