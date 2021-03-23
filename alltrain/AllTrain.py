@@ -108,7 +108,7 @@ class AllTrain(Train):
             self.save_dict['epoch'] = epoch
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
-
+                pass
                 # expcf.net_stats()
 
                 #load data

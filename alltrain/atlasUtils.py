@@ -5,6 +5,7 @@ import torch
 import torch.nn.functional as F
 
 def softDice(pred, target, smoothing=1, nonSquared=False):
+
     intersection = (pred * target).sum(dim=(1, 2, 3))
     if nonSquared:
         union = (pred).sum() + (target).sum()
@@ -17,9 +18,26 @@ def softDice(pred, target, smoothing=1, nonSquared=False):
 
     return dice.mean()
 
+def softDice2D(pred, target, smoothing=1, nonSquared=False):
+
+    intersection = (pred * target).sum(dim=(1, 2))
+    if nonSquared:
+        union = (pred).sum() + (target).sum()
+    else:
+        union = (pred * pred).sum(dim=(1, 2)) + (target * target).sum(dim=(1, 2))
+    dice = (2 * intersection + smoothing) / (union + smoothing)
+
+    #fix nans
+    dice[dice != dice] = dice.new_tensor([1.0])
+
+    return dice.mean()
+
 def dice(pred, target):
     # predBin = (pred > 0.5).float()
-    return softDice(pred.float(), target, 1e-7, True).item()
+    if len(pred.shape) == 4:
+        return softDice(pred.float(), target, 1e-7, True).item()
+    elif len(pred.shape) == 3:
+        return softDice2D(pred.float(), target, 1e-7, True).item()
 
 def diceLoss(pred, target, nonSquared=False):
     return 1 - softDice(pred, target, smoothing=0.0001, nonSquared=nonSquared)
