@@ -58,9 +58,9 @@ class deconv2DBatchNormRelu(nn.Module):
         return outputs
 
 
-class unetConv2(nn.Module):
+class UnetConv2(nn.Module):
     def __init__(self, in_size, out_size, is_batchnorm, n=2, ks=3, stride=1, padding=1):
-        super(unetConv2, self).__init__()
+        super(UnetConv2, self).__init__()
         self.n = n
         self.ks = ks
         self.stride = stride
@@ -214,7 +214,7 @@ class UnetGridGatingSignal3(nn.Module):
 class unetUp(nn.Module):
     def __init__(self, in_size, out_size, is_deconv):
         super(unetUp, self).__init__()
-        self.conv = unetConv2(in_size, out_size, False)
+        self.conv = UnetConv2(in_size, out_size, False)
         if is_deconv:
             self.up = nn.ConvTranspose2d(in_size, out_size, kernel_size=4, stride=2, padding=1)
         else:
@@ -222,7 +222,7 @@ class unetUp(nn.Module):
 
         # initialise the blocks
         for m in self.children():
-            if m.__class__.__name__.find('unetConv2') != -1: continue
+            if m.__class__.__name__.find('UnetConv2') != -1: continue
             init_weights(m, init_type='kaiming')
 
     def forward(self, inputs1, inputs2):
