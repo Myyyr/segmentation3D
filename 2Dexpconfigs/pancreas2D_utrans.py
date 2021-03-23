@@ -80,8 +80,11 @@ class ExpConfig():
         data_splits = {'train':[], 'test':[]}
         all_splits = [splt_1, splt_2, splt_3, splt_4, splt_5]
         
-        data_splits['test'] = [all_splits[self.split]]
-        data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
+        data_splits['test'] = all_splits[self.split]
+        data_splits['train'] = []
+        for k in [i for i in all_splits[:self.split]] + all_splits[self.split+1:]:
+            data_splits['train'] += k
+
 
         return data_splits[sets]
 
