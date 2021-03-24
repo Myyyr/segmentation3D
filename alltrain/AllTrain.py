@@ -147,10 +147,8 @@ class AllTrain(Train):
 
             self.tb.add_scalar("meanDice", self.meanDice, epoch)
             
-            if expcf.look_small:
-                print("epoch: {}, meanDice: {}, smallMeanDice: {}".format(epoch, self.meanDice, self.smallmeanDice))
-            else:
-                print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
+            
+            print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
                                                                             self.meanDice, 
                                                                             self.convert_byte(torch.cuda.max_memory_allocated()), 
                                                                             self.convert_time(total_time)) )
