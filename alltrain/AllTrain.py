@@ -206,7 +206,6 @@ class AllTrain(Train):
 
         with torch.no_grad():
             expcf.net.eval()
-            dice = [[] for i in range(self.classes)]
             for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
                 inputs, labels = data
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
