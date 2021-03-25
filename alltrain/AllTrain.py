@@ -211,7 +211,6 @@ class AllTrain(Train):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = F.softmax(expcf.net(inputs), dim=1)
                 del inputs
-                print(outputs.shape, labels.shape)
                 dice(outputs, labels)
                 del labels, outputs
 

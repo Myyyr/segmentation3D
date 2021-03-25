@@ -51,7 +51,7 @@ class DiceScore():
 		return (2*xy + self.epsilon)/(x + y + self.epsilon)
 
 	def dice_values(self, x,y):
-		# print(x.shape, y.shape)
+		print(x.shape, y.shape)
 		x_sum = x.sum().item()
 		y_sum = y.sum().item()
 		int_sum = (x*y).sum().item()
