@@ -101,31 +101,31 @@ class AllTrain(Train):
         self.save_dict['first_batch_memory'] = ""
         min_loss = 1e10
 
-        # for epoch in range(expcf.start_epoch, expcf.epoch):
-        #     startTime = time.time()
-        #     expcf.net.train()
+        for epoch in range(expcf.start_epoch, expcf.epoch):
+            startTime = time.time()
+            expcf.net.train()
 
 
-        #     total_loss = 0
-        #     self.save_dict['epoch'] = epoch
+            total_loss = 0
+            self.save_dict['epoch'] = epoch
 
-        #     for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
-        #         #load data
-        #         inputs, labels = data
-        #         loss, total_loss = self.step(expcf, inputs, labels, total_loss)
-        #         self.tb.add_scalar("train_loss", loss.item(), epoch*inputs.shape[0] + i)
-        #         del inputs, labels
-        #         self.back_step(expcf, loss)
-        #         del loss
+            # for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
+            #     #load data
+            #     inputs, labels = data
+            #     loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+            #     self.tb.add_scalar("train_loss", loss.item(), epoch*inputs.shape[0] + i)
+            #     del inputs, labels
+            #     self.back_step(expcf, loss)
+            #     del loss
 
 
-        #     if self.save_dict['first_batch_memory'] == "":
-        #         self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+            # if self.save_dict['first_batch_memory'] == "":
+            #     self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
 
-        #     print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
+            # print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
-        #     epochTime = time.time() - startTime
-        #     total_time += epochTime
+            # epochTime = time.time() - startTime
+            # total_time += epochTime
             
 
 
