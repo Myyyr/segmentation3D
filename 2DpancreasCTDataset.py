@@ -73,6 +73,7 @@ class SplitTCIA2DDataset(data.Dataset):
         target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target[None,:,:]).long()
+        print('target', target.shape)
         return input, target
 
 
