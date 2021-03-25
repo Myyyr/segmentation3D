@@ -2,7 +2,7 @@ import torch.nn as nn
 
 class UNetConv2D(nn.Module):
     def __init__(self, in_size, out_size, kernel=(3,3), pad=(1,1), stride=(1,1)):
-        super(UnetConv2D, self).__init__()
+        super(UNetConv2D, self).__init__()
         self.conv1 = nn.Sequential(nn.Conv2d(in_size, out_size, kernel, stride, pad),
                                    nn.BatchNorm2d(out_size),
                                    nn.ReLU(inplace=True),)
@@ -17,7 +17,7 @@ class UNetConv2D(nn.Module):
 
 class UNetConv3D(nn.Module):
     def __init__(self, in_size, out_size, kernel=(3,3,3), pad=(1,1,1), stride=(1,1,1)):
-        super(UnetConv3D, self).__init__()
+        super(UNetConv3D, self).__init__()
         self.conv1 = nn.Sequential(nn.Conv3d(in_size, out_size, kernel, stride, pad),
                                    nn.BatchNorm3d(out_size),
                                    nn.ReLU(inplace=True),)
