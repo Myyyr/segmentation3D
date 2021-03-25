@@ -1,4 +1,5 @@
 import torch.nn as nn
+import torch
 
 class UNetConv2D(nn.Module):
     def __init__(self, in_size, out_size, kernel=(3,3), pad=(1,1), stride=(1,1)):
