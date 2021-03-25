@@ -51,7 +51,7 @@ class DiceScore():
 
 	def dice_values(self, x,y):
 		x_sum = x.sum().item()
-		y_sum = y_sum().item()
+		y_sum = y.sum().item()
 		int_sum = (x*y).sum().item()
 		return x_sum, y_sum, int_sum
 
