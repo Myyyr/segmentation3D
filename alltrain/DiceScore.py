@@ -22,6 +22,7 @@ class DiceScore():
 	
 
 	def __call__(self, output, pred):
+		output = output.argmax(dim = 1)
 		bs = output.shape[0]
 		for c in range(self.n_classes):
 			cout_sum, cpred_sum, cint_sum = self.dice_values(self.get_mask(output, c), self.get_mask(pred, c))
@@ -50,7 +51,7 @@ class DiceScore():
 		return (2*xy + self.epsilon)/(x + y + self.epsilon)
 
 	def dice_values(self, x,y):
-		print(x.shape, y.shape)
+		# print(x.shape, y.shape)
 		x_sum = x.sum().item()
 		y_sum = y.sum().item()
 		int_sum = (x*y).sum().item()
