@@ -36,7 +36,7 @@ class UnetUp2D(nn.Module):
     def __init__(self, in_size, out_size):
         super(UnetUp2D, self).__init__()
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
-        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2), padding=((1,0),(1,0)))
+        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2), padding=(1,0,1,0))
         self.conv1 = UNetConv2D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
