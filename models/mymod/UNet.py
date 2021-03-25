@@ -13,7 +13,7 @@ class UNet(nn.Module):
         self.filters = filters
         self.UNetConv = {'2d':UNetConv2D, '3d':UNetConv3D}[self.dim]
         self.UNetUpLayer = {'2d':UnetUp2D, '3d':UnetUp3D}[self.dim]
-        self.maxpool = {'2d':MaxPool2d, '3d':MaxPool3d}[self.dim]
+        self.maxpool = {'2d':nn.MaxPool2d, '3d':nn.MaxPool3d}[self.dim]
 
         # encoder
         self.conv1 = self.UNetConv(self.in_channels, filters[0])
