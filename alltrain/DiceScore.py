@@ -38,7 +38,7 @@ class DiceScore():
 		self.n_count += bs
 
 	def get_dice_scores(self):
-		return self.all_dices()
+		return self.all_dices
 
 	def get_mean_dice_score(self, exeptions = []):
 		a = []
