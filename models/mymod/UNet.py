@@ -13,19 +13,20 @@ class UNet(nn.Module):
         self.filters = filters
         self.UNetConv = {'2d':UNetConv2D, '3d':UNetConv3D}[self.dim]
         self.UNetUpLayer = {'2d':UnetUp2D, '3d':UnetUp3D}[self.dim]
+        self.maxpool = {'2d':MaxPool2d, '3d':MaxPool3d}[self.dim]
 
         # encoder
         self.conv1 = self.UNetConv(self.in_channels, filters[0])
-        self.maxpool1 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool1 = self.maxpool(kernel_size=2)
 
         self.conv2 = self.UNetConv(filters[0], filters[1])
-        self.maxpool2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool2 = self.maxpool(kernel_size=2)
 
         self.conv3 = self.UNetConv(filters[1], filters[2])
-        self.maxpool3 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool3 = self.maxpool(kernel_size=2)
 
         self.conv4 = self.UNetConv(filters[2], filters[3])
-        self.maxpool4 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool4 = self.maxpool(kernel_size=2)
 
         self.center = self.UNetConv(filters[3], filters[4])
 
