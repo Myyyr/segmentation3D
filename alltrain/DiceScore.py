@@ -14,7 +14,7 @@ class DiceScore():
 		self.all_dices = {}
 		for k in self.classes : 
 			self.accum[k] = {'inter_sum':0, 'pred_sum':0, 'out_sum':0, 'all':0}
-			self.dices[k] = 0
+			self.all_dices[k] = 0
 
 		self.epsilon = epsilon
 		self.mean_dice = 0
