@@ -40,10 +40,7 @@ class UnetUp2D(nn.Module):
         self.conv1 = UNetConv2D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
-        print(inputs1.shape, inputs2.shape)
         outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
-        print(inputs1.shape, outputs2.shape)
-
         return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 

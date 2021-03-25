@@ -14,7 +14,7 @@ class UNet(nn.Module):
         self.UNetConv = {'2d':UNetConv2D, '3d':UNetConv3D}[self.dim]
         self.UNetUpLayer = {'2d':UnetUp2D, '3d':UnetUp3D}[self.dim]
         self.maxpool = {'2d':nn.MaxPool2d, '3d':nn.MaxPool3d}[self.dim]
-
+        self.final_layer = {'2d':nn.Conv2d, '3d':nn.Conv3d}[self.dim]
         # encoder
         self.conv1 = self.UNetConv(self.in_channels, filters[0])
         self.maxpool1 = self.maxpool(kernel_size=2)
@@ -37,7 +37,7 @@ class UNet(nn.Module):
         self.up_concat1 = self.UNetUpLayer(filters[1], filters[0])
 
         # final conv (without any concat)
-        self.final = nn.Conv3d(filters[0], n_classes, 1)
+        self.final = self.final_layer(filters[0], n_classes, 1)
 
 
     def forward(self, X):
