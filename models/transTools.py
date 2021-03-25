@@ -40,7 +40,7 @@ class trans(nn.Module):
         self.pe = positionalencoding2d(self.d, self.h, self.w).cuda()
         self.projection = projection
         if self.projection == "linear":
-            self.wq = nn.Linear(self.n*self.d, self.n*self.d)
+            self.wq = nn.Linear(self.d, self.d)
             self.wk = nn.Linear(self.n*self.d, self.n*self.d)
             self.wv = nn.Linear(self.n*self.d, self.n*self.d)
         else:

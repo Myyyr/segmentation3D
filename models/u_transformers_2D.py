@@ -35,10 +35,10 @@ class u_transformers_2D(nn.Module):
         self.center = UnetConv2(filters[3], filters[4], self.is_batchnorm)
         self.trans = trans(*trans_shape)
         # upsampling
-        self.up_concat4 = unetUp(filters[4], filters[3], is_batchnorm)
-        self.up_concat3 = unetUp(filters[3], filters[2], is_batchnorm)
-        self.up_concat2 = unetUp(filters[2], filters[1], is_batchnorm)
-        self.up_concat1 = unetUp(filters[1], filters[0], is_batchnorm)
+        self.up_concat4 = unetUp(filters[4], filters[3], False)
+        self.up_concat3 = unetUp(filters[3], filters[2], False)
+        self.up_concat2 = unetUp(filters[2], filters[1], False)
+        self.up_concat1 = unetUp(filters[1], filters[0], False)
 
         # final conv (without any concat)
         self.final = nn.Conv2d(filters[0], n_classes, 1)
@@ -71,7 +71,7 @@ class u_transformers_2D(nn.Module):
 
 
 
-        # center = self.center(maxpool4)
+        center = self.center(maxpool4) #gardee ça
         center, q, k, v = self.trans(self.center(maxpool4))
         del q, k ,v
 

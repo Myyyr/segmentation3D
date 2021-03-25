@@ -219,6 +219,7 @@ class unetUp(nn.Module):
             self.up = nn.ConvTranspose2d(in_size, out_size, kernel_size=4, stride=2, padding=1)
         else:
             self.up = nn.UpsamplingBilinear2d(scale_factor=2)
+            # self.conv = conv (2,2)
 
         # initialise the blocks
         for m in self.children():

@@ -12,6 +12,8 @@ import os
 import numpy as np
 import torch.nn.functional as F
 
+import alltrain.DiceScore as dc
+
 def optimizer_to(optim, device):
     for param in optim.state.values():
         # Not sure there are any global tensors in the state dict
@@ -108,19 +110,14 @@ class AllTrain(Train):
             self.save_dict['epoch'] = epoch
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
-
-                # expcf.net_stats()
-
                 #load data
                 inputs, labels = data
-
-                
-                
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+                self.tb.add_scalar("train_loss", loss.item(), epoch*inputs.shape[0] + i)
                 del inputs, labels
                 self.back_step(expcf, loss)
                 del loss
-                # torch.cuda.empty_cache()
+
 
             if self.save_dict['first_batch_memory'] == "":
                 self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
@@ -143,9 +140,10 @@ class AllTrain(Train):
             total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
 
-            self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
-
-            self.tb.add_scalar("meanDice", self.meanDice, epoch)
+            #self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
+            self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
+            for k in self.expconfig.classes_name:
+                self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][self.expconfig.classes_name[k]])
             
             
             print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
@@ -177,39 +175,33 @@ class AllTrain(Train):
             ret += str(int(t//units[k])  )+k
         return ret
 
-    def valide_step(self, expcf, outputs, labels, dice, smalldice = None, smalllabels = None, smalloutputs = None):
-        # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
-        outputs = outputs.argmax(dim = 1)    
-        masks = []
-        if labels.shape[1] == self.classes:
-            labels = labels.argmax(dim = 1)
-        label_masks = []
-        # print("after armax : out {}, lab {}".format(outputs.shape, labels.shape))
-        # a = 
-        # print("unique : out {}, lab {}".format(np.unique(outputs.detach().cpu().numpy(),np.unique(labels.detach().cpu().numpy()))))
 
-        # print('label :', np.unique(labels.cpu().numpy()))
-        # print('outpu :', np.unique(outputs.cpu().numpy()))
+    # # !!! REVOIR -> accumulateur inter / union
+    # def valide_step(self, expcf, outputs, labels, dice):
+    #     # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
+    #     outputs = outputs.argmax(dim = 1)    
+    #     masks = []
+    #     if labels.shape[1] == self.classes:
+    #         labels = labels.argmax(dim = 1)
+    #     label_masks = []
+        
 
-        for i in range(self.classes):
-            btch_dice = []
-            for b in range(labels.shape[0]):
-                mask = atlasUtils.getMask(outputs[b,...][None,...], i)
-                label_mask = atlasUtils.getMask(labels[b,...][None,...], i)
-                btch_dice.append(atlasUtils.dice(mask, label_mask))
+    #     for i in range(self.classes):
+    #         btch_dice = []
+    #         for b in range(labels.shape[0]):
+    #             mask = atlasUtils.getMask(outputs[b,...][None,...], i)
+    #             label_mask = atlasUtils.getMask(labels[b,...][None,...], i)
+    #             btch_dice.append(atlasUtils.dice(mask, label_mask))
 
-            # print(" | mask {}, label_mask {}".format(mask.shape, label_mask.shape))
-            # print(" | unique : mask {}, labmask {}".format(np.unique(mask.detach().cpu().numpy(),np.unique(label_mask.detach().cpu().numpy()))))
-
-            # dice[i].append(atlasUtils.dice(mask, label_mask))
-            dice[i].append(np.mean(btch_dice))
-            del mask, label_mask
-        del outputs, labels, label_masks, masks
+    #         dice[i].append(np.mean(btch_dice))
+    #         del mask, label_mask
+    #     del outputs, labels, label_masks, masks
 
         
     def validate(self, epoch):
         expcf = self.expconfig
         startTime = time.time()
+        dice = dc.DiceScore(self.expconfig.classes_name)
 
 
         with torch.no_grad():
@@ -220,19 +212,13 @@ class AllTrain(Train):
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
                 outputs = F.softmax(expcf.net(inputs), dim=1)
                 del inputs
-                
-                self.valide_step(expcf, outputs, labels, dice)
+                dice(outputs, labels)
                 del labels, outputs
-            # print(dice)
-            # print(len(dice))
-            meanDices = []
+
             for i in range(self.classes):
-                meanDices.append(np.mean(dice[i]))
-                # print(meanDices)
-                self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
-            print()
-            self.meanDice = np.mean(meanDices)
-            self.save_dict['meanDice'] =  self.meanDice 
+                self.save_dict['original'][self.expconfig.classes_name[i]] = dice.get_dice_scores()[self.expconfig.classes_name[i]]
+            
+            self.save_dict['meanDice'] =  dice.get_mean_dice_score(exeptions = ['background'])
 
             self.save_dict['epoch'] = epoch
             self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
@@ -243,6 +229,41 @@ class AllTrain(Train):
         self.save_results()
 
         return time.time() - startTime
+
+    # def validate(self, epoch):
+    #     expcf = self.expconfig
+    #     startTime = time.time()
+
+
+    #     with torch.no_grad():
+    #         expcf.net.eval()
+    #         dice = [[] for i in range(self.classes)]
+    #         for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
+    #             inputs, labels = data
+    #             inputs, labels = inputs.to(self.device), labels.to(self.device)
+    #             outputs = F.softmax(expcf.net(inputs), dim=1)
+    #             del inputs
+                
+    #             self.valide_step(expcf, outputs, labels, dice)
+    #             del labels, outputs
+
+    #         meanDices = []
+    #         for i in range(self.classes):
+    #             meanDices.append(np.mean(dice[i]))
+    #             self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
+            
+    #         self.meanDice = np.mean(meanDices)
+    #         self.save_dict['meanDice'] =  self.meanDice 
+
+    #         self.save_dict['epoch'] = epoch
+    #         self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+    #         self.save_dict['training_time'] =  time.time() - self.startingTime
+
+    #         print(self.save_dict)
+
+    #     self.save_results()
+
+    #     return time.time() - startTime
 
 
 
