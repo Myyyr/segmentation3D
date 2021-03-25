@@ -36,12 +36,12 @@ class UnetUp2D(nn.Module):
     def __init__(self, in_size, out_size):
         super(UnetUp2D, self).__init__()
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
-        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2), padding=(1,0,1,0))
+        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2))
         self.conv1 = UNetConv2D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
         print(inputs1.shape, inputs2.shape)
-        outputs2 = self.conv0(self.up(inputs2))
+        outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
         print(inputs1.shape, outputs2.shape)
 
         return self.conv1(torch.cat([inputs1, outputs2], 1))
