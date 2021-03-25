@@ -30,10 +30,10 @@ class UNet(nn.Module):
         self.center = self.UNetConv(filters[3], filters[4])
 
         # upsampling
-        self.up_concat4 = UNetUpLayer(filters[4], filters[3])
-        self.up_concat3 = UNetUpLayer(filters[3], filters[2])
-        self.up_concat2 = UNetUpLayer(filters[2], filters[1])
-        self.up_concat1 = UNetUpLayer(filters[1], filters[0])
+        self.up_concat4 = self.UNetUpLayer(filters[4], filters[3])
+        self.up_concat3 = self.UNetUpLayer(filters[3], filters[2])
+        self.up_concat2 = self.UNetUpLayer(filters[2], filters[1])
+        self.up_concat1 = self.UNetUpLayer(filters[1], filters[0])
 
         # final conv (without any concat)
         self.final = nn.Conv3d(filters[0], n_classes, 1)
