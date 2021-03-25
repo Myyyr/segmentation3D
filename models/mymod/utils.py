@@ -35,7 +35,7 @@ class UnetUp2D(nn.Module):
     def __init__(self, in_size, out_size):
         super(UnetUp2D, self).__init__()
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
-        self.conv0 = nn.Conv2d(in_size, out_size, kernel=(2,2), pad=(1,1), stride=(1,1))
+        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2), padding=(1,1), stride=(1,1))
         self.conv1 = UNetConv2D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
@@ -47,7 +47,7 @@ class UnetUp3D(nn.Module):
     def __init__(self, in_size, out_size):
         super(UnetUp3D, self).__init__()
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
-        self.conv0 = nn.Conv3d(in_size, out_size, kernel=(2,2,2), pad=(1,1,1), stride=(1,1,1))
+        self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2), padding=(1,1,1), stride=(1,1,1))
         self.conv1 = UNetConv3D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
