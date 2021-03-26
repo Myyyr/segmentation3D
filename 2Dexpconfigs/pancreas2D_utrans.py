@@ -53,7 +53,7 @@ class ExpConfig():
         self.transform = tf.Compose([
                             tf.RandomAffine(degrees = 5,
                                             translate = (5,5),
-                                            scale = (0.95,1.05))])
+                                            scale = (0.95,1))])
 
         # Training
         self.start_epoch = 0
