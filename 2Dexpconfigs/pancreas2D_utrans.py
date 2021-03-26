@@ -53,7 +53,7 @@ class ExpConfig():
         self.transform = tf.Compose([
                             tf.RandomAffine(degrees = 5,
                                             translate = (0.05,0.05),
-                                            scale = (0.95,1.05))])
+                                            scale = (0.95,1.05)),])
 
         # Training
         self.start_epoch = 0
@@ -71,8 +71,8 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform)
-        validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'))
+        trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform, mode='train')
+        validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'), mode = 'valid')
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 

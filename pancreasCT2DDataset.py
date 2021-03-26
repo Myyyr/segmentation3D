@@ -19,7 +19,7 @@ def shape2str(s):
 
 
 class SplitTCIA2DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0):
+    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0, mode = 'train'):
         super(SplitTCIA2DDataset, self).__init__()
         
 
@@ -68,8 +68,8 @@ class SplitTCIA2DDataset(data.Dataset):
         # target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
-        if self.transform != None:
-            input, target = self.transform(input, target)
+        if self.transform != None and mode == 'train':
+            input, target = self.transform({'input':input, 'target':target}).values()
 
         return input, target
 
