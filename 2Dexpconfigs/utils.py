@@ -1,6 +1,7 @@
 import numpy as np
 import torch
 import inspect
+import collections
 
 class EnhancedCompose(object):
     """Composes several transforms together."""
