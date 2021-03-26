@@ -56,7 +56,7 @@ class UNetTransformer(nn.Module):
         maxpool4 = self.maxpool4(conv4)
 
         center = self.center(maxpool4)
-        center, _ = self.transformer(center)
+        center,_,_,_ = self.transformer(center)
 
         up4 = self.up_concat4(conv4, center)
         up3 = self.up_concat3(conv3, up4)
