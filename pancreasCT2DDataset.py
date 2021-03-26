@@ -70,7 +70,7 @@ class SplitTCIA2DDataset(data.Dataset):
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
         if self.transform != None and self.mode == 'train':
-            input, target = self.transform({'input':input, 'target':target}).values()
+            input, target = self.transform([input,target])
 
         return input, target
 
