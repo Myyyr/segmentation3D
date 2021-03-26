@@ -29,7 +29,7 @@ def positionalencoding2d(d_model, height, width):
 
 class Trans2D(nn.Module):
     def __init__(self, d, n_heads = 1):
-        super(Trans, self).__init__()
+        super(Trans2D, self).__init__()
 
         if d%n_heads != 0:
             print("!!! d has to be a multiple of n_heads !!!")
