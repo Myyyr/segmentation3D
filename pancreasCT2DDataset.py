@@ -68,8 +68,7 @@ class SplitTCIA2DDataset(data.Dataset):
 
         # if self.hot == 1:
         # target = self._toEvaluationOneHot(target)
-        input = torch.from_numpy(input[None,:,:]).float()
-        target = torch.from_numpy(target).long()
+        input = input[None,:,:]
         if self.transform != None and self.mode == 'train':
             seed = np.random.randint(2147483647)
             random.seed(seed)
@@ -77,6 +76,8 @@ class SplitTCIA2DDataset(data.Dataset):
             random.seed(seed)
             target = self.transform(target)
 
+        input = torch.from_numpy(input).float()
+        target = torch.from_numpy(target).long()
         return input, target
 
 
