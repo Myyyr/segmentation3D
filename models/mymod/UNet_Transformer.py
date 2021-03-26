@@ -2,41 +2,46 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
+from models.mymod.transTools import Trans2D
+class UNetTransformer(nn.Module):
 
-class UNet(nn.Module):
-
-    def __init__(self, filters, n_classes=2, in_channels=4, dim='2d'):
-        super(unet_3D, self).__init__()
+    def __init__(self, filters, n_classes=2, in_channels=1, n_heads=1, dim='2d'):
+        super(UNetTransformer, self).__init__()
 
         self.in_channels = in_channels
         self.dim = dim
         self.filters = filters
+        self.n_heads = n_heads
         self.UNetConv = {'2d':UNetConv2D, '3d':UNetConv3D}[self.dim]
         self.UNetUpLayer = {'2d':UnetUp2D, '3d':UnetUp3D}[self.dim]
-
+        self.maxpool = {'2d':nn.MaxPool2d, '3d':nn.MaxPool3d}[self.dim]
+        self.final_layer = {'2d':nn.Conv2d, '3d':nn.Conv3d}[self.dim]
+        self.trans_layer = {'2d':Trans2D}[self.dim]
+        
         # encoder
         self.conv1 = self.UNetConv(self.in_channels, filters[0])
-        self.maxpool1 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool1 = self.maxpool(kernel_size=2)
 
         self.conv2 = self.UNetConv(filters[0], filters[1])
-        self.maxpool2 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool2 = self.maxpool(kernel_size=2)
 
         self.conv3 = self.UNetConv(filters[1], filters[2])
-        self.maxpool3 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool3 = self.maxpool(kernel_size=2)
 
         self.conv4 = self.UNetConv(filters[2], filters[3])
-        self.maxpool4 = nn.MaxPool3d(kernel_size=(2, 2, 2))
+        self.maxpool4 = self.maxpool(kernel_size=2)
 
         self.center = self.UNetConv(filters[3], filters[4])
+        self.transformer = self.trans_layer(filters[4],self.n_heads)
 
         # upsampling
-        self.up_concat4 = UNetUpLayer(filters[4], filters[3])
-        self.up_concat3 = UNetUpLayer(filters[3], filters[2])
-        self.up_concat2 = UNetUpLayer(filters[2], filters[1])
-        self.up_concat1 = UNetUpLayer(filters[1], filters[0])
+        self.up_concat4 = self.UNetUpLayer(filters[4], filters[3])
+        self.up_concat3 = self.UNetUpLayer(filters[3], filters[2])
+        self.up_concat2 = self.UNetUpLayer(filters[2], filters[1])
+        self.up_concat1 = self.UNetUpLayer(filters[1], filters[0])
 
         # final conv (without any concat)
-        self.final = nn.Conv3d(filters[0], n_classes, 1)
+        self.final = self.final_layer(filters[0], n_classes, 1)
 
 
     def forward(self, X):
@@ -51,6 +56,8 @@ class UNet(nn.Module):
         maxpool4 = self.maxpool4(conv4)
 
         center = self.center(maxpool4)
+        center, _ = self.transformer(center)
+
         up4 = self.up_concat4(conv4, center)
         up3 = self.up_concat3(conv3, up4)
         up2 = self.up_concat2(conv2, up3)
@@ -79,15 +86,4 @@ def convert_bytes(size):
         size /= 1024.0
 
     return size
-
-
-
-
-
-
-
-
-
-
-
 

@@ -142,8 +142,9 @@ class AllTrain(Train):
 
             #self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
             self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
-            for k in self.expconfig.classes_name:
-                self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)
+            # for k in self.expconfig.classes_name:
+            #     self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)
+            self.tb.add_scalars('ValidClassesDice', self.save_dict['original'], epoch)
             
             
             print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
@@ -218,6 +219,7 @@ class AllTrain(Train):
                 self.save_dict['original'][self.expconfig.classes_name[i]] = dice.get_dice_scores()[self.expconfig.classes_name[i]]
             
             self.save_dict['meanDice'] =  dice.get_mean_dice_score(exeptions = ['background'])
+            self.meanDice = dice.get_mean_dice_score(exeptions = ['background'])
 
             self.save_dict['epoch'] = epoch
             self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))

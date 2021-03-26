@@ -33,7 +33,7 @@ class u_transformers_2D(nn.Module):
         self.maxpool4 = nn.MaxPool2d(kernel_size=(2, 2))
 
         self.center = UnetConv2(filters[3], filters[4], self.is_batchnorm)
-        self.trans = trans(*trans_shape)
+        self.trans = trans(*trans_shape, 2)
         # upsampling
         self.up_concat4 = unetUp(filters[4], filters[3], False)
         self.up_concat3 = unetUp(filters[3], filters[2], False)
@@ -71,7 +71,7 @@ class u_transformers_2D(nn.Module):
 
 
 
-        center = self.center(maxpool4) #gardee ça
+        # center = self.center(maxpool4) #gardee ça
         center, q, k, v = self.trans(self.center(maxpool4))
         del q, k ,v
 

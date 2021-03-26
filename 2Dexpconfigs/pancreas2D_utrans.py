@@ -1,7 +1,7 @@
 # More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
-from models.u_transformers_2D import u_transformers_2D
+from models.mymod.UNet_Transformer import UNetTransformer
 from models.utils import get_scheduler
 import torch.optim as optim
 from pancreasCT2DDataset import *
@@ -33,7 +33,7 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = u_transformers_2D(filters = self.channels, trans_shape = (1024,32,32), n_classes=2, is_deconv=True, in_channels=1, is_batchnorm=True)
+        self.net = UNetTransformer(filters = self.channels, n_classes=2, in_channels=1,n_heads=1, dim='2d')
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
