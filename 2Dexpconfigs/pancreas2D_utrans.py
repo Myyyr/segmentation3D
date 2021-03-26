@@ -54,7 +54,7 @@ class ExpConfig():
         self.transform = tf.Compose([
                             tf.RandomAffine(degrees = 5,
                                             scale = (0.95,1.05)),
-                            tf.functional.pil_to_tensor,
+                            tf.ToTensor(),
                             ])
 
         # Training
