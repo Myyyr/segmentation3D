@@ -8,6 +8,7 @@ from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchvision.transforms as tf
+from utils import EnhancedCompose
 # import torchio as tio
 
 def count_parameters(model): 
@@ -50,7 +51,7 @@ class ExpConfig():
         #     tio.RandomAffine(scales=scales, degrees=deg)
         # ])
         # self.transform = None
-        self.transform = tf.Compose([
+        self.transform = EnhancedCompose([
                             tf.RandomAffine(degrees = 5,
                                             translate = (0.05,0.05),
                                             scale = (0.95,1.05)),])
