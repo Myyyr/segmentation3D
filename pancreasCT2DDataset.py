@@ -69,7 +69,7 @@ class SplitTCIA2DDataset(data.Dataset):
 
         # if self.hot == 1:
         # target = self._toEvaluationOneHot(target)
-        input = Image.fromarray(input[None,:,:])
+        input = Image.fromarray(input)
         target = Image.fromarray(target)
         if self.transform != None and self.mode == 'train':
             seed = np.random.randint(2147483647)
