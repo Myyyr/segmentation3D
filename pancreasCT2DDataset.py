@@ -79,10 +79,10 @@ class SplitTCIA2DDataset(data.Dataset):
             target = self.transform(target)
 
 
-            input = input.float()
+            input = input[None, :, :].float()
             target = target.long()
         else:
-            input = torch.from_numpy(input).float()
+            input = torch.from_numpy(input[None, :, :]).float()
             target = torch.from_numpy(target).long()
         return input, target
 
