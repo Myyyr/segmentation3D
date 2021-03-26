@@ -13,6 +13,7 @@ import torchsample.transforms as ts
 import torch
 import torchio as tio
 
+import random
 
 def shape2str(s):
     return str(s[0])+'_'+str(s[1])+'_'+str(s[2])
@@ -70,7 +71,11 @@ class SplitTCIA2DDataset(data.Dataset):
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
         if self.transform != None and self.mode == 'train':
-            input, target = self.transform([input,target])
+            seed = np.random.randint(2147483647)
+            random.seed(seed)
+            input = self.transform(input)
+            random.seed(seed)
+            target = self.transform(target)
 
         return input, target
 

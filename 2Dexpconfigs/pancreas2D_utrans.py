@@ -51,13 +51,10 @@ class ExpConfig():
         #     tio.RandomAffine(scales=scales, degrees=deg)
         # ])
         # self.transform = None
-        self.transform = EnhancedCompose([
-                            [tf.RandomAffine(degrees = 5,
-                                            translate = (0.05,0.05),
-                                            scale = (0.95,1.05)),
+        self.transform = tf.Compose([
                             tf.RandomAffine(degrees = 5,
                                             translate = (0.05,0.05),
-                                            scale = (0.95,1.05))],
+                                            scale = (0.95,1.05)),
                             ])
 
         # Training
