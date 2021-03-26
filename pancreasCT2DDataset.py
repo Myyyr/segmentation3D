@@ -14,6 +14,7 @@ import torch
 import torchio as tio
 
 import random
+from PIL import Image
 
 def shape2str(s):
     return str(s[0])+'_'+str(s[1])+'_'+str(s[2])
@@ -68,7 +69,8 @@ class SplitTCIA2DDataset(data.Dataset):
 
         # if self.hot == 1:
         # target = self._toEvaluationOneHot(target)
-        input = input[None,:,:]
+        input = Image.fromarray(input[None,:,:])
+        target = Image.fromarray(target)
         if self.transform != None and self.mode == 'train':
             seed = np.random.randint(2147483647)
             random.seed(seed)
@@ -76,8 +78,12 @@ class SplitTCIA2DDataset(data.Dataset):
             random.seed(seed)
             target = self.transform(target)
 
-        input = torch.from_numpy(input).float()
-        target = torch.from_numpy(target).long()
+
+            input = input.float()
+            target = target.long()
+        else:
+            input = torch.from_numpy(input).float()
+            target = torch.from_numpy(target).long()
         return input, target
 
 
