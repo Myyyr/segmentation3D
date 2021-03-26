@@ -8,7 +8,7 @@ from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchvision.transforms as tf
-from utils import EnhancedCompose
+from .utils import EnhancedCompose
 # import torchio as tio
 
 def count_parameters(model): 
