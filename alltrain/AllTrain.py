@@ -113,7 +113,7 @@ class AllTrain(Train):
                 #load data
                 inputs, labels = data
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
-                self.tb.add_scalar("train_loss", loss.item(), epoch*inputs.shape[0] + i)
+                self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
                 del inputs, labels
                 self.back_step(expcf, loss)
                 del loss
