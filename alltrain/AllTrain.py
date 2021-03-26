@@ -143,7 +143,7 @@ class AllTrain(Train):
             #self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
             self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             for k in self.expconfig.classes_name:
-                self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][self.expconfig.classes_name[k]])
+                self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)
             
             
             print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
