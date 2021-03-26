@@ -52,9 +52,13 @@ class ExpConfig():
         # ])
         # self.transform = None
         self.transform = EnhancedCompose([
+                            [tf.RandomAffine(degrees = 5,
+                                            translate = (0.05,0.05),
+                                            scale = (0.95,1.05)),
                             tf.RandomAffine(degrees = 5,
                                             translate = (0.05,0.05),
-                                            scale = (0.95,1.05)),])
+                                            scale = (0.95,1.05))],
+                            ])
 
         # Training
         self.start_epoch = 0
