@@ -25,6 +25,7 @@ class SplitTCIA2DDataset(data.Dataset):
 
         self.image_filenames = []
         self.target_filenames = []
+        self.mode = mode
 
         for i in data_splits:
             for j in listdir(join(root_dir, 'images')):
@@ -68,7 +69,7 @@ class SplitTCIA2DDataset(data.Dataset):
         # target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
-        if self.transform != None and mode == 'train':
+        if self.transform != None and self.mode == 'train':
             input, target = self.transform({'input':input, 'target':target}).values()
 
         return input, target
