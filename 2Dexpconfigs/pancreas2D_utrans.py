@@ -7,6 +7,7 @@ import torch.optim as optim
 from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
+import torchvision.transforms as tf
 # import torchio as tio
 
 def count_parameters(model): 
@@ -48,7 +49,11 @@ class ExpConfig():
         #     tio.RandomElasticDeformation(max_displacement=max_displacement),
         #     tio.RandomAffine(scales=scales, degrees=deg)
         # ])
-        self.transform = None
+        # self.transform = None
+        self.transform = tf.Compose([
+                            tf.RandomAffine(degrees = 5,
+                                            translate = 5,
+                                            scale = (0.95,1.05))])
 
         # Training
         self.start_epoch = 0

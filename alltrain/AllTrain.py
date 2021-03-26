@@ -113,7 +113,7 @@ class AllTrain(Train):
                 #load data
                 inputs, labels = data
                 loss, total_loss = self.step(expcf, inputs, labels, total_loss)
-                self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
+                # self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
                 del inputs, labels
                 self.back_step(expcf, loss)
                 del loss
@@ -140,7 +140,7 @@ class AllTrain(Train):
             total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
 
-            #self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
+            self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
             self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
             #     self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)

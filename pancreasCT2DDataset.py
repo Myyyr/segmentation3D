@@ -62,19 +62,14 @@ class SplitTCIA2DDataset(data.Dataset):
         input = np.load(self.image_filenames[index])
         target = np.load(self.target_filenames[index])
 
-        #check_exceptions(input, target)
-        if self.transform != None:
-            # sub = tio.Subject(input = tio.ScalarImage(tensor = input[None, :,:,:]), 
-            #                   target = tio.LabelMap(tensor = target[None, :,:,:]))
-            # sub = self.transform(sub)
-            # input = np.array(sub['input'])[0,...]
-            # target = np.array(sub['target'])[0,...]
-            pass
+       
 
         # if self.hot == 1:
         # target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:]).float()
         target = torch.from_numpy(target).long()
+        if self.transform != None:
+            input, target = self.transform(input, target)
 
         return input, target
 
