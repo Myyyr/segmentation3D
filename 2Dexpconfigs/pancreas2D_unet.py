@@ -7,6 +7,7 @@ import torch.optim as optim
 from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
+import torchvision.transforms as tf
 # import torchio as tio
 
 def count_parameters(model): 
