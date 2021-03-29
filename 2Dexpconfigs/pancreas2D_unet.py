@@ -16,7 +16,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 1
+        self.id = 2
         self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
         self.debug = False
 
@@ -27,7 +27,7 @@ class ExpConfig():
         self.split = 0
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
@@ -41,25 +41,26 @@ class ExpConfig():
         self.load_model()
 
         self.n_classes = 2
-        # max_displacement = 5,5,5
-        # deg = (0,5,10)
-        # scales = 0
-        # self.transform = tio.Compose([
-        #     tio.RandomElasticDeformation(max_displacement=max_displacement),
-        #     tio.RandomAffine(scales=scales, degrees=deg)
-        # ])
-        self.transform = None
+        
+        self.transform = tf.Compose([
+                            tf.RandomAffine(degrees = 5,
+                                            scale = (0.95,1.05),
+                                            translate = (0.05, 0.05)),
+                            tf.ToTensor(),
+                            ])
+
 
         # Training
         self.start_epoch = 0
         self.epoch = 300
         self.loss = torch.nn.CrossEntropyLoss()
-        self.batchsize = 4
+        self.batchsize = 8
         self.lr_rate = 5e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
-        self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
+        # self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
+        self.lr_scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer, 0.96)
 
         # Other
         self.classes_name = ['background','pancreas']
