@@ -17,7 +17,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 2
+        self.id = 21
         self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
         self.debug = False
 
@@ -56,7 +56,7 @@ class ExpConfig():
         self.epoch = 300
         self.loss = torch.nn.CrossEntropyLoss()
         self.batchsize = 8
-        self.lr_rate = 5e-4
+        self.lr_rate = 1e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
