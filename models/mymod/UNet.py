@@ -2,6 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
+import random as rd
 
 class UNet(nn.Module):
 
@@ -71,6 +72,35 @@ class UNet(nn.Module):
 
         return log_p
 
+
+class Patched3DUNet(nn.Module):
+    def __init__(self, patch_size, filters, n_classes=2, in_channels=1):
+        super(PatchedUNet, self).__init__()
+        self.in_channels = in_channels
+        self.dim = '3d'
+        self.filters = filters
+        # self.patch_size = patch_size
+        self.ps_h, self.ps_w, self.ps_d = patch_size
+        self.n_classes = n_classes
+
+        self.unet = UNet(filters=self.filters, n_classes=self.n_classes, in_channels=self.in_channels, dim=self.dim)
+
+
+
+    def forward(self, inp, mode = 'train'):
+        bs, c, h, w, d = inp.shape
+        if mode == 'train':
+            x = random.randint(0, h-self.ps_h)
+            y = random.randint(0, w-self.ps_w)
+            z = random.randint(0, d-self.ps_d)
+
+            inp = inp[x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
+
+            
+
+            return out, (x,y,z)
+        else:
+            pass
 
 
 def convert_bytes(size):
