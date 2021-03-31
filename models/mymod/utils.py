@@ -48,9 +48,10 @@ class UnetUp3D(nn.Module):
     def __init__(self, in_size, out_size):
         super(UnetUp3D, self).__init__()
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
-        self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2), padding=((1,0),(1,0),(1,0)))
+        self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
         self.conv1 = UNetConv3D(in_size, out_size)
 
     def forward(self, inputs1, inputs2):
-        outputs2 = self.conv0(self.up(inputs2))
+        # outputs2 = self.conv0(self.up(inputs2))
+        outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0)))
         return self.conv1(torch.cat([inputs1, outputs2], 1))

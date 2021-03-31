@@ -44,7 +44,7 @@ class UNetTransformer(nn.Module):
         self.final = self.final_layer(filters[0], n_classes, 1)
 
 
-    def forward(self, X):
+    def forward(self, X, mode=None):
         conv1 = self.conv1(X)
         del X
         maxpool1 = self.maxpool1(conv1)

@@ -75,7 +75,7 @@ class UNet(nn.Module):
 
 class Patched3DUNet(nn.Module):
     def __init__(self, patch_size, filters, n_classes=2, in_channels=1):
-        super(PatchedUNet, self).__init__()
+        super(Patched3DUNet, self).__init__()
         self.in_channels = in_channels
         self.dim = '3d'
         self.filters = filters
@@ -89,42 +89,81 @@ class Patched3DUNet(nn.Module):
 
     def forward(self, inp, mode = 'train'):
         bs, c, h, w, d = inp.shape
-        if mode == 'train':
-            # x = random.randint(0, h-self.ps_h)
-            # y = random.randint(0, w-self.ps_w)
-            # z = random.randint(0, d-self.ps_d)
-
-            # inp = inp[x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
-            # out = self.unet(inp)
-
-            out = self.unet(inp)
-
-            
-            return out
+        # if mode == 'train':
+        if self.training:
+            return self.unet(inp)
         else:
-            nh, nw, nd = int(h//self.ps_h), int(w//self.ps_w), int(d//self.ps_d)
-            out = torch.zeros(bs, 1, h, w, d)
-            count = torch.zeros(bs, 1, h, w, d)
+            IDXpatch = Patch(h,w,d,self.ps_h, self.ps_w, self.ps_d)
+            nh, nw, nd = IDXpatch.nh, IDXpatch.nw, IDXpatch.nd
+            print(nh,nw,nd)
+            out = torch.zeros(bs, self.n_classes, h, w, d)
+            count = torch.zeros(bs, self.n_classes, h, w, d)
             for i in range(nh):
                 for j in range(nw):
                     for k in range(nd):
-                        x,y,z = i*self.ps_h, j*self.ps_w, k*self.ps_d
-
-                        if x > h: 
-                            sup_x = (x, h - self.ps_h)
-                            x = h - self.ps_h
-                        if y > w: 
-                            sup_y = (y, w - self.ps_w)
-                            y = w - self.ps_w
-                        if z > d: 
-                            sup_z = (z, d - self.ps_d)
-                            z = d - self.ps_d
+                        # x,y,z = i*self.ps_h, j*self.ps_w, k*self.ps_d
+                        x,y,z = IDXpatch(i,j,k)
+                        # if x + self.ps_h > h: 
+                        #     sup_x = (x, h - self.ps_h)
+                        #     x = h - self.ps_h
+                        # if y + self.ps_w > w: 
+                        #     sup_y = (y, w - self.ps_w)
+                        #     y = w - self.ps_w
+                        # if z + self.ps_d > d: 
+                        #     sup_z = (z, d - self.ps_d)
+                        #     z = d - self.ps_d
                         count[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)] += 1
                         patch_ijk = inp[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
+                        print(x,y,z,patch_ijk.shape)
                         out_ijk = self.unet(patch_ijk)
-                        out[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)] = out_ijk
+                        out[...,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)] = out_ijk
             out = out/count
-            return out
+            return out, count
+
+class Patch():
+    def __init__(self, h, w, d, ps_h, ps_w, ps_d):
+        self.ps_h = ps_h
+        self.ps_w = ps_w
+        self.ps_d = ps_d
+
+        self.h = h
+        self.w = w
+        self.d = d
+
+        self.nh = int(h//self.ps_h)
+        self.nw = int(w//self.ps_w)
+        self.nd = int(d//self.ps_d)
+
+        if (h%self.ps_h!=0):
+            self.nh += 1
+            s = int((self.ps_h - h%self.ps_h)/self.nh)
+            ms = int((self.ps_h - h%self.ps_h)%self.nh)
+            self.ds_h = [0] + [s* for a in range(1, self.nh-1)] + [0]
+            self.ds_h[self.ds_d]
+        if (w%self.ps_w!=0):
+            self.nw += 1
+            self.ds_w = [0] + [s* for a in range(1, self.nw-1)] + [0]
+            self.ds_h[self.ds_d]
+        if (d%self.ps_d!=0):
+            self.nd += 1
+            self.ds_d = [0] + [s* for a in range(1, self.nd-1)] + [0]
+            self.ds_h[self.ds_d]
+
+    def __call__(self, i,j,k):
+        x,y,z = i*self.ps_h, j*self.ps_w, k*self.ps_d
+
+        if (self.h%self.ps_h!=0):
+            x -= sum(self.ds_h[:(i+1)])
+            # x = (i-1)*self.ps_h + self.h%self.ps_h
+        if (self.w%self.ps_w!=0):
+            y -= sum(self.ds_w[:(j+1)])
+            # y = (j-1)*self.ps_w + self.w%self.ps_w
+        if (self.d%self.ps_d!=0):
+            z -= sum(self.ds_d[:(k+1)])
+            # z = (k-1)*self.ps_d + self.d%self.ps_d
+
+        return (x,y,z)
+        
 
 
 def convert_bytes(size):
