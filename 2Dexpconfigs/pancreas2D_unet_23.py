@@ -17,7 +17,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 22
+        self.id = 23
         self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
         self.debug = False
 
