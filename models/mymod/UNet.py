@@ -41,7 +41,7 @@ class UNet(nn.Module):
         self.final = self.final_layer(filters[0], n_classes, 1)
 
 
-    def forward(self, X):
+    def forward(self, X, mode = None):
         conv1 = self.conv1(X)
         del X
         maxpool1 = self.maxpool1(conv1)
@@ -90,17 +90,41 @@ class Patched3DUNet(nn.Module):
     def forward(self, inp, mode = 'train'):
         bs, c, h, w, d = inp.shape
         if mode == 'train':
-            x = random.randint(0, h-self.ps_h)
-            y = random.randint(0, w-self.ps_w)
-            z = random.randint(0, d-self.ps_d)
+            # x = random.randint(0, h-self.ps_h)
+            # y = random.randint(0, w-self.ps_w)
+            # z = random.randint(0, d-self.ps_d)
 
-            inp = inp[x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
+            # inp = inp[x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
+            # out = self.unet(inp)
+
+            out = self.unet(inp)
 
             
-
-            return out, (x,y,z)
+            return out
         else:
-            pass
+            nh, nw, nd = int(h//self.ps_h), int(w//self.ps_w), int(d//self.ps_d)
+            out = torch.zeros(bs, 1, h, w, d)
+            count = torch.zeros(bs, 1, h, w, d)
+            for i in range(nh):
+                for j in range(nw):
+                    for k in range(nd):
+                        x,y,z = i*self.ps_h, j*self.ps_w, k*self.ps_d
+
+                        if x > h: 
+                            sup_x = (x, h - self.ps_h)
+                            x = h - self.ps_h
+                        if y > w: 
+                            sup_y = (y, w - self.ps_w)
+                            y = w - self.ps_w
+                        if z > d: 
+                            sup_z = (z, d - self.ps_d)
+                            z = d - self.ps_d
+                        count[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)] += 1
+                        patch_ijk = inp[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)]
+                        out_ijk = self.unet(patch_ijk)
+                        out[:,:,x:(x+self.ps_h),y:(y+self.ps_w),z:(z+self.ps_d)] = out_ijk
+            out = out/count
+            return out
 
 
 def convert_bytes(size):
