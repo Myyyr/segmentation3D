@@ -72,7 +72,7 @@ class UNet(nn.Module):
 
         return log_p
 
-
+"""
 class Patched3DUNet(nn.Module):
     def __init__(self, patch_size, filters, n_classes=2, in_channels=1):
         super(Patched3DUNet, self).__init__()
@@ -164,7 +164,7 @@ class Patch():
 
         return (x,y,z)
         
-
+"""
 
 def convert_bytes(size):
     for x in ['bytes', 'KB', 'MB', 'GB', 'TB']:
