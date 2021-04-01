@@ -45,7 +45,7 @@ class ExpConfig():
         self.n_classes = 2
         
         self.transform = tf.Compose([
-                            tf.RandomAffine(degrees = 15,
+                            tf.RandomAffine(degrees = 10,
                                             scale = (0.9,1.1),
                                             translate = (0.1, 0.1)),
                             tf.ToTensor(),
