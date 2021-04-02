@@ -51,7 +51,8 @@ class UnetUp2D(nn.Module):
 
         #initialise the blocks
         for m in self.children():
-            init_weights(m, init_type='kaiming')
+            if isinstance(m, nn.Conv2d):
+                init_weights(m, init_type='kaiming')
 
     def forward(self, inputs1, inputs2):
         outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
@@ -67,8 +68,8 @@ class UnetUp3D(nn.Module):
 
         #initialise the blocks
         for m in self.children():
-            init_weights(m, init_type='kaiming')
-
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
     def forward(self, inputs1, inputs2):
         # outputs2 = self.conv0(self.up(inputs2))
         outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0)))
