@@ -1,6 +1,7 @@
 import torch
 import torch.nn as nn
 import math
+from models.networks_other import init_weights
 
 
 def positionalencoding2d(d_model, height, width):
@@ -45,6 +46,10 @@ class Trans2D(nn.Module):
         self.wq = nn.Linear(self.d, self.d)
         self.wk = nn.Linear(self.d, self.d)
         self.wv = nn.Linear(self.d, self.d)
+
+        #initialise the blocks
+        for m in self.children():
+            init_weights(m, init_type='kaiming')
         
         
     def forward(self, x):

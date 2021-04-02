@@ -3,6 +3,8 @@ import torch.nn.functional as F
 import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
 from models.mymod.transTools import Trans2D
+from models.networks_other import init_weights
+
 class UNetTransformer(nn.Module):
 
     def __init__(self, filters, n_classes=2, in_channels=1, n_heads=1, dim='2d'):
@@ -42,6 +44,11 @@ class UNetTransformer(nn.Module):
 
         # final conv (without any concat)
         self.final = self.final_layer(filters[0], n_classes, 1)
+
+        # initialise weights
+        for m in self.modules():
+            if isinstance(m, self.final_layer):
+                init_weights(m, init_type='kaiming')
 
 
     def forward(self, X, mode=None):
