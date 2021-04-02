@@ -29,7 +29,7 @@ class ExpConfig():
         self.split = 0
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
