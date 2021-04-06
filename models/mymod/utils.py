@@ -4,14 +4,20 @@ from models.networks_other import init_weights
 
 
 class UNetConv2D(nn.Module):
-    def __init__(self, in_size, out_size, kernel=(3,3), pad=(1,1), stride=(1,1)):
+    def __init__(self, in_size, out_size, kernel=(3,3), pad=(1,1), stride=(1,1), bn = True):
         super(UNetConv2D, self).__init__()
-        self.conv1 = nn.Sequential(nn.Conv2d(in_size, out_size, kernel, stride, pad),
-                                   nn.BatchNorm2d(out_size),
-                                   nn.ReLU(inplace=True),)
-        self.conv2 = nn.Sequential(nn.Conv2d(out_size, out_size, kernel, 1, pad),
-                                   nn.BatchNorm2d(out_size),
-                                   nn.ReLU(inplace=True),)
+        if nb:
+            self.conv1 = nn.Sequential(nn.Conv2d(in_size, out_size, kernel, stride, pad),
+                                       nn.BatchNorm2d(out_size),
+                                       nn.ReLU(inplace=True),)
+            self.conv2 = nn.Sequential(nn.Conv2d(out_size, out_size, kernel, 1, pad),
+                                       nn.BatchNorm2d(out_size),
+                                       nn.ReLU(inplace=True),)
+        else:
+            self.conv1 = nn.Sequential(nn.Conv2d(in_size, out_size, kernel, stride, pad),
+                                       nn.ReLU(inplace=True),)
+            self.conv2 = nn.Sequential(nn.Conv2d(out_size, out_size, kernel, 1, pad),
+                                       nn.ReLU(inplace=True),)
 
         #initialise the blocks
         for m in self.children():
@@ -23,14 +29,20 @@ class UNetConv2D(nn.Module):
         return outputs
 
 class UNetConv3D(nn.Module):
-    def __init__(self, in_size, out_size, kernel=(3,3,3), pad=(1,1,1), stride=(1,1,1)):
+    def __init__(self, in_size, out_size, kernel=(3,3,3), pad=(1,1,1), stride=(1,1,1), bn = True):
         super(UNetConv3D, self).__init__()
-        self.conv1 = nn.Sequential(nn.Conv3d(in_size, out_size, kernel, stride, pad),
-                                   nn.BatchNorm3d(out_size),
-                                   nn.ReLU(inplace=True),)
-        self.conv2 = nn.Sequential(nn.Conv3d(out_size, out_size, kernel, 1, pad),
-                                   nn.BatchNorm3d(out_size),
-                                   nn.ReLU(inplace=True),)
+        if bn:
+            self.conv1 = nn.Sequential(nn.Conv3d(in_size, out_size, kernel, stride, pad),
+                                       nn.BatchNorm3d(out_size),
+                                       nn.ReLU(inplace=True),)
+            self.conv2 = nn.Sequential(nn.Conv3d(out_size, out_size, kernel, 1, pad),
+                                       nn.BatchNorm3d(out_size),
+                                       nn.ReLU(inplace=True),)
+        else:
+            self.conv1 = nn.Sequential(nn.Conv3d(in_size, out_size, kernel, stride, pad),
+                                       nn.ReLU(inplace=True),)
+            self.conv2 = nn.Sequential(nn.Conv3d(out_size, out_size, kernel, 1, pad),
+                                       nn.ReLU(inplace=True),)
         #initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')
@@ -43,11 +55,11 @@ class UNetConv3D(nn.Module):
 
 
 class UnetUp2D(nn.Module):
-    def __init__(self, in_size, out_size):
+    def __init__(self, in_size, out_size, bn = True):
         super(UnetUp2D, self).__init__()
         self.up = nn.UpsamplingBilinear2d(scale_factor=2)
         self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2))
-        self.conv1 = UNetConv2D(in_size, out_size)
+        self.conv1 = UNetConv2D(in_size, out_size, bn=bn)
 
         #initialise the blocks
         for m in self.children():
@@ -59,12 +71,12 @@ class UnetUp2D(nn.Module):
         return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 
-class UnetUp3D(nn.Module):
+class UnetUp3D(nn.Module, bn = True):
     def __init__(self, in_size, out_size):
         super(UnetUp3D, self).__init__()
         self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
         self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
-        self.conv1 = UNetConv3D(in_size, out_size)
+        self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
 
         #initialise the blocks
         for m in self.children():
