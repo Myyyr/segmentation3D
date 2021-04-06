@@ -6,7 +6,7 @@ from models.networks_other import init_weights
 class UNetConv2D(nn.Module):
     def __init__(self, in_size, out_size, kernel=(3,3), pad=(1,1), stride=(1,1), bn = True):
         super(UNetConv2D, self).__init__()
-        if nb:
+        if bn:
             self.conv1 = nn.Sequential(nn.Conv2d(in_size, out_size, kernel, stride, pad),
                                        nn.BatchNorm2d(out_size),
                                        nn.ReLU(inplace=True),)
