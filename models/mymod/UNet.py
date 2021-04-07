@@ -8,7 +8,7 @@ from models.networks_other import init_weights
 
 class UNet(nn.Module):
 
-    def __init__(self, filters, n_classes=2, in_channels=1, dim='2d', bn=True):
+    def __init__(self, filters, n_classes=2, in_channels=1, dim='2d', bn=True, up_mode='biline'):
         super(UNet, self).__init__()
 
         self.in_channels = in_channels
@@ -34,10 +34,10 @@ class UNet(nn.Module):
         self.center = self.UNetConv(filters[3], filters[4], bn=bn)
 
         # upsampling
-        self.up_concat4 = self.UNetUpLayer(filters[4], filters[3], bn=bn)
-        self.up_concat3 = self.UNetUpLayer(filters[3], filters[2], bn=bn)
-        self.up_concat2 = self.UNetUpLayer(filters[2], filters[1], bn=bn)
-        self.up_concat1 = self.UNetUpLayer(filters[1], filters[0], bn=bn)
+        self.up_concat4 = self.UNetUpLayer(filters[4], filters[3], bn=bn, up_mode=up_mode)
+        self.up_concat3 = self.UNetUpLayer(filters[3], filters[2], bn=bn, up_mode=up_mode)
+        self.up_concat2 = self.UNetUpLayer(filters[2], filters[1], bn=bn, up_mode=up_mode)
+        self.up_concat1 = self.UNetUpLayer(filters[1], filters[0], bn=bn, up_mode=up_mode)
 
         # final conv (without any concat)
         self.final = self.final_layer(filters[0], n_classes, 1)

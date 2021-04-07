@@ -55,28 +55,43 @@ class UNetConv3D(nn.Module):
 
 
 class UnetUp2D(nn.Module):
-    def __init__(self, in_size, out_size, bn = True):
+    def __init__(self, in_size, out_size, bn = True, up_mode='biline'):
         super(UnetUp2D, self).__init__()
-        self.up = nn.UpsamplingBilinear2d(scale_factor=2)
-        self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2))
-        self.conv1 = UNetConv2D(in_size, out_size, bn=bn)
+        self.up_mode = up_mode
+
+        if self.up_mode == 'biline':
+            self.up = nn.UpsamplingBilinear2d(scale_factor=2)
+            self.conv0 = nn.Conv2d(in_size, out_size, kernel_size=(2,2))
+            self.conv1 = UNetConv2D(in_size, out_size, bn=bn)
+        elif self.up_mode == 'deconv':
+            self.up = nn.ConvTranspose2d(in_size, out_size, 2)
+            self.conv1 = UNetConv2D(in_size, out_size, bn=bn)
 
         #initialise the blocks
         for m in self.children():
             if isinstance(m, nn.Conv2d):
                 init_weights(m, init_type='kaiming')
+            elif isinstance(m, nn.ConvTranspose2d):
+                init_weights(m, init_type='kaiming')
 
     def forward(self, inputs1, inputs2):
-        outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
-        return self.conv1(torch.cat([inputs1, outputs2], 1))
-
+        if self.up_mode == 'biline':
+            outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
+            return self.conv1(torch.cat([inputs1, outputs2], 1))
+        elif self.up_mode == 'deconv':
+            outputs2 = self.up(inputs2)
+            return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 class UnetUp3D(nn.Module):
     def __init__(self, in_size, out_size, bn = True):
         super(UnetUp3D, self).__init__()
-        self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
-        self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
-        self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
+        if self.up_mode == 'triline':
+            self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
+            self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
+            self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
+        elif self.up_mode == 'deconv':
+            self.up = nn.ConvTranspose3d(in_size, out_size, 2)
+            self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
 
         #initialise the blocks
         for m in self.children():
@@ -84,5 +99,9 @@ class UnetUp3D(nn.Module):
                 init_weights(m, init_type='kaiming')
     def forward(self, inputs1, inputs2):
         # outputs2 = self.conv0(self.up(inputs2))
-        outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0)))
-        return self.conv1(torch.cat([inputs1, outputs2], 1))
+        if self.up_mode == 'triline':
+            outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0)))
+            return self.conv1(torch.cat([inputs1, outputs2], 1))
+        elif self.up_mode == 'deconv':
+            outputs2 = self.up(inputs2)
+            return self.conv1(torch.cat([inputs1, outputs2], 1))
