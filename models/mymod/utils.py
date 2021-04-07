@@ -79,9 +79,7 @@ class UnetUp2D(nn.Module):
             outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0)))
             return self.conv1(torch.cat([inputs1, outputs2], 1))
         elif self.up_mode == 'deconv':
-            # outputs2 = nn.functional.pad(self.up(inputs2), (1,0,1,0))
             outputs2 = self.up(inputs2)
-            print(outputs2.shape, inputs1.shape)
             return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 class UnetUp3D(nn.Module):
@@ -105,5 +103,5 @@ class UnetUp3D(nn.Module):
             outputs2 = self.conv0(nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0)))
             return self.conv1(torch.cat([inputs1, outputs2], 1))
         elif self.up_mode == 'deconv':
-            outputs2 = nn.functional.pad(self.up(inputs2), (1,0,1,0,1,0))
+            outputs2 = self.up(inputs2)
             return self.conv1(torch.cat([inputs1, outputs2], 1))
