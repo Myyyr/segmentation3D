@@ -1,13 +1,14 @@
 # More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
-from models.mymod.UNet import UNet
+from models.mymod.UNet_Transformer import UNetTransformer
 from models.utils import get_scheduler
 import torch.optim as optim
 from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchvision.transforms as tf
+from .utils import EnhancedCompose
 # import torchio as tio
 
 def count_parameters(model): 
@@ -17,8 +18,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 27
-        self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
+        self.id = 100
+        self.experiment_name = "pancreas_2D_utrans_{}".format(self.id)
         self.debug = False
 
         # System
@@ -34,11 +35,11 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = UNet(filters = self.channels, n_classes=2, in_channels=1, dim='2d', bn = False)
+        self.net = UNetTransformer(filters = self.channels, n_classes=2, in_channels=1,n_heads=1, dim='2d', bn=False)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/pancreas2D_unet_kaiming_nobn.pth'
+        self.model_path = './checkpoints/models/pancreas2D_utrans_kaiming_nobn.pth'
         self.load_model()
 
         self.n_classes = 2
@@ -50,7 +51,6 @@ class ExpConfig():
                             tf.ToTensor(),
                             ])
 
-
         # Training
         self.start_epoch = 0
         self.epoch = 20
@@ -60,16 +60,15 @@ class ExpConfig():
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
-        self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
-        # self.lr_scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer, 0.99)
-
+        # self.lr_scheduler = get_scheduler(self.optimizer, "constant", self.lr_rate)
+        self.lr_scheduler = optim.lr_scheduler.ExponentialLR(self.optimizer, 0.99)
         # Other
         self.classes_name = ['background','pancreas']
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform)
-        validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'))
+        trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform, mode='train')
+        validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'), mode = 'valid')
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
 
