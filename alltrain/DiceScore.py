@@ -109,4 +109,5 @@ def _toEvaluationOneHot(labels, n_classes):
         print(out[:,i, ...].shape)
         print((labels == i).shape)
         out[:,i, ...] = (labels == i)
+        exit(0)
     return out
