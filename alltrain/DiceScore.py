@@ -65,8 +65,9 @@ class DiceScore():
 # Modify to one hot encode the target
 class DiceLoss():
     """docstring for DiceLoss"""
-    def __init__(self, n_classes):
+    def __init__(self, n_classes, eps = 1e-5):
         self.n_classes = n_classes
+        self.eps = eps
 
     def __call__(self, input, target):
         return self.dice_loss(input, target)
@@ -100,7 +101,7 @@ class DiceLoss():
         den2=torch.sum(den2,dim=2)#b,c
         
 
-        dice=2*(num/(den1+den2))
+        dice=2*((num + self.eps)/(den1+den2 + self.eps))
         # print(dice.shape)
         # dice_eso=dice[:,1:]#we ignore bg dice val, and take the fg
 
