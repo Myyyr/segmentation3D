@@ -71,6 +71,8 @@ def dice_loss(input,target):
     uniques=np.unique(target.cpu().numpy())
     n_classes = uniques.shape[0]
     target = _toEvaluationOneHot(target, n_classes)
+    print(input.shape)
+    print(target.shape)
 
     assert input.size() == target.size(), "Input sizes must be equal."
     assert input.dim() == 4, "Input must be a 4D Tensor."
