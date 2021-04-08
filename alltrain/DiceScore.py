@@ -68,12 +68,12 @@ def dice_loss(input,target):
     input is a torch variable of size BatchxnclassesxHxW representing log probabilities for each class
     x target is a 1-hot representation of the groundtruth, shoud have same size as the input x target is encoded as for CE pytorch loss
     """
-    target = _toEvaluationOneHot(target)
+    uniques=np.unique(target.cpu().numpy())
+    n_classes = uniques.shape[0]
+    target = _toEvaluationOneHot(target, n_classes)
 
     assert input.size() == target.size(), "Input sizes must be equal."
     assert input.dim() == 4, "Input must be a 4D Tensor."
-    uniques=np.unique(target.cpu().numpy())
-    n_classes = uniques.shape[0]
     assert set(list(uniques))<=set([0,1]), "target must only contain zeros and ones"
 
     probs=torch.nn.functional.softmax(input)
@@ -101,9 +101,8 @@ def dice_loss(input,target):
     return dice_total
 
 
-def _toEvaluationOneHot(labels):
+def _toEvaluationOneHot(labels, n_classes):
     shape = labels.shape
-    n_classes = np.unique(labels.numpy()).shape[0]
     out = torch.zeros(*(shape[0], n_classes, shape[-2], shape[-1]))
     for i in range(n_classes):
         out[:,i, ...] = (labels == i)[:,0,...]
