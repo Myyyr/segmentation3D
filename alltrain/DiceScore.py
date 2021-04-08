@@ -106,5 +106,7 @@ def _toEvaluationOneHot(labels, n_classes):
     out = torch.zeros(*(shape[0], n_classes, shape[-2], shape[-1]))
     print(out.shape)
     for i in range(n_classes):
+        print(out[:,i, ...].shape)
+        print((labels == i)[:,0,...].shape)
         out[:,i, ...] = (labels == i)[:,0,...]
     return out
