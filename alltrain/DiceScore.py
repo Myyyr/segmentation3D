@@ -104,6 +104,7 @@ def dice_loss(input,target):
 def _toEvaluationOneHot(labels, n_classes):
     shape = labels.shape
     out = torch.zeros(*(shape[0], n_classes, shape[-2], shape[-1]))
+    print(out.shape)
     for i in range(n_classes):
         out[:,i, ...] = (labels == i)[:,0,...]
     return out
