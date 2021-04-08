@@ -72,7 +72,7 @@ def dice_loss(input,target):
 
     assert input.size() == target.size(), "Input sizes must be equal."
     assert input.dim() == 4, "Input must be a 4D Tensor."
-    uniques=np.unique(target.numpy())
+    uniques=np.unique(target.cpu().numpy())
     n_classes = uniques.shape[0]
     assert set(list(uniques))<=set([0,1]), "target must only contain zeros and ones"
 
