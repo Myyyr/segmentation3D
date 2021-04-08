@@ -63,49 +63,55 @@ class DiceScore():
 # From https://github.com/rogertrullo/pytorch/blob/rogertrullo-dice_loss/torch/nn/functional.py#L708
 # Paper : http://campar.in.tum.de/pub/milletari2016Vnet/milletari2016Vnet.pdf
 # Modify to one hot encode the target
-def dice_loss(input,target):
-    """
-    input is a torch variable of size BatchxnclassesxHxW representing log probabilities for each class
-    x target is a 1-hot representation of the groundtruth, shoud have same size as the input x target is encoded as for CE pytorch loss
-    """
-    uniques=np.unique(target.cpu().numpy())
-    n_classes = uniques.shape[0]
-    target = _toEvaluationOneHot(target, n_classes)
-    print(input.shape)
-    print(target.shape)
+class DiceLoss():
+    """docstring for DiceLoss"""
+    def __init__(self, n_classes):
+        self.n_classes = n_classes
 
-    assert input.size() == target.size(), "Input sizes must be equal."
-    assert input.dim() == 4, "Input must be a 4D Tensor."
-    assert set(list(uniques))<=set([0,1]), "target must only contain zeros and ones"
+    def __call__(self, input, target):
+        return self.dice_loss(input, target)
 
-    probs=torch.nn.functional.softmax(input)
-    num=probs*target#b,c,h,w--p*g
-    num=torch.sum(num,dim=3)#b,c,h
-    num=torch.sum(num,dim=2)
-    
+    def dice_loss(self, input,target):
+        """
+        input is a torch variable of size BatchxnclassesxHxW representing log probabilities for each class
+        x target is a 1-hot representation of the groundtruth, shoud have same size as the input x target is encoded as for CE pytorch loss
+        """
+        # uniques=np.unique(target.cpu().numpy())
+        # n_classes = uniques.shape[0]
+        target = _toEvaluationOneHot(target)
 
-    den1=probs*probs#--p^2
-    den1=torch.sum(den1,dim=3)#b,c,h
-    den1=torch.sum(den1,dim=2)
-    
+        assert input.size() == target.size(), "Input sizes must be equal."
+        assert input.dim() == 4, "Input must be a 4D Tensor."
+        # assert set(list(uniques))<=set([0,1]), "target must only contain zeros and ones"
 
-    den2=target*target#--g^2
-    den2=torch.sum(den2,dim=3)#b,c,h
-    den2=torch.sum(den2,dim=2)#b,c
-    
+        probs=torch.nn.functional.softmax(input)
+        num=probs*target#b,c,h,w--p*g
+        num=torch.sum(num,dim=3)#b,c,h
+        num=torch.sum(num,dim=2)
+        
 
-    dice=2*(num/(den1+den2))
-    # print(dice.shape)
-    # dice_eso=dice[:,1:]#we ignore bg dice val, and take the fg
+        den1=probs*probs#--p^2
+        den1=torch.sum(den1,dim=3)#b,c,h
+        den1=torch.sum(den1,dim=2)
+        
 
-    # dice_total=-1*torch.sum(dice_eso)/dice_eso.size(0)#divide by batch_sz
-    dice_total = 1 - torch.sum(dice)/(n_classes*target.shape[0])
-    return dice_total
+        den2=target*target#--g^2
+        den2=torch.sum(den2,dim=3)#b,c,h
+        den2=torch.sum(den2,dim=2)#b,c
+        
+
+        dice=2*(num/(den1+den2))
+        # print(dice.shape)
+        # dice_eso=dice[:,1:]#we ignore bg dice val, and take the fg
+
+        # dice_total=-1*torch.sum(dice_eso)/dice_eso.size(0)#divide by batch_sz
+        dice_total = 1 - torch.sum(dice)/(self.n_classes*target.shape[0])
+        return dice_total
 
 
-def _toEvaluationOneHot(labels, n_classes):
-    shape = labels.shape
-    out = torch.zeros(*(shape[0], n_classes, shape[-2], shape[-1])).cuda()
-    for i in range(n_classes):
-        out[:,i, ...] = (labels == i)
-    return out
+    def _toEvaluationOneHot(self, labels):
+        shape = labels.shape
+        out = torch.zeros(*(shape[0], self.n_classes, shape[-2], shape[-1])).cuda()
+        for i in range(self.n_classes):
+            out[:,i, ...] = (labels == i)
+        return out
