@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 import torch
 import torchvision.transforms as tf
 from .utils import EnhancedCompose
-from alltrain.DiceScore import dice_loss
+from alltrain.DiceScore import DiceLoss
 # import torchio as tio
 
 def count_parameters(model): 
@@ -56,7 +56,7 @@ class ExpConfig():
         self.start_epoch = 0
         self.epoch = 20
         # self.loss = torch.nn.CrossEntropyLoss()
-        self.loss = dice_loss(self.n_classes)
+        self.loss = DiceLoss(self.n_classes)
         self.batchsize = 4
         self.lr_rate = 1e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
