@@ -53,6 +53,7 @@ class AllTrain(Train):
 
         self.trainDataLoader = self.expconfig.trainDataLoader
         self.valDataLoader = self.expconfig.valDataLoader
+        self.testDataLoader = self.expconfig.testDataLoader
 
         self.save_dict = {'original':{} ,'small':{}}
         
@@ -92,6 +93,7 @@ class AllTrain(Train):
         del loss
 
     def train(self):
+        self.evaluate()
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
@@ -100,6 +102,8 @@ class AllTrain(Train):
         total_time = 0.0
         self.save_dict['first_batch_memory'] = ""
         min_loss = 1e10
+
+
 
         for epoch in range(expcf.start_epoch, expcf.epoch):
             startTime = time.time()
@@ -158,6 +162,7 @@ class AllTrain(Train):
                 min_loss = TL
                 self.saveToDisk(epoch)
 
+        self.evaluate()
         self.tb.close()
 
     def convert_byte(self, v):
@@ -176,27 +181,6 @@ class AllTrain(Train):
             ret += str(int(t//units[k])  )+k
         return ret
 
-
-    # # !!! REVOIR -> accumulateur inter / union
-    # def valide_step(self, expcf, outputs, labels, dice):
-    #     # print("before armax : out {}, lab {}".format(outputs.shape, labels.shape))
-    #     outputs = outputs.argmax(dim = 1)    
-    #     masks = []
-    #     if labels.shape[1] == self.classes:
-    #         labels = labels.argmax(dim = 1)
-    #     label_masks = []
-        
-
-    #     for i in range(self.classes):
-    #         btch_dice = []
-    #         for b in range(labels.shape[0]):
-    #             mask = atlasUtils.getMask(outputs[b,...][None,...], i)
-    #             label_mask = atlasUtils.getMask(labels[b,...][None,...], i)
-    #             btch_dice.append(atlasUtils.dice(mask, label_mask))
-
-    #         dice[i].append(np.mean(btch_dice))
-    #         del mask, label_mask
-    #     del outputs, labels, label_masks, masks
 
         
     def validate(self, epoch):
@@ -231,40 +215,47 @@ class AllTrain(Train):
 
         return time.time() - startTime
 
-    # def validate(self, epoch):
-    #     expcf = self.expconfig
-    #     startTime = time.time()
+    def evaluate(self):
+        print("-"*20, "\nEVALUATION ...")
+        expcf = self.expconfig
 
+        with torch.no_grad():
+            expcf.net.eval()
 
-    #     with torch.no_grad():
-    #         expcf.net.eval()
-    #         dice = [[] for i in range(self.classes)]
-    #         for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
-    #             inputs, labels = data
-    #             inputs, labels = inputs.to(self.device), labels.to(self.device)
-    #             outputs = F.softmax(expcf.net(inputs), dim=1)
-    #             del inputs
-                
-    #             self.valide_step(expcf, outputs, labels, dice)
-    #             del labels, outputs
+            pids_dices = {}
+            for pid in self.testDataLoader.data_splits:
+                pids_dices[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
 
-    #         meanDices = []
-    #         for i in range(self.classes):
-    #             meanDices.append(np.mean(dice[i]))
-    #             self.save_dict['original'][self.expconfig.classes_name[i]] = meanDices[i]
-            
-    #         self.meanDice = np.mean(meanDices)
-    #         self.save_dict['meanDice'] =  self.meanDice 
+            for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
+                pid, inputs, labels = data
+                inputs, labels = inputs.to(self.device), labels.to(self.device)
 
-    #         self.save_dict['epoch'] = epoch
-    #         self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
-    #         self.save_dict['training_time'] =  time.time() - self.startingTime
+                outputs = F.softmax(expcf.net(inputs), dim=1)
+                del inputs
+                dice[str(pid)](outputs, labels)
+                del labels, outputs
 
-    #         print(self.save_dict)
+            dices = {}
+            classes_dices = {}
+            for i in range(self.classes):
+                classes_dices[self.expconfig.classes_name[i]] = []
 
-    #     self.save_results()
+            for pid in self.testDataLoader.data_splits:
+                dices[str(pid)] = {}
+                for i in range(self.classes):
+                    dices[str(pid)][self.expconfig.classes_name[i]] = dice[str(pid)].get_dice_scores()[self.expconfig.classes_name[i]]
+                    classes_dices[self.expconfig.classes_name[i]].append(dice[str(pid)].get_dice_scores()[self.expconfig.classes_name[i]])
 
-    #     return time.time() - startTime
+                dices[str(pid)]["mean_over_orgs"] = dice[str(pid)].get_mean_dice_score(exeptions = ['background'])
+            dices['means'] = {}
+            for i in range(self.classes):
+                dices['means'][self.expconfig.classes_name[i]] = np.mean(classes_dices[self.expconfig.classes_name[i]])
+            dices['means']['mean_overall_orgs'] = np.mean(list(dices['mean'].values()))
+
+        print(dices)
+        with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
+            json.dump(dices, f)
+
 
 
 

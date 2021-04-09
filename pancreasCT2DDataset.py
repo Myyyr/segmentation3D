@@ -29,6 +29,7 @@ class SplitTCIA2DDataset(data.Dataset):
         self.image_filenames = []
         self.target_filenames = []
         self.mode = mode
+        self.data_splits = data_splits
 
         for i in data_splits:
             for j in listdir(join(root_dir, 'images')):
@@ -103,11 +104,21 @@ class SplitTCIA2DDataset(data.Dataset):
             input = torch.from_numpy(input[None, :, :, 0]).float()
             target = torch.from_numpy(target[:,:,0]).long()
 
+            return input, target
 
-        else:
+
+        elif self.mode=='valid':
             input = torch.from_numpy(input[None, :, :]).float()
             target = torch.from_numpy(target).long()
-        return input, target
+            return input, target
+        else:
+            pid = self.get_pid
+            input = torch.from_numpy(input[None, :, :]).float()
+            target = torch.from_numpy(target).long()
+            return pid, input, target
+
+    def get_pid(self, index):
+        return int(self.image_filenames[index].split('/')[-3])
 
 
     def _toEvaluationOneHot(self, labels):
