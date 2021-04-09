@@ -112,7 +112,7 @@ class SplitTCIA2DDataset(data.Dataset):
             target = torch.from_numpy(target).long()
             return input, target
         else:
-            pid = torch.from_numpy(np.array([self.get_pid]))
+            pid = torch.from_numpy(np.array([self.get_pid(index)]))
             input = torch.from_numpy(input[None, :, :]).float()
             target = torch.from_numpy(target).long()
             return pid, input, target
