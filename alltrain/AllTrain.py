@@ -251,7 +251,7 @@ class AllTrain(Train):
             dices['means'] = {}
             for i in range(self.classes):
                 dices['means'][self.expconfig.classes_name[i]] = np.mean(classes_dices[self.expconfig.classes_name[i]])
-            dices['means']['mean_overall_orgs'] = np.mean(list(dices['mean'].values()))
+            dices['means']['mean_overall_orgs'] = np.mean(list(dices['means'].values()))
 
         print(dices)
         with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
