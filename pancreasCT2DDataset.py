@@ -85,6 +85,9 @@ class SplitTCIA2DDataset(data.Dataset):
             zx = 1 + np.random.rand() * 0.2 - 0.1
             zy = 1 + np.random.rand() * 0.2 - 0.1
 
+            input = np.expand_dims(input, axis=-1)
+            target = np.expand_dims(target, axis=-1)
+
             input = tf.keras.preprocessing.image.apply_affine_transform(input,
                                                                         theta=theta,
                                                                         tx=tx, ty=ty,
@@ -97,8 +100,8 @@ class SplitTCIA2DDataset(data.Dataset):
                                                                          zx=zx, zy=zy,
                                                                          fill_mode='nearest',
                                                                          order=0)
-            input = torch.from_numpy(input[None, :, :]).float()
-            target = torch.from_numpy(target).long()
+            input = torch.from_numpy(input[None, :, :, 0]).float()
+            target = torch.from_numpy(target[:,:,0]).long()
 
 
         else:
