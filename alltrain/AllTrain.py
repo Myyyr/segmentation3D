@@ -222,9 +222,9 @@ class AllTrain(Train):
         with torch.no_grad():
             expcf.net.eval()
 
-            pids_dices = {}
+            dice = {}
             for pid in expcf.testDataset.data_splits:
-                pids_dices[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
+                dice[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
 
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
                 pid, inputs, labels = data
