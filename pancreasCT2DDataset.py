@@ -15,6 +15,7 @@ import torchio as tio
 
 import random
 from PIL import Image
+import tensorflow as tf
 
 def shape2str(s):
     return str(s[0])+'_'+str(s[1])+'_'+str(s[2])
@@ -66,22 +67,40 @@ class SplitTCIA2DDataset(data.Dataset):
         target = np.load(self.target_filenames[index])
 
        
-
-        # if self.hot == 1:
-        # target = self._toEvaluationOneHot(target)
         
+        # if self.transform != None and self.mode == 'train':
+        #     input = Image.fromarray(input)
+        #     target = Image.fromarray(target)
+        #     seed = np.random.randint(2147483647)
+        #     random.seed(seed)
+        #     input = self.transform(input)
+        #     random.seed(seed)
+        #     target = self.transform(target)
+
         if self.transform != None and self.mode == 'train':
-            input = Image.fromarray(input)
-            target = Image.fromarray(target)
-            seed = np.random.randint(2147483647)
-            random.seed(seed)
-            input = self.transform(input)
-            random.seed(seed)
-            target = self.transform(target)
+            
+            theta = np.random.randint(-6, 6)
+            tx = np.random.randint(-15, 15)
+            ty = np.random.randint(-15, 15)
+            zx = 1 + np.random.rand() * 0.2 - 0.1
+            zy = 1 + np.random.rand() * 0.2 - 0.1
+
+            input = tf.keras.preprocessing.image.apply_affine_transform(input,
+                                                                        theta=theta,
+                                                                        tx=tx, ty=ty,
+                                                                        zx=zx,
+                                                                        zy=zy,
+                                                                        fill_mode='nearest')
+            target = tf.keras.preprocessing.image.apply_affine_transform(target,
+                                                                         theta=theta,
+                                                                         tx=tx, ty=ty,
+                                                                         zx=zx, zy=zy,
+                                                                         fill_mode='nearest',
+                                                                         order=0)
+            input = torch.from_numpy(input[None, :, :]).float()
+            target = torch.from_numpy(target).long()
 
 
-            input = input.float()
-            target = target[0,:,:].long()
         else:
             input = torch.from_numpy(input[None, :, :]).float()
             target = torch.from_numpy(target).long()

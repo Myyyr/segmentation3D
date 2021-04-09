@@ -90,18 +90,21 @@ class DiceLoss():
         num=torch.sum(num,dim=3)#b,c,h
         num=torch.sum(num,dim=2)#b,c
         num=torch.sum(num,dim=0)#c
+        print(num)
         
 
         den1=probs*probs#--p^2
         den1=torch.sum(den1,dim=3)#b,c,h
         den1=torch.sum(den1,dim=2)#b,c
         den1=torch.sum(den1,dim=0)#c
+        print(den1)
         
 
         den2=target*target#--g^2
         den2=torch.sum(den2,dim=3)#b,c,h
         den2=torch.sum(den2,dim=2)#b,c
         den2=torch.sum(den2,dim=0)#c
+        print(den2)
         
 
         dice=(2*num + self.eps)/(den1+den2 + self.eps)
