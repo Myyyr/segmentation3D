@@ -255,7 +255,7 @@ class AllTrain(Train):
 
         print(dices)
         with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
-            json.dump(dices, f)
+            json.dump(dices, f, indent=4)
 
 
 
