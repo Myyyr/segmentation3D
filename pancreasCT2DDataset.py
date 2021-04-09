@@ -118,7 +118,9 @@ class SplitTCIA2DDataset(data.Dataset):
             return pid, input, target
 
     def get_pid(self, index):
-        return int(self.image_filenames[index].split('/')[-3])
+        a = int(self.image_filenames[index].split('/')[-3])
+        print(a)
+        return a
 
 
     def _toEvaluationOneHot(self, labels):
