@@ -93,7 +93,7 @@ class AllTrain(Train):
         del loss
 
     def train(self):
-        self.evaluate()
+        # self.evaluate()
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
