@@ -228,6 +228,7 @@ class AllTrain(Train):
 
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
                 pid, inputs, labels = data
+                pid = int(pid[0,0].item())
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
 
                 outputs = F.softmax(expcf.net(inputs), dim=1)
