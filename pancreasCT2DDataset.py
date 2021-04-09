@@ -77,7 +77,7 @@ class SplitTCIA2DDataset(data.Dataset):
         #     random.seed(seed)
         #     target = self.transform(target)
 
-        if self.transform != None and self.mode == 'train':
+        if self.transform and self.mode == 'train':
             
             theta = np.random.randint(-6, 6)
             tx = np.random.randint(-15, 15)
