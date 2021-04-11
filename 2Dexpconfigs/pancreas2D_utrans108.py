@@ -1,15 +1,15 @@
 # More Parameters (depth) to match with classical UNet number of parameters.
 # n_parameters = 114557582
 import os
-from models.mymod.UNet import UNet
+from models.mymod.UNet_Transformer import UNetTransformer
 from models.utils import get_scheduler
 import torch.optim as optim
 from pancreasCT2DDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchvision.transforms as tf
-from alltrain.DiceScore import DiceLoss
-
+from .utils import EnhancedCompose
+# from alltrain.DiceScore import DiceLoss
 # import torchio as tio
 
 def count_parameters(model): 
@@ -19,8 +19,8 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 206
-        self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
+        self.id = 108
+        self.experiment_name = "pancreas_2D_utrans_{}".format(self.id)
         self.debug = False
 
         # System
@@ -30,17 +30,17 @@ class ExpConfig():
         self.split = 0
         
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = UNet(filters = self.channels, n_classes=2, in_channels=1, dim='2d', bn = False, up_mode='deconv')
+        self.net = UNetTransformer(filters = self.channels, n_classes=2, in_channels=1,n_heads=1, dim='2d', bn=True, up_mode='deconv')
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/pancreas2D_unet_kaiming_nobn_deconv.pth'
+        self.model_path = './checkpoints/models/pancreas2D_utrans_kaiming_deconv.pth'
         self.load_model()
 
         self.n_classes = 2
@@ -51,6 +51,7 @@ class ExpConfig():
         #                                     translate = (0.1, 0.1)),
         #                     tf.ToTensor(),
         #                     ])
+
         self.transform = True
 
         # Training
@@ -72,13 +73,12 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        self.trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform)
-        self.validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'))
+        self.trainDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('train') , transform = self.transform, mode='train')
+        self.validDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'), mode = 'valid')
         self.testDataset = SplitTCIA2DDataset(self.datapath, self.split, self.generate_splits('test'), mode = 'test')
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=self.validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)
-
 
     def generate_splits(self, sets, i = 0):
         splt_1 = [19, 23, 55, 30, 60, 26, 12, 6, 64, 38, 42, 62, 69, 5, 14, 63, 31]

@@ -19,7 +19,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 206
+        self.id = 207
         self.experiment_name = "pancreas_2D_unet_{}".format(self.id)
         self.debug = False
 
@@ -36,11 +36,11 @@ class ExpConfig():
         # Model
         self.channels = [64, 128, 256, 512, 1024]
         self.channels = [int(x) for x in self.channels]
-        self.net = UNet(filters = self.channels, n_classes=2, in_channels=1, dim='2d', bn = False, up_mode='deconv')
+        self.net = UNet(filters = self.channels, n_classes=2, in_channels=1, dim='2d', bn = True, up_mode='deconv')
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/pancreas2D_unet_kaiming_nobn_deconv.pth'
+        self.model_path = './checkpoints/models/pancreas2D_unet_kaiming_deconv.pth'
         self.load_model()
 
         self.n_classes = 2

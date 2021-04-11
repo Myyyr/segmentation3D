@@ -134,8 +134,8 @@ class AllTrain(Train):
 
 
             #validation at end of epoch
-            if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
-                validTime = self.validate(epoch)
+            # if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
+            #     validTime = self.validate(epoch)
 
             #take lr sheudler step
             if expcf.lr_scheduler != None:
@@ -143,18 +143,22 @@ class AllTrain(Train):
 
             total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
-
+            self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
             self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
-            self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
+            # self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
             #     self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)
-            self.tb.add_scalars('ValidClassesDice', self.save_dict['original'], epoch)
+            # self.tb.add_scalars('ValidClassesDice', self.save_dict['original'], epoch)
             
             
-            print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
-                                                                            self.meanDice, 
-                                                                            self.convert_byte(torch.cuda.max_memory_allocated()), 
-                                                                            self.convert_time(total_time)) )
+            # print("epoch: {}, meanDice: {}, memory : {}, Time : {}".format(epoch, 
+            #                                                                 self.meanDice, 
+            #                                                                 self.convert_byte(torch.cuda.max_memory_allocated()), 
+            #                                                                 self.convert_time(total_time)) )
+            print("epoch: {}, lr: {:.4f}, memory : {}, Time : {}".format(epoch, 
+                                                            expcf.optimizer.param_groups[0]['lr'],
+                                                            self.convert_byte(torch.cuda.max_memory_allocated()), 
+                                                            self.convert_time(total_time)) )
 
 
             TL = total_loss
