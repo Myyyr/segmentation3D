@@ -124,7 +124,7 @@ class AllTrain(Train):
 
 
             if self.save_dict['first_batch_memory'] == "":
-                self.save_dict['first_batch_memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+                self.save_dict['first_batch_memory'] = str(selfexpcf.optimizer.param_groups[0]['lr'].convert_byte(torch.cuda.max_memory_allocated()))
 
             print("epoch: {}, total_loss: {}, mem: {}".format(epoch, total_loss/int(len(self.trainDataLoader)), str(self.convert_byte(torch.cuda.max_memory_allocated())) ) )
 
@@ -141,7 +141,7 @@ class AllTrain(Train):
             if expcf.lr_scheduler != None:
                 expcf.lr_scheduler.step()
 
-            total_time += validTime
+            # total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
             self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
             self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
