@@ -77,6 +77,7 @@ class UNETR(nn.Module):
                 sk123.append(torch.reshape(X, self.emb_size_reshape_trans))
 
         # Decode
+        print('X.shape', X.shape)
         X = self.up_concat4(X)
         X = self.up_concat3(torch.cat([self.skip3(sk123[3]), X],1))
         X = self.up_concat2(torch.cat([self.skip2(sk123[2]), X],1))
