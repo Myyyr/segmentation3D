@@ -58,7 +58,7 @@ class UNETR(nn.Module):
 
     def forward(self, X, mode=None):
         if len(list(X.shape))==5: 
-            X = torch.reshape[:,0,...]
+            X = X[:,0,...]
         bs = X.shape[0]
 
         sk0 = self.skip0(X)
