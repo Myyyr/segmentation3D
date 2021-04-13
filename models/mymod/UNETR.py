@@ -43,12 +43,12 @@ class UNETR(nn.Module):
 
         # Upsamplers
         self.up_concat4 = nn.ConvTranspose3d(self.d_model, self.filters[0], 2, stride = 2)
-        self.up_concat3 = nn.ModuleList([UNetConv3D(self.filters[0]*2,self.filters[1], bn=bn), nn.ConvTranspose3d(self.filters[1], self.filters[1], (2,2,2), stride = (2,2,2))])
-        self.up_concat2 = nn.ModuleList([UNetConv3D(self.filters[1]*2,self.filters[2], bn=bn), nn.ConvTranspose3d(self.filters[2], self.filters[2], (2,2,2), stride = (2,2,2))])
-        self.up_concat1 = nn.ModuleList([UNetConv3D(self.filters[2]*2,self.filters[3], bn=bn), nn.ConvTranspose3d(self.filters[3], self.filters[3], (2,2,2), stride = (2,2,2))])
+        self.up_concat3 = nn.Sequential(*[UNetConv3D(self.filters[0]*2,self.filters[1], bn=bn), nn.ConvTranspose3d(self.filters[1], self.filters[1], (2,2,2), stride = (2,2,2))])
+        self.up_concat2 = nn.Sequential(*[UNetConv3D(self.filters[1]*2,self.filters[2], bn=bn), nn.ConvTranspose3d(self.filters[2], self.filters[2], (2,2,2), stride = (2,2,2))])
+        self.up_concat1 = nn.Sequential(*[UNetConv3D(self.filters[2]*2,self.filters[3], bn=bn), nn.ConvTranspose3d(self.filters[3], self.filters[3], (2,2,2), stride = (2,2,2))])
 
         # final conv (without any concat)
-        self.final = nn.ModuleList([UNetConv3D(self.filters[3]*2,n_classes, bn=bn), nn.Conv3d(n_classes, n_classes, kernel_size=1)])
+        self.final = nn.Sequential(*[UNetConv3D(self.filters[3]*2,n_classes, bn=bn), nn.Conv3d(n_classes, n_classes, kernel_size=1)])
 
         # initialise weights
         for m in self.modules():
