@@ -51,7 +51,7 @@ class UNETR(nn.Module):
 
         # initialise weights
         for m in self.modules():
-            if isinstance(m, nn.ConvTranspose3d) or isinstance(m, nn.Conv3d), or isinstance(m, nn.TransformerEncoderLayer):
+            if isinstance(m, nn.ConvTranspose3d) or isinstance(m, nn.Conv3d) or isinstance(m, nn.TransformerEncoderLayer):
                 init_weights(m, init_type='kaiming')
 
 
