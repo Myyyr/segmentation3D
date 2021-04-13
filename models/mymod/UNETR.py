@@ -78,14 +78,13 @@ class UNETR(nn.Module):
 
         # Decode
         X = self.up_concat4(sk123[3])
-        print('sk123[2].shape', sk123[2].shape)
-        print('self.skip3(sk123[2]).shape', self.skip3(sk123[2]).shape)
-        print('X.shape', X.shape)
         X = self.up_concat3(torch.cat([self.skip3(sk123[2]), X],1))
         X = self.up_concat2(torch.cat([self.skip2(sk123[1]), X],1))
         X = self.up_concat1(torch.cat([self.skip1(sk123[0]), X],1))
 
         # Final
+        print('sk0.shape',sk0.shape)
+        print('X.shape',X.shape)
         X = self.final(torch.cat([sk0, X], 1))
         
         return X
