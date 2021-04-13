@@ -19,20 +19,20 @@ def shape2str(s):
 
 
 class SplitTCIA3DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0, mode = "train"):
+    def __init__(self, root_dir, split, dt_splits, im_dim = None, transform=None, hot = 0, mode = "train"):
         super(SplitTCIA3DDataset, self).__init__()
         
         self.im_dim = shape2str(im_dim)
         self.hot = hot
         self.mode = mode
-        self.data_splits = data_splits
+        
 
         # list_dir = []
 
         self.image_filenames = []
         self.target_filenames = []
 
-        for i in data_splits:
+        for i in dt_splits:
             # list_dir.append(join(root_dir, i))
 
             image_dir = join(root_dir, i, 'image')
@@ -40,9 +40,12 @@ class SplitTCIA3DDataset(data.Dataset):
             target_dir = join(root_dir, i, 'label')
 
 
+
+
             self.image_filenames  += [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
             self.target_filenames += [join(target_dir, x) for x in listdir(target_dir) if is_image_file(x)]
 
+        self.data_splits = [self.get_pid(i) for i in self.image_filenames]
         self.image_filenames = sorted(self.image_filenames)
         self.target_filenames = sorted(self.target_filenames)
 
