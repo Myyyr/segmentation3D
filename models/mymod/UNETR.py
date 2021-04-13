@@ -25,7 +25,8 @@ class UNETR(nn.Module):
 
         self.emb_size_reshape = [int(i/j) for i,j in zip(self.input_shape, self.patch_size)] + [np.prod(self.patch_size)]
         self.emb_size_flat = [np.prod(self.emb_size_reshape[:3]), self.emb_size_reshape[3]]
-        
+        print('self.emb_size_reshape', self.emb_size_reshape)
+        print('self.emb_size_flat', self.emb_size_flat)
         # Encoders
         self.lin = nn.Linear(self.emb_size_reshape[3], self.d_model)
         self.ListTrans = []
