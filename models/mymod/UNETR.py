@@ -10,6 +10,7 @@ class UNETR(nn.Module):
 
     def __init__(self, filters = [64, 128, 256, 512], d_model=768, input_shape= (512,512,512), patch_size=(16,16,16), skip_idx = [3,6,9,12], n_classes=2, in_channels=1, n_heads=8, bn = True, up_mode='deconv', n_layers=12):
         super(UNETR, self).__init__()
+        print("UNETR")
 
         self.in_channels = in_channels
         self.d_model = d_model
