@@ -123,8 +123,8 @@ class UNETRSkip(nn.Module):
             l.append(nn.ReLU(inplace=True))
             l.append(nn.ConvTranspose3d(self.filters[i+1], self.filters[i+1], 2, stride = 2))
 
-            self.module_list.append(nn.ModuleList(l))
-        self.module_list = nn.ModuleList(self.module_list)
+            self.module_list.append(nn.Sequential(*l))
+        self.module_list = nn.Sequential(*self.module_list)
 
         for m in self.children():
             if isinstance(m, nn.Conv3d):
@@ -133,4 +133,5 @@ class UNETRSkip(nn.Module):
                 init_weights(m, init_type='kaiming')
 
     def forward(self, x):
+        # print("------ x.shape", x.shape)
         return self.module_list(x)
