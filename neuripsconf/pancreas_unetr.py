@@ -83,12 +83,12 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.input_shape , transform = self.transform)
-        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape )
-        testDataset  = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape , mode = 'test')
-        self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
-        self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
-        self.testDataLoader = DataLoader(dataset=testDataset, num_workers=1, batch_size=1, shuffle=False)
+        self.trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.input_shape , transform = self.transform)
+        self.validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape )
+        self.testDataset  = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape , mode = 'test')
+        self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
+        self.valDataLoader = DataLoader(dataset=self.validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
+        self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)
 
 
     def generate_splits(self, sets, i = 0):
