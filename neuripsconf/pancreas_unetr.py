@@ -68,10 +68,12 @@ class ExpConfig():
         self.hot = 0
         self.batchsize = 1
         self.lr_rate = 1e-4
+        self.final_lr_rate = 1e-5
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
 
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
+        self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "po", self.lr_rate, self.decay)
 
         # Other
