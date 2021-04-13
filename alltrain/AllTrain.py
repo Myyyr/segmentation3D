@@ -262,6 +262,48 @@ class AllTrain(Train):
             json.dump(dices, f, indent=4)
 
 
+    # def evaluate3D(self):
+    #     print("-"*20, "\nEVALUATION ...")
+    #     expcf = self.expconfig
+
+    #     with torch.no_grad():
+    #         expcf.net.eval()
+
+    #         dice = {}
+    #         for pid in expcf.testDataset.data_splits:
+    #             dice[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
+
+    #         for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
+    #             pid, inputs, labels = data
+    #             pid = int(pid[0,0].item())
+    #             inputs, labels = inputs.to(self.device), labels.to(self.device)
+
+    #             outputs = F.softmax(expcf.net(inputs), dim=1)
+    #             del inputs
+    #             dice[str(pid)](outputs, labels)
+    #             del labels, outputs
+
+    #         dices = {}
+    #         classes_dices = {}
+    #         for i in range(self.classes):
+    #             classes_dices[self.expconfig.classes_name[i]] = []
+
+    #         for pid in expcf.testDataset.data_splits:
+    #             dices[str(pid)] = {}
+    #             for i in range(self.classes):
+    #                 dices[str(pid)][self.expconfig.classes_name[i]] = dice[str(pid)].get_dice_scores()[self.expconfig.classes_name[i]]
+    #                 classes_dices[self.expconfig.classes_name[i]].append(dice[str(pid)].get_dice_scores()[self.expconfig.classes_name[i]])
+
+    #             dices[str(pid)]["mean_over_orgs"] = dice[str(pid)].get_mean_dice_score(exeptions = ['background'])
+    #         dices['means'] = {}
+    #         for i in range(self.classes):
+    #             dices['means'][self.expconfig.classes_name[i]] = np.mean(classes_dices[self.expconfig.classes_name[i]])
+    #         dices['means']['mean_overall_orgs'] = np.mean(list(dices['means'].values()))
+
+    #     print(dices)
+    #     with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
+    #         json.dump(dices, f, indent=4)
+
 
 
 

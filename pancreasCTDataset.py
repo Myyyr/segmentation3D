@@ -19,11 +19,13 @@ def shape2str(s):
 
 
 class SplitTCIA3DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0):
+    def __init__(self, root_dir, split, data_splits, im_dim = None, transform=None, hot = 0, mode = "train"):
         super(SplitTCIA3DDataset, self).__init__()
         
         self.im_dim = shape2str(im_dim)
         self.hot = hot
+        self.mode = mode
+        self.data_splits = data_splits
 
         # list_dir = []
 
@@ -83,7 +85,9 @@ class SplitTCIA3DDataset(data.Dataset):
 
         # print(target.shape
 
-
+        if self.mode == 'test':
+            pid = torch.from_numpy(np.array([self.get_pid(index)]))
+            return pid, input, target
         return input, target
 
 
