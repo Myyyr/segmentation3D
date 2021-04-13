@@ -30,7 +30,6 @@ class ExpConfig():
 
 
         input_shape = [512,512,256]
-        v_size = [bs,1]+ input_shape
         filters = [4, 16, 64, 256]
         skip_idx = [3,6,9,12]
         patch_size=(16,16,16)
