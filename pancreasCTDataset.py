@@ -98,6 +98,11 @@ class SplitTCIA3DDataset(data.Dataset):
             out[i, ...] = (labels == i)
         return out
 
+    def get_pid(self, index):
+        a = self.image_filenames[index].split('/')[-1]
+        a = a.replace('.nii','').replace('000','').replace('00','')
+        return int(a)
+
 
     def __len__(self):
         return len(self.image_filenames)
