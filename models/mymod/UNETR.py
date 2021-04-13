@@ -32,6 +32,7 @@ class UNETR(nn.Module):
         for i in range(self.n_layers):
             encoder_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_heads)
             self.ListTrans.append(nn.TransformerEncoder(encoder_layer, 1))
+        self.TransModuleList = nn.ModuleList(self.ListTrans) 
 
         # Skips
         self.skip0 = UNetConv3D(self.in_channels, self.filters[3], bn=bn)
