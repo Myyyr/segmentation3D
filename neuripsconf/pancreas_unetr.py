@@ -97,7 +97,7 @@ class ExpConfig():
         
         data_splits['test'] = [all_splits[self.split]]
         data_splits['train'] = all_splits[:self.split] + all_splits[self.split+1:]
-
+        print(sets, data_splits[sets])
         return data_splits[sets]
 
     def load_model(self):
