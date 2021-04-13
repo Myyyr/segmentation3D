@@ -57,11 +57,13 @@ class UNETR(nn.Module):
 
 
     def forward(self, X, mode=None):
-        if len(list(X.shape))==5: 
-            X = X[:,0,...]
-        bs = X.shape[0]
+
 
         sk0 = self.skip0(X)
+
+        # if len(list(X.shape))==5: 
+        #     X = X[:,0,...]
+        bs = X.shape[0]
         sk123 = []
         self.emb_size_reshape = [bs] + self.emb_size_reshape
         self.emb_size_reshape_trans = self.emb_size_reshape[:4]+ [self.d_model]
