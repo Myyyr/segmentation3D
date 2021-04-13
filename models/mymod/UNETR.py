@@ -62,7 +62,7 @@ class UNETR(nn.Module):
         sk0 = self.skip0(X)
         sk123 = []
         self.emb_size_reshape = [bs] + self.emb_size_reshape
-        self.emb_size_reshape_trans = [bs] + self.emb_size_reshape[:3]+ [self.d_model]
+        self.emb_size_reshape_trans = [bs] + self.emb_size_reshape[:4]+ [self.d_model]
         self.emb_size_flat = [bs] + self.emb_size_flat
         # Get patches, flat and project
         X = torch.reshape(X, self.emb_size_reshape)
