@@ -105,3 +105,32 @@ class UnetUp3D(nn.Module):
         elif self.up_mode == 'deconv':
             outputs2 = self.up(inputs2)
             return self.conv1(torch.cat([inputs1, outputs2], 1))
+
+
+class UNETRSkip(nn.Module):
+    def __init__(self,d_model, filters, mode = "deconv", bn = True):
+        super(UNETRSkip, self).__init__()
+
+        self.d_model = d_model
+        self.filters = [d_model] + filters
+        self.n_module = len(filters)
+        self.bn = True
+
+        self.module_list = []
+        for i in range(self.n_module):
+            l = [nn.Conv3d(self.filters[i], self.filters[i+1], kernel_size=3)]
+            if bn: l.append(nn.BatchNorm3d(self.filters[i+1]))
+            l.append(nn.ReLU(inplace=True))
+            l.append(nn.ConvTranspose3d(self.filters[i+1], self.filters[i+1], 2, stride = 2))
+
+            self.module_list.append(nn.ModuleList(l))
+        self.module_list = nn.ModuleList(self.module_list)
+
+        for m in self.children():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
+            elif isinstance(m, nn.ConvTranspose3d):
+                init_weights(m, init_type='kaiming')
+
+    def forward(self, x):
+        return self.module_list(x)
