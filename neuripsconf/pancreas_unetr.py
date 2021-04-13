@@ -60,6 +60,7 @@ class ExpConfig():
 
 
         # Training
+        self.start_epoch = 0
         self.train_original_classes = False
         self.epoch = 25
 
