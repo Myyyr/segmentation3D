@@ -92,7 +92,7 @@ class SplitTCIA3DDataset(data.Dataset):
         # print(target.shape
 
         if self.mode == 'test':
-            pid = torch.from_numpy(np.array([self.data_splits(index)]))
+            pid = torch.from_numpy(np.array([self.data_splits[index]]))
             return pid, input, target
         return input, target
 
