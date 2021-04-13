@@ -25,7 +25,7 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        self.labelpath = "/local/SSD_DEEPLEARNING/PANCREAS_MULTI_RES/160_160_64/"
+        self.labelpath = "/local/DEEPLEARNING/PANCREAS_MULTI_RES/512_512_256/"
         self.datapath = self.labelpath
 
 
