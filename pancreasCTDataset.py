@@ -47,8 +47,7 @@ class SplitTCIA3DDataset(data.Dataset):
             self.target_filenames += [join(target_dir, x) for x in listdir(target_dir) if is_image_file(x)]
 
             self.data_splits += [self.get_pid(i) for i in listdir(image_dir) if is_image_file(i)]
-        print(self.data_splits)
-        exit(0)
+        
         self.image_filenames = sorted(self.image_filenames)
         self.target_filenames = sorted(self.target_filenames)
 
