@@ -62,7 +62,7 @@ class UNETR(nn.Module):
         sk0 = self.skip0(X)
         sk123 = []
         self.emb_size_reshape = [bs] + self.emb_size_reshape
-        self.emb_size_reshape_trans = [bs] + self.emb_size_reshape[:4]+ [self.d_model]
+        self.emb_size_reshape_trans = self.emb_size_reshape[:4]+ [self.d_model]
         self.emb_size_flat = [bs] + self.emb_size_flat
         # Get patches, flat and project
         X = torch.reshape(X, self.emb_size_reshape)
@@ -74,7 +74,7 @@ class UNETR(nn.Module):
             print("trans {}".format(i))
             X = self.ListTrans[i](X)
             if i+1 in self.skip_idx:
-                sk123.append(torch.reshape(X, self.emb_size_reshape_trans))
+                sk123.append(torch.reshape(X, self.emb_size_reshape_trans).permute(0,4,1,2,3))
 
         # Decode
         X = self.up_concat4(sk123[3])
