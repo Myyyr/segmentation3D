@@ -118,7 +118,7 @@ class UNETRSkip(nn.Module):
 
         self.module_list = []
         for i in range(self.n_module):
-            l = [nn.Conv3d(self.filters[i], self.filters[i+1], kernel_size=3)]
+            l = [nn.Conv3d(self.filters[i], self.filters[i+1], kernel_size=3, padding=1)]
             if bn: l.append(nn.BatchNorm3d(self.filters[i+1]))
             l.append(nn.ReLU(inplace=True))
             l.append(nn.ConvTranspose3d(self.filters[i+1], self.filters[i+1], (2,2,2), stride = (2,2,2)))
