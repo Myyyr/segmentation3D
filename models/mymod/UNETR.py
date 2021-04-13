@@ -65,6 +65,8 @@ class UNETR(nn.Module):
         self.emb_size_reshape_trans = self.emb_size_reshape[:4]+ [self.d_model]
         self.emb_size_flat = [bs] + self.emb_size_flat
         # Get patches, flat and project
+        print('X.shape' ,X.shape)
+        print('self.emb_size_reshape', self.emb_size_reshape)
         X = torch.reshape(X, self.emb_size_reshape)
         X = torch.reshape(X, self.emb_size_flat)
         X = self.lin(X)
