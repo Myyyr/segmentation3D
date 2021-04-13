@@ -73,7 +73,6 @@ class UNETR(nn.Module):
         X = torch.reshape(X, emb_size_flat)
         X = self.lin(X)
 
-        print('X.shape', X.shape)
 
         # Go through transformers and save reshaped skip
         for i in range(self.n_layers):
