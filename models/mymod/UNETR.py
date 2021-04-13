@@ -79,6 +79,7 @@ class UNETR(nn.Module):
 
             X = self.ListTrans[i](X)
             if i+1 in self.skip_idx:
+                print('self.emb_size_reshape_trans', self.emb_size_reshape_trans)
                 sk123.append(torch.reshape(X, self.emb_size_reshape_trans).permute(0,4,1,2,3))
 
         # Decode
