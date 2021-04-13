@@ -29,7 +29,7 @@ class ExpConfig():
         self.datapath = self.labelpath
 
 
-        input_shape = [512,512,256]
+        self.input_shape = [512,512,256]
         filters = [4, 16, 64, 256]
         skip_idx = [3,6,9,12]
         patch_size=(16,16,16)
@@ -82,9 +82,9 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.im_dim , transform = self.transform)
-        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim )
-        testDataset  = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.im_dim , mode = 'test')
+        trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.input_shape , transform = self.transform)
+        validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape )
+        testDataset  = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape , mode = 'test')
         self.trainDataLoader = DataLoader(dataset=trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
         self.testDataLoader = DataLoader(dataset=testDataset, num_workers=1, batch_size=1, shuffle=False)
