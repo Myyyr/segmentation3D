@@ -133,5 +133,4 @@ class UNETRSkip(nn.Module):
                 init_weights(m, init_type='kaiming')
 
     def forward(self, x):
-        # print("------ x.shape", x.shape)
         return self.module_list(x)
