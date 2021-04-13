@@ -25,6 +25,7 @@ class SplitTCIA3DDataset(data.Dataset):
         self.im_dim = shape2str(im_dim)
         self.hot = hot
         self.mode = mode
+        self.data_splits = []
         
 
         # list_dir = []
@@ -45,7 +46,7 @@ class SplitTCIA3DDataset(data.Dataset):
             self.image_filenames  += [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
             self.target_filenames += [join(target_dir, x) for x in listdir(target_dir) if is_image_file(x)]
 
-        self.data_splits = [i for i in dt_splits]
+            self.data_splits = [i for i in listdir(image_dir) if is_image_file(x)]
         print(self.data_splits)
         exit(0)
         self.image_filenames = sorted(self.image_filenames)
