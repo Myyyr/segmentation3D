@@ -51,7 +51,7 @@ class UNETR(nn.Module):
 
         # initialise weights
         for m in self.modules():
-            if isinstance(m, nn.ConvTranspose3d) or isinstance(m, nn.Conv3d):
+            if isinstance(m, nn.ConvTranspose3d) or isinstance(m, nn.Conv3d), or isinstance(m, nn.TransformerEncoderLayer):
                 init_weights(m, init_type='kaiming')
 
 
@@ -68,6 +68,7 @@ class UNETR(nn.Module):
 
         # Go through transformers and save reshaped skip
         for i in range(self.n_layers):
+            print("trans {}".format(i))
             X = self.ListTrans[i](X)
             if i+1 in self.skip_idx:
                 sk123.append(torch.reshape(X, self.emb_size_reshape))
