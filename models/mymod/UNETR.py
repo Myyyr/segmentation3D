@@ -27,7 +27,7 @@ class UNETR(nn.Module):
         self.emb_size_flat = [np.prod(self.emb_size_reshape[:3]), self.emb_size_reshape[3]]
         
         # Encoders
-        self.lin = nn.Linear(self.emb_size_reshape[3], seld.d_model)
+        self.lin = nn.Linear(self.emb_size_reshape[3], self.d_model)
         self.ListTrans = []
         for i in range(self.n_layers):
             encoder_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_heads)
