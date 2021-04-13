@@ -78,6 +78,7 @@ class UNETR(nn.Module):
 
         # Decode
         X = self.up_concat4(sk123[3])
+        print('sk123[2].shape', sk123[2].shape)
         b = self.skip3(sk123[2])
         print(shape(b))
         a = torch.cat([b, X],1)
