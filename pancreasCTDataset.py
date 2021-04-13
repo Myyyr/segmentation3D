@@ -103,7 +103,7 @@ class SplitTCIA3DDataset(data.Dataset):
 
     def get_pid(self, index):
         
-        a = self.image_filenames[index].split('/')[-1]
+        a = self.image_filenames[int(index)].split('/')[-1]
         print(a)
         a = a.replace('.nii','').replace('000','').replace('00','')
         print(a)
