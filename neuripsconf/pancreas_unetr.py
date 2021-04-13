@@ -30,10 +30,10 @@ class ExpConfig():
 
 
         self.input_shape = [512,512,256]
-        filters = [4, 16, 64, 256]
-        skip_idx = [3,6,9,12]
+        filters = [4, 8, 16, 32]
+        skip_idx = [1,3,5,6]
         patch_size=(16,16,16)
-        n_layers=12
+        n_layers=6
         
         # GPU
         self.gpu = '0'
