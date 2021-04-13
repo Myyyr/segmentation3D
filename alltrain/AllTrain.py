@@ -234,7 +234,7 @@ class AllTrain(Train):
                 pid, inputs, labels = data
                 pid = int(pid[0,0].item())
                 inputs, labels = inputs.to(self.device), labels.to(self.device)
-                print('inputs.shape', inputs.shape)
+                # print('inputs.shape', inputs.shape)
                 outputs = F.softmax(expcf.net(inputs), dim=1)
                 del inputs
                 dice[str(pid)](outputs, labels)
