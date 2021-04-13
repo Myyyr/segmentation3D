@@ -65,15 +65,12 @@ class UNETR(nn.Module):
         self.emb_size_flat = [bs] + self.emb_size_flat
         # Get patches, flat and project
         X = torch.reshape(X, self.emb_size_reshape)
-        print('X.shape', X.shape)
         X = torch.reshape(X, self.emb_size_flat)
-        print('X.shape', X.shape)
         X = self.lin(X)
 
         # Go through transformers and save reshaped skip
         for i in range(self.n_layers):
             print("trans {}".format(i))
-            print('X.shape', X.shape)
             X = self.ListTrans[i](X)
             if i+1 in self.skip_idx:
                 sk123.append(torch.reshape(X, self.emb_size_reshape))
