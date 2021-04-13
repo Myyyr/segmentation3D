@@ -46,7 +46,7 @@ class SplitTCIA3DDataset(data.Dataset):
             self.image_filenames  += [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
             self.target_filenames += [join(target_dir, x) for x in listdir(target_dir) if is_image_file(x)]
 
-            self.data_splits = [i for i in listdir(image_dir) if is_image_file(i)]
+            self.data_splits += [get_pid(i) for i in listdir(image_dir) if is_image_file(i)]
         print(self.data_splits)
         exit(0)
         self.image_filenames = sorted(self.image_filenames)
@@ -106,11 +106,7 @@ class SplitTCIA3DDataset(data.Dataset):
         return out
 
     def get_pid(self, index):
-        print(index)
-        a = self.image_filenames[int(index)].split('/')[-1]
-        print(a)
-        a = a.replace('.nii','').replace('000','').replace('00','')
-        print(a)
+        a = index.replace('.nii','').replace('000','').replace('00','')
         return int(a)
 
 
