@@ -41,7 +41,7 @@ class ExpConfig():
 
         # Model
         self.n_classes = 2
-        self.net = UNETR(input_shape=input_shape,filters=filters,patch_size=patch_size, n_layers=n_layers, skip_idx=skip_idx)
+        self.net = UNETR(input_shape=self.input_shape,filters=filters,patch_size=patch_size, n_layers=n_layers, skip_idx=skip_idx)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
