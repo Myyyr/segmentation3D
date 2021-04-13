@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from models.networks_other import init_weights
-from mymod.utils import UNetConv3D, UNETRSkip
+from models.mymod.utils import UNetConv3D, UNETRSkip
 class UNETR(nn.Module):
 
     def __init__(self, filters = [64, 128, 256, 512], d_model=768, input_shape= (512,512,512), patch_size=(16,16,16), skip_idx = [3,6,9,12], n_classes=2, in_channels=1, n_heads=8, bn = True, up_mode='deconv', n_layers=12):
