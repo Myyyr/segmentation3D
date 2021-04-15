@@ -21,18 +21,20 @@ def shape2str(s):
 
 
 class Patched3DSplitTCIA3DDataset(data.Dataset):
-    def __init__(self, root_dir, split, data_splits, patch_size, transform=None, hot = 0):
+    def __init__(self, root_dir, split, dt_splits, patch_size, transform=None, hot = 0, mode = 'train'):
         super(Patched3DSplitTCIA3DDataset, self).__init__()
         
         self.patch_size = patch_size
         self.hot = hot
+        self.mode = test
+        self.data_splits = []
 
         # list_dir = []
 
         self.image_filenames = []
         self.target_filenames = []
 
-        for i in data_splits:
+        for i in dt_splits:
             # list_dir.append(join(root_dir, i))
 
             image_dir = join(root_dir, i, 'image')
@@ -42,6 +44,8 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
 
             self.image_filenames  += [join(image_dir, x) for x in listdir(image_dir) if is_image_file(x)]
             self.target_filenames += [join(target_dir, x) for x in listdir(target_dir) if is_image_file(x)]
+
+            self.data_splits += [self.get_pid(i) for i in listdir(image_dir) if is_image_file(i)]
 
         self.image_filenames = sorted(self.image_filenames)
         self.target_filenames = sorted(self.target_filenames)
@@ -53,6 +57,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
 
         # data augmentation
         self.transform = transform
+
 
         
         
@@ -79,21 +84,39 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
             target = self._toEvaluationOneHot(target)
         input = torch.from_numpy(input[None,:,:,:]).float()
         target = torch.from_numpy(target).long()
-         
+        
 
-        x = random.randint(0, h-self.ps_h)
-        y = random.randint(0, w-self.ps_w)
-        z = random.randint(0, d-self.ps_d)
+        if mode == 'train':
 
-        ps_h, ps_w, ps_d = self.patch_size
+            x = random.randint(0, h-self.ps_h)
+            y = random.randint(0, w-self.ps_w)
+            z = random.randint(0, d-self.ps_d)
 
-        input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
-        target = target[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            ps_h, ps_w, ps_d = self.patch_size
 
-        # print(target.shape
+            input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            target = target[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+
+            return input, target
+
+        if mode == 'test':
+            pid = torch.from_numpy(np.array([self.data_splits[index]]))
 
 
-        return input, target
+            ps_w, ps_h, ps_d = self.patch_size
+            b, w,h,d = input.shape
+            if w%ps_w != 0:
+                print("H, W, D must be multiple of patch size")
+                exit(0)
+            n = int(w/ps_w)
+
+            input = torch.reshape(input, (b,n,n,n, int(w/ps_w), int(h/ps_h), int(d/ps_d)))
+            input = input.permute((1,2,3,0,4,5,6))
+
+            #target = torch.reshape(target, (n**3, int(w/ps_w), int(d/ps_d), int(h/ps_h)))
+
+            return pid, input, target
+
 
 
     def _toEvaluationOneHot(self, labels):
@@ -102,6 +125,10 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
         for i in range(2):
             out[i, ...] = (labels == i)
         return out
+
+    def get_pid(self, index):
+        a = index.replace('.nii','').replace('000','').replace('00','')
+        return int(a)
 
 
     def __len__(self):
