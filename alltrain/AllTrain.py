@@ -187,37 +187,37 @@ class AllTrain(Train):
 
 
         
-    def validate(self, epoch):
-        expcf = self.expconfig
-        startTime = time.time()
-        dice = dc.DiceScore(self.expconfig.classes_name)
+    # def validate(self, epoch):
+    #     expcf = self.expconfig
+    #     startTime = time.time()
+    #     dice = dc.DiceScore(self.expconfig.classes_name)
 
 
-        with torch.no_grad():
-            expcf.net.eval()
-            for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
-                inputs, labels = data
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-                outputs = F.softmax(expcf.net(inputs), dim=1)
-                del inputs
-                dice(outputs, labels)
-                del labels, outputs
+    #     with torch.no_grad():
+    #         expcf.net.eval()
+    #         for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
+    #             inputs, labels = data
+    #             inputs, labels = inputs.to(self.device), labels.to(self.device)
+    #             outputs = F.softmax(expcf.net(inputs), dim=1)
+    #             del inputs
+    #             dice(outputs, labels)
+    #             del labels, outputs
 
-            for i in range(self.classes):
-                self.save_dict['original'][self.expconfig.classes_name[i]] = dice.get_dice_scores()[self.expconfig.classes_name[i]]
+    #         for i in range(self.classes):
+    #             self.save_dict['original'][self.expconfig.classes_name[i]] = dice.get_dice_scores()[self.expconfig.classes_name[i]]
             
-            self.save_dict['meanDice'] =  dice.get_mean_dice_score(exeptions = ['background'])
-            self.meanDice = dice.get_mean_dice_score(exeptions = ['background'])
+    #         self.save_dict['meanDice'] =  dice.get_mean_dice_score(exeptions = ['background'])
+    #         self.meanDice = dice.get_mean_dice_score(exeptions = ['background'])
 
-            self.save_dict['epoch'] = epoch
-            self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
-            self.save_dict['training_time'] =  time.time() - self.startingTime
+    #         self.save_dict['epoch'] = epoch
+    #         self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
+    #         self.save_dict['training_time'] =  time.time() - self.startingTime
 
-            print(self.save_dict)
+    #         print(self.save_dict)
 
-        self.save_results()
+    #     self.save_results()
 
-        return time.time() - startTime
+    #     return time.time() - startTime
 
     def evaluate(self):
         print("-"*20, "\nEVALUATION ...")
@@ -233,13 +233,26 @@ class AllTrain(Train):
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
                 pid, inputs, labels = data
                 pid = int(pid[0,0].item())
-                inputs, labels = inputs.to(self.device), labels.to(self.device)
-                # print(i, 'inputs.shape', inputs.shape)
-                outputs = F.softmax(expcf.net(inputs), dim=1)
-                del inputs
-                dice[str(pid)](outputs, labels)
-                del labels, outputs
 
+                if !expcf.patched:
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
+                    # print(i, 'inputs.shape', inputs.shape)
+                    outputs = F.softmax(expcf.net(inputs), dim=1)
+                    del inputs
+                    dice[str(pid)](outputs, labels)
+                    del labels, outputs
+                else:
+                    n, b, w, h, d = inputs.shape
+                    outputs = torch.zeros((b, w, h, d, self.n_classes))
+                    ps_w = int(w/n)
+                    ps_h = int(h/n)
+                    ps_d = int(d/n)
+                    
+                    for x in range(n):
+                        for y in range(n):
+                            for z in range(n):
+                                # out_xyz = expcf.net(inputs[x,y,z,...])
+                                outputs[x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = expcf.net(inputs[x,y,z,...])
             dices = {}
             classes_dices = {}
             for i in range(self.classes):
