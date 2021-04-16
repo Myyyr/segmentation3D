@@ -35,6 +35,7 @@ class ExpConfig():
         patch_size=(16,16,16)
         self.data_patch = [128,128,128]
         n_layers=12
+        self.patched = True
         
         # GPU
         self.gpu = '0'

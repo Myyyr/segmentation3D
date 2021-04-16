@@ -234,7 +234,7 @@ class AllTrain(Train):
                 pid, inputs, labels = data
                 pid = int(pid[0,0].item())
 
-                if !expcf.patched:
+                if not expcf.patched:
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     # print(i, 'inputs.shape', inputs.shape)
                     outputs = F.softmax(expcf.net(inputs), dim=1)
