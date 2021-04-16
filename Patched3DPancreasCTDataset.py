@@ -86,7 +86,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
         target = torch.from_numpy(target).long()
         
 
-        if mode == 'train':
+        if self.mode == 'train':
 
             x = random.randint(0, h-self.ps_h)
             y = random.randint(0, w-self.ps_w)
@@ -99,7 +99,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
 
             return input, target
 
-        if mode == 'test':
+        if self.mode == 'test':
             pid = torch.from_numpy(np.array([self.data_splits[index]]))
 
 
