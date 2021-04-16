@@ -243,6 +243,7 @@ class AllTrain(Train):
                     del labels, outputs
                 else:
                     # print(inputs.shape)
+                    inputs, labels = inputs.to(self.device), labels.to(self.device)
                     b, nw, nh, nd, w, h, d = inputs.shape
                     outputs = torch.zeros((b, w, h, d, expcf.n_classes))
                     ps_w = int(w/nw)
