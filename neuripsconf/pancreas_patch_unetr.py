@@ -4,7 +4,7 @@ import os
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from pancreasCTDataset import *
+from Patched3DPancreasCTDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchio as tio
@@ -18,7 +18,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = 300
+        self.id = 301
         self.experiment_name = "pancreas_unetr_v{}".format(self.id)
         self.debug = False
 
@@ -30,10 +30,11 @@ class ExpConfig():
 
 
         self.input_shape = [512,512,256]
-        filters = [4, 8, 16, 32]
-        skip_idx = [1,3,5,6]
+        filters = [64, 128, 256, 512]
+        skip_idx = [3,6,9,12]
         patch_size=(16,16,16)
-        n_layers=6
+        self.data_patch = [128,128,128]
+        n_layers=12
         
         # GPU
         self.gpu = '0'
@@ -41,12 +42,12 @@ class ExpConfig():
 
         # Model
         self.n_classes = 2
-        self.net = UNETR(input_shape=self.input_shape,filters=filters,patch_size=patch_size, n_layers=n_layers, skip_idx=skip_idx)
+        self.net = UNETR(input_shape=self.data_patch,filters=filters,patch_size=patch_size, n_layers=n_layers, skip_idx=skip_idx)
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
         # self.model_path = './checkpoints/models/unetr.pth'
-        self.model_path = './checkpoints/models/300/mod.pth'
+        self.model_path = './checkpoints/models/unetr.pth'
         self.load_model()
         self.split = 1
          
@@ -84,9 +85,9 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        self.trainDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), im_dim=self.input_shape , transform = self.transform)
-        self.validDataset = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape )
-        self.testDataset  = SplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), im_dim=self.input_shape , mode = 'test')
+        self.trainDataset = Patched3DSplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('train'), self.data_patch , transform = self.transform)
+        self.validDataset = Patched3DSplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), self.data_patch )
+        self.testDataset  = Patched3DSplitTCIA3DDataset(self.datapath, self.split, self.generate_splits('test'), self.data_patch , mode = 'test')
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.valDataLoader = DataLoader(dataset=self.validDataset, num_workers=1, batch_size=self.batchsize, shuffle=False)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)
