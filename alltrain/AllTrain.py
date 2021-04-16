@@ -243,15 +243,15 @@ class AllTrain(Train):
                     del labels, outputs
                 else:
                     print(inputs.shape)
-                    n, b, w, h, d = inputs.shape
+                    b, nw, nh, nd, w, h, d = inputs.shape
                     outputs = torch.zeros((b, w, h, d, self.n_classes))
                     ps_w = int(w/n)
                     ps_h = int(h/n)
                     ps_d = int(d/n)
                     
-                    for x in range(n):
-                        for y in range(n):
-                            for z in range(n):
+                    for x in range(nw):
+                        for y in range(nh):
+                            for z in range(nd):
                                 # out_xyz = expcf.net(inputs[x,y,z,...])
                                 outputs[x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = expcf.net(inputs[x,y,z,...])
             dices = {}
