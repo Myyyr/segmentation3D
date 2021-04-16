@@ -242,7 +242,7 @@ class AllTrain(Train):
                     dice[str(pid)](outputs, labels)
                     del labels, outputs
                 else:
-                    print(inputs.shape)
+                    # print(inputs.shape)
                     b, nw, nh, nd, w, h, d = inputs.shape
                     outputs = torch.zeros((b, w, h, d, expcf.n_classes))
                     ps_w = int(w/nw)
