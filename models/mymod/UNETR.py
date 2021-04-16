@@ -59,7 +59,7 @@ class UNETR(nn.Module):
 
     def forward(self, X, mode=None):
         bs = X.shape[0]
-        X = X[bs, None, ...]
+        X = X[:, None, ...]
 
         sk0 = self.skip0(X)
 
