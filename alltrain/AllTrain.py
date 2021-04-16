@@ -245,7 +245,8 @@ class AllTrain(Train):
                     # print(inputs.shape)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     b, nw, nh, nd, w, h, d = inputs.shape
-                    b, c, aw, ah, ad = labels.shape
+                    # print(labels.shape)
+                    b, aw, ah, ad = labels.shape
                     outputs = torch.zeros((b, aw, ah, ad, expcf.n_classes))
                     # ps_w = int(w/nw)
                     # ps_h = int(h/nh)
