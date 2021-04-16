@@ -245,9 +245,9 @@ class AllTrain(Train):
                     print(inputs.shape)
                     b, nw, nh, nd, w, h, d = inputs.shape
                     outputs = torch.zeros((b, w, h, d, expcf.n_classes))
-                    ps_w = int(w/n)
-                    ps_h = int(h/n)
-                    ps_d = int(d/n)
+                    ps_w = int(w/nw)
+                    ps_h = int(h/nh)
+                    ps_d = int(d/nd)
                     
                     for x in range(nw):
                         for y in range(nh):
