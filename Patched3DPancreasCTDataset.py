@@ -87,12 +87,14 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
         
 
         if self.mode == 'train':
+            b, w,h,d = input.shape
+            ps_h, ps_w, ps_d = self.patch_size
 
             x = random.randint(0, h-self.ps_h)
             y = random.randint(0, w-self.ps_w)
             z = random.randint(0, d-self.ps_d)
 
-            ps_h, ps_w, ps_d = self.patch_size
+            
 
             input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             target = target[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
