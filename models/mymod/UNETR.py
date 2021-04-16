@@ -62,7 +62,7 @@ class UNETR(nn.Module):
         X = X[:, None, ...]
 
         sk0 = self.skip0(X)
-        
+
         
         
         sk123 = []
@@ -79,9 +79,9 @@ class UNETR(nn.Module):
         for i in range(self.n_layers):
             print(X.shape)
             exit(0)
-            X = self.ListTrans[i](X)
+            X = self.ListTrans[i](X.permute(1,0,2))
             if i+1 in self.skip_idx:
-                sk123.append(torch.reshape(X, emb_size_reshape_trans).permute(0,4,1,2,3))
+                sk123.append(torch.reshape(X.permute(1,0,2), emb_size_reshape_trans).permute(0,4,1,2,3))
 
         # Decode
         X = self.up_concat4(sk123[3])
