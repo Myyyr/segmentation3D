@@ -260,6 +260,7 @@ class AllTrain(Train):
                                 print(out_xyz.shape)
                                 print(outputs[:, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d].shape)
                                 print(w,h,d)
+                                print(z*d, (z+1)*d)
                                 exit(0)
                                 outputs[:, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d] = out_xyz
             dices = {}
