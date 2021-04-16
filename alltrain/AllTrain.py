@@ -245,7 +245,7 @@ class AllTrain(Train):
                     print(inputs.shape)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     b, nw, nh, nd, w, h, d = inputs.shape
-                    
+
                     # print(labels.shape)
                     b, aw, ah, ad = labels.shape
                     outputs = torch.zeros((b, expcf.n_classes, aw, ah, ad))
@@ -259,6 +259,7 @@ class AllTrain(Train):
                                 out_xyz = expcf.net(inputs[:,x,y,z,...])
                                 print(out_xyz.shape)
                                 print(outputs[:, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d].shape)
+                                print(w,h,d)
                                 exit(0)
                                 outputs[:, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d] = out_xyz
             dices = {}
