@@ -62,9 +62,7 @@ class UNETR(nn.Module):
         X = X[:, None, ...]
 
         sk0 = self.skip0(X)
-        print(X.shape)
-        print(sk0.shape)
-        exit(0)
+        
         
         
         sk123 = []
