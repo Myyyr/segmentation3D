@@ -90,9 +90,9 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
             b, w,h,d = input.shape
             ps_h, ps_w, ps_d = self.patch_size
 
-            x = random.randint(0, h-self.ps_h)
-            y = random.randint(0, w-self.ps_w)
-            z = random.randint(0, d-self.ps_d)
+            x = random.randint(0, h- ps_h)
+            y = random.randint(0, w- ps_w)
+            z = random.randint(0, d- ps_d)
 
             
 
