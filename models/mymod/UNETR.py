@@ -77,8 +77,6 @@ class UNETR(nn.Module):
 
         # Go through transformers and save reshaped skip
         for i in range(self.n_layers):
-            print(X.shape)
-            exit(0)
             X = self.ListTrans[i](X.permute(1,0,2))
             if i+1 in self.skip_idx:
                 sk123.append(torch.reshape(X.permute(1,0,2), emb_size_reshape_trans).permute(0,4,1,2,3))
