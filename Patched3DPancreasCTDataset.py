@@ -99,7 +99,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
             input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             target = target[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
-            input = torch.reshape(input, (1, ps_w, ps_h, ps_d))
+            input = torch.reshape(input, (ps_w, ps_h, ps_d))
             return input, target
 
         if self.mode == 'test':
