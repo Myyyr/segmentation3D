@@ -109,7 +109,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
                 print("H, W, D must be multiple of patch size")
                 exit(0)
             nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
-            input = torch.reshape(input, (b,nw,nh,nd, int(w/ps_w), int(h/ps_h), int(d/ps_d)))
+            input = torch.reshape(input, (b,nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
             input = input.permute((1,2,3,0,4,5,6))
 
             #target = torch.reshape(target, (n**3, int(w/ps_w), int(d/ps_d), int(h/ps_h)))
