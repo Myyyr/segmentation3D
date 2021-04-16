@@ -26,7 +26,7 @@ class Patched3DSplitTCIA3DDataset(data.Dataset):
         
         self.patch_size = patch_size
         self.hot = hot
-        self.mode = test
+        self.mode = mode
         self.data_splits = []
 
         # list_dir = []
