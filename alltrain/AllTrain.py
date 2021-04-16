@@ -256,7 +256,7 @@ class AllTrain(Train):
                                 out_xyz = expcf.net(inputs[:,x,y,z,...])
                                 # print(out_xyz.shape)
                                 # exit(0)
-                                outputs[:, x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = expcf.net(out_xyz)
+                                outputs[:, x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = out_xyz
             dices = {}
             classes_dices = {}
             for i in range(self.classes):
