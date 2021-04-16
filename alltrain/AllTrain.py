@@ -244,7 +244,7 @@ class AllTrain(Train):
                 else:
                     print(inputs.shape)
                     b, nw, nh, nd, w, h, d = inputs.shape
-                    outputs = torch.zeros((b, w, h, d, self.n_classes))
+                    outputs = torch.zeros((b, w, h, d, expcf.n_classes))
                     ps_w = int(w/n)
                     ps_h = int(h/n)
                     ps_d = int(d/n)
@@ -253,7 +253,7 @@ class AllTrain(Train):
                         for y in range(nh):
                             for z in range(nd):
                                 # out_xyz = expcf.net(inputs[x,y,z,...])
-                                outputs[x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = expcf.net(inputs[x,y,z,...])
+                                outputs[x*ps_w:(x+1)*ps_w, y*ps_h:(y+1)*ps_h, z*ps_d:(z+1)*ps_d] = expcf.net(inputs[:,x,y,z,...])
             dices = {}
             classes_dices = {}
             for i in range(self.classes):
