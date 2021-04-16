@@ -47,10 +47,7 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        # self.model_path = './checkpoints/models/unetr.pth'
-        self.model_path = './checkpoints/models/unetr.pth'
-        self.load_model()
-        self.split = 1
+        
          
         
         max_displacement = 5,5,5
@@ -66,6 +63,11 @@ class ExpConfig():
         self.start_epoch = 0
         self.train_original_classes = False
         self.epoch = 25
+
+        # self.model_path = './checkpoints/models/unetr.pth'
+        self.model_path = './checkpoints/models/unetr.pth'
+        self.load_model()
+        self.split = 1
 
         self.loss = torch.nn.CrossEntropyLoss()
 
