@@ -41,7 +41,7 @@ def get_scheduler(optimizer, opt, lr, decay=None):
     if opt == "constant":
         def lambda_rule(epoch):
             #print(epoch)
-            return lr
+            return 1
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
     if opt == "po":
