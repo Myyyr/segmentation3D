@@ -62,7 +62,7 @@ class ExpConfig():
         # Training
         self.start_epoch = 0
         self.train_original_classes = False
-        self.epoch = 100
+        self.epoch = 400
 
         # self.model_path = './checkpoints/models/unetr.pth'
         self.model_path = './checkpoints/models/unetr.pth'
@@ -72,8 +72,8 @@ class ExpConfig():
         self.loss = torch.nn.CrossEntropyLoss()
 
         self.hot = 0
-        self.batchsize = 1
-        self.lr_rate = 1e-3
+        self.batchsize = 2
+        self.lr_rate = 1e-4
         self.final_lr_rate = 1e-4
         self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
 
