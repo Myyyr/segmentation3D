@@ -6,10 +6,10 @@ import torch
 import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
-from models.cotr.network_architecture import CNNBackbone
-from models.cotr.network_architecture.neural_network import SegmentationNetwork
-from models.cotr.network_architecture.DeTrans.DeformableTrans import DeformableTransformer
-from models.cotr.network_architecture.DeTrans.position_encoding import build_position_encoding
+from models.cotr import CNNBackbone
+from models.cotr.neural_network import SegmentationNetwork
+from models.cotr.DeTrans.DeformableTrans import DeformableTransformer
+from models.cotr.DeTrans.position_encoding import build_position_encoding
 
 class Conv3d_wd(nn.Conv3d):
 
