@@ -209,4 +209,6 @@ class ResTranUnet(SegmentationNetwork):
         if self._deep_supervision and self.do_ds:
             return seg_output
         else:
+            print(seg_output[0].shape)
+            exit(0)
             return seg_output[0]#.permute(0,1,3,4,2)
