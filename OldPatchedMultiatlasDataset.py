@@ -13,21 +13,19 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48), return_full_image=False):
         super(PatchedMultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
-        # self.labelPath = expConfig.labelpath
+        self.labelPath = expConfig.labelpath
         self.mode = mode
-        self.file = {}
-        # self.labelFile = None
+        self.file = None
+        self.labelFile = None
         self.patch_size = patch_size
         #augmentation settings
         self.transform = expConfig.transform
 
         self.n_iter = n_iter
         self.return_full_image = return_full_image
-        self.n_classes = 14
 
-        for i in os.lisdir(self.filePath):
-            pid = i.split('/')[-1].replace('.npy', '').replace('000', '').replace('00', '')
-            self.file[str(pid)] = i
+
+        self.n_classes = 14
 
 
         if self.mode == 'train':
@@ -45,7 +43,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         np.random.seed(datetime.datetime.now().second + datetime.datetime.now().microsecond)
 
         #lazily open file
-        # self.openFileIfNotOpen()
+        self.openFileIfNotOpen()
 
         if self.mode == 'train':
             item_index = int(index%self.n_files)
@@ -54,12 +52,11 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         
         # print(item_index)
         # print(len(self.used_split))
-        index = self.used_pids[item_index]
+        index = self.used_split[item_index]
 
         #load from hdf5 file
-        file = np.load(self.file[str(index)])
-        image = file[0,...]
-        labels = file[1,...]
+        image = self.file["images_" + 'train'][index, ...]
+        labels = self.labelFile["masks_" + 'train'][index, ...]
             
 
         #Prepare data depeinding on soft/hard augmentation scheme
