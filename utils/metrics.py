@@ -2,7 +2,7 @@
 # https://github.com/wkentaro/pytorch-fcn/blob/master/torchfcn/utils.py
 
 import numpy as np
-import cv2
+# import cv2
 import torch.nn as nn
 import torch
 import torch.nn.functional as F
