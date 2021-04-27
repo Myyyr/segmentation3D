@@ -35,13 +35,13 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         #lazily open file
         self.openFileIfNotOpen()
 
-        if self.return_full_image:
+        if self.mode == 'train':
             item_index = int(index%self.n_files)
         else:
             item_index = index
         
-        print(item_index)
-        print(len(self.used_split))
+        # print(item_index)
+        # print(len(self.used_split))
         index = self.used_split[item_index]
 
         #load from hdf5 file
