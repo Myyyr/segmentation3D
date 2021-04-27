@@ -81,7 +81,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             ptc_input = torch.reshape(ptc_input, (ps_w, ps_h, ps_d))
             if self.return_full_image:
                 return (ptc_input, image), labels
-            return ptc_input, labels
+            return ptc_input[:, None, ...], labels
 
         if self.mode == 'test':
             pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
@@ -94,7 +94,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 exit(0)
             nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
             image = torch.reshape(image[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            return pid, image, target
+            return pid, image[:, None, ...], target
 
 
     def __len__(self):
