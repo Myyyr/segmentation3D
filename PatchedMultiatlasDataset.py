@@ -17,7 +17,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.mode = mode
         self.file = None
         self.labelFile = None
-
+        self.patch_size = patch_size
         #augmentation settings
         self.transform = expConfig.transform
 
