@@ -74,7 +74,7 @@ class ExpConfig():
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 10
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
-        self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, self.epoch)
+        self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
