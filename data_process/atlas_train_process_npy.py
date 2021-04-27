@@ -137,8 +137,8 @@ def prepare_data(input_folder, output_folder, size, input_channels, target_resol
             img = pad_slice_to_size(img, (512, 512, 256))
             mask = pad_slice_to_size(mask, (512, 512, 256))
 
-            print_info(img, "X")
-            print_info(mask, "Y")
+            # print_info(img, "X")
+            # print_info(mask, "Y")
 
             # print("mask sum ", np.sum(mask))
             scale_vector = target_resolution
@@ -281,23 +281,24 @@ def load_and_maybe_process_data(input_folder,
     :return: Returns an h5py.File handle to the dataset
     '''
 
-    size_str = '_'.join([str(i) for i in size])
-    res_str = '_'.join([str(i) for i in target_resolution])
+    # size_str = '_'.join([str(i) for i in size])
+    # res_str = '_'.join([str(i) for i in target_resolution])
 
-    data_file_name = 'data_3D_size_%s_res_%s.hdf5' % (size_str, res_str)
+    # data_file_name = 'data_3D_size_%s_res_%s.hdf5' % (size_str, res_str)
 
-    data_file_path = os.path.join(preprocessing_folder, data_file_name)
+    # data_file_path = os.path.join(preprocessing_folder, data_file_name)
 
-    utils.makefolder(preprocessing_folder)
+    # utils.makefolder(preprocessing_folder)
 
-    if not os.path.exists(data_file_path) or force_overwrite:
-        logging.info('This configuration of mode, size and target resolution has not yet been preprocessed')
-        logging.info('Preprocessing now!')
-        prepare_data(input_folder, data_file_path, size, input_channels, target_resolution)
-    else:
-        logging.info('Already preprocessed this configuration. Loading now!')
+    # if not os.path.exists(data_file_path) or force_overwrite:
+    #     logging.info('This configuration of mode, size and target resolution has not yet been preprocessed')
+    #     logging.info('Preprocessing now!')
+    #     prepare_data(input_folder, data_file_path, size, input_channels, target_resolution)
+    # else:
+    #     logging.info('Already preprocessed this configuration. Loading now!')
+    prepare_data(input_folder, data_file_path, size, input_channels, target_resolution)
 
-    return h5py.File(data_file_path, 'r')
+    # return h5py.File(data_file_path, 'r')
 
 
 if __name__ == '__main__':
@@ -314,7 +315,7 @@ if __name__ == '__main__':
     # target_size = (160,160,64)
     # rescale = [0.1]
 
-    d = load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
+    load_and_maybe_process_data(input_folder, preprocessing_folder, target_size, 1, rescale, force_overwrite=True)
 
 
 
