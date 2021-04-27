@@ -91,8 +91,8 @@ class UNETR(nn.Module):
         X = self.final(torch.cat([sk0, X], 1))
         
 
-        print(X.shape)
-        exit(0)
+        # print(X.shape)
+        # exit(0)
         return X
 
     @staticmethod
