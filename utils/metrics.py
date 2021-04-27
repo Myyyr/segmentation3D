@@ -254,11 +254,11 @@ class DC_and_CE_loss(nn.Module):
         else:
             mask = None
         print(target.shape)
-        
+
         dc_loss = self.dc(net_output, target, loss_mask=mask) if self.weight_dice != 0 else 0
         if self.log_dice:
             dc_loss = -torch.log(-dc_loss)
-
+        print( target[:, 0].shape)
         ce_loss = self.ce(net_output, target[:, 0].long()) if self.weight_ce != 0 else 0
         if self.ignore_label is not None:
             ce_loss *= mask[:, 0]
