@@ -5,6 +5,7 @@ import numpy as np
 import time
 import random
 import torchio as tio
+import datetime
 # import dataProcessing.augmentation as aug
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
