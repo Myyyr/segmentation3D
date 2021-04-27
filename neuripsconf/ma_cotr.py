@@ -10,6 +10,7 @@ import torch
 import torchio as tio
 
 from models.cotr.CoTr import ResTranUnet
+from utils.metrics import DC_and_CE_loss
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -64,6 +65,8 @@ class ExpConfig():
         self.epoch = 1000
 
         self.loss = torch.nn.CrossEntropyLoss()
+
+        self.loss = DC_and_CE_loss({'batch_dice': True, 'smooth': 1e-5, 'do_bg': False}, {})
 
         self.batchsize = 2
         self.lr_rate = 2e-2
