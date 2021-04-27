@@ -280,6 +280,7 @@ class RobustCrossEntropyLoss(nn.CrossEntropyLoss):
         if len(target.shape) == len(input.shape):
             assert target.shape[1] == 1
             target = target[:, 0]
+        print(input.shape, target.shape)
         return super().forward(input, target.long())
 
 
