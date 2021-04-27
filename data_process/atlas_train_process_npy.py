@@ -296,7 +296,7 @@ def load_and_maybe_process_data(input_folder,
     #     prepare_data(input_folder, data_file_path, size, input_channels, target_resolution)
     # else:
     #     logging.info('Already preprocessed this configuration. Loading now!')
-    prepare_data(input_folder, data_file_path, size, input_channels, target_resolution)
+    prepare_data(input_folder, preprocessing_folder, size, input_channels, target_resolution)
 
     # return h5py.File(data_file_path, 'r')
 
