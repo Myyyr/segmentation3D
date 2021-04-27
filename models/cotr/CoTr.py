@@ -141,7 +141,7 @@ class U_ResTran3D(nn.Module):
 
 
     def forward(self, inputs):
-        inputs = inputs.permute(0,1,4,2,3)
+        
         # # %%%%%%%%%%%%% CoTr
         x_convs = self.backbone(inputs)
         x_fea, masks, x_posemb = self.posi_mask(x_convs)
@@ -204,8 +204,9 @@ class ResTranUnet(SegmentationNetwork):
         self.do_ds = deep_supervision
 
     def forward(self, x):
+        x = x.permute(0,1,4,2,3)
         seg_output = self.U_ResTran3D(x)
         if self._deep_supervision and self.do_ds:
             return seg_output
         else:
-            return seg_output[0]
+            return seg_output[0].permute(0,2,3,1)
