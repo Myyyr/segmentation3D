@@ -40,6 +40,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         else:
             item_index = index
         
+        print(item_index)
+        print(len(self.used_split))
         index = self.used_split[item_index]
 
         #load from hdf5 file
