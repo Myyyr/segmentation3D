@@ -4,7 +4,7 @@ import os
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from pancreasCTDataset import *
+from PatchedMultiatlasDataset import *
 from torch.utils.data import DataLoader
 import torch
 import torchio as tio
