@@ -144,23 +144,12 @@ def prepare_data(input_folder, output_file, size, input_channels, target_resolut
             scale_vector = target_resolution
 
             if scale_vector != [1.0]:
-                # print(img.shape)
-                # #img = transform.resize(img, size)
-                # img = transform.rescale(img, scale_vector[0], anti_aliasing=False, preserve_range=True)
-                # #mask = transform.resize(mask, size)
-                # mask = rescale_labels(mask, scale_vector[0])
-
                 img = F.interpolate(torch.from_numpy(img)[None, None, :, :, :].float(), size = size, mode = 'trilinear', align_corners = True).numpy()[0,0,...]
                 mask = rescale_labels(mask, scale_vector[0], size)
-
-                np.save('checkpoints/images/img.npy', img)
-                np.save('checkpoints/images/mask.npy', mask)
-
                 
                 print_info(img, "x")
                 print_info(mask, "y", unique = True)
 
-            # print("mask sum ", np.sum(mask))
             img = normalise_image(img)
 
             img_list.append(img)
@@ -296,7 +285,7 @@ def load_and_maybe_process_data(input_folder,
 
 if __name__ == '__main__':
     input_folder = "/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/RawData/Training/"
-    preprocessing_folder = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas/"
+    preprocessing_folder = "/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/multi_atlas/"
     rescale = [1]
     # target_size = (512//10, 512//10, 198//10)
     # target_size = (int(round(512*rescale[0])), int(round(512*rescale[0])), int(round(198*rescale[0])))
