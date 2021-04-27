@@ -66,7 +66,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                   
 
         if self.mode == 'train':
-            b, w,h,d = input.shape
+            b, w,h,d = image.shape
             ps_h, ps_w, ps_d = self.patch_size
 
             x = random.randint(0, h- ps_h)
@@ -75,12 +75,12 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             
 
-            ptc_input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            ptc_input = image[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
             ptc_input = torch.reshape(ptc_input, (ps_w, ps_h, ps_d))
             if self.return_full_image:
-                return (ptc_input, input), labels
+                return (ptc_input, image), labels
             return ptc_input, labels
 
         if self.mode == 'test':
@@ -88,13 +88,13 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
 
             ps_w, ps_h, ps_d = self.patch_size
-            b, w,h,d = input.shape
+            b, w,h,d = image.shape
             if w%ps_w != 0:
                 print("H, W, D must be multiple of patch size")
                 exit(0)
             nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
-            input = torch.reshape(input[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            return pid, input, target
+            image = torch.reshape(image[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
+            return pid, image, target
 
 
     def __len__(self):
