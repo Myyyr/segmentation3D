@@ -10,6 +10,8 @@ from models.cotr import CNNBackbone
 from models.cotr.neural_network import SegmentationNetwork
 from models.cotr.DeTrans.DeformableTrans import DeformableTransformer
 from models.cotr.DeTrans.position_encoding import build_position_encoding
+import math
+
 
 class Conv3d_wd(nn.Conv3d):
 
@@ -173,7 +175,11 @@ class U_ResTran3D(nn.Module):
 
         result = self.upsamplex2(x)
         result = self.cls_conv(result)
-
+        a = [i.mean().item() for i in [inputs, ds0, ds1, ds2, result]]
+        print(a)
+        for k in a:
+            if math.isnan(k):
+                exit(0)
         return [result, ds0, ds1, ds2]
 
 
@@ -209,6 +215,5 @@ class ResTranUnet(SegmentationNetwork):
         if self._deep_supervision and self.do_ds:
             return seg_output
         else:
-            print(seg_output[0].mean().item())
             # exit(0)
             return seg_output[0]#.permute(0,1,3,4,2)
