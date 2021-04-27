@@ -11,6 +11,7 @@ import torchio as tio
 
 from models.cotr.CoTr import ResTranUnet
 from utils.metrics import DC_and_CE_loss
+from nnunet.utilities.nd_softmax import softmax_helper
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
@@ -42,7 +43,8 @@ class ExpConfig():
 
         # Model
         self.n_classes = 14
-        self.net = ResTranUnet(norm_cfg='BN', activation_cfg='ReLU', img_size=self.patch_size, num_classes=self.n_classes, weight_std=False, deep_supervision=False)
+        self.net = ResTranUnet(norm_cfg='IN', activation_cfg='LeakyReLU', img_size=self.patch_size, num_classes=self.n_classes, weight_std=False, deep_supervision=False)
+        self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
