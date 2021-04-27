@@ -51,7 +51,7 @@ def get_scheduler(optimizer, opt, lr, decay=None, max_epochs=None):
     
     if opt == 'poly':
         def lambda_rule(epoch):
-            return (1 - epoch / max_epochs)**exponent
+            return (1 - epoch / max_epochs)**0.9
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
         
