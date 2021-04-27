@@ -112,7 +112,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
 
     def __len__(self):
-        self.openFileIfNotOpen()
+        # self.openFileIfNotOpen()
         if self.mode == 'train':
             return self.n_iter
         return len(self.n_files)
