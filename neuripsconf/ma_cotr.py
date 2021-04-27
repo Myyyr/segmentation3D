@@ -47,7 +47,7 @@ class ExpConfig():
 
         self.model_path = './checkpoints/models/cotr.pth'
         # self.model_path = './checkpoints/models/300/mod.pth'
-        self.load_model()
+        
          
         
         max_displacement = 5,5,5
@@ -76,6 +76,8 @@ class ExpConfig():
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
+
+        self.load_model()
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
         
