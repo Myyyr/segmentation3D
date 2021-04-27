@@ -8,7 +8,6 @@ from tciautils import load_nifti_img, check_exceptions, is_image_file
 
 import torchvision
 import skimage.transform
-import torchsample.transforms as ts
 
 import torch
 import torchio as tio
