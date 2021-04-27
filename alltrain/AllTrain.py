@@ -52,7 +52,7 @@ class AllTrain(Train):
         self.expconfig.set_data(split)
 
         self.trainDataLoader = self.expconfig.trainDataLoader
-        self.valDataLoader = self.expconfig.valDataLoader
+   #     self.valDataLoader = self.expconfig.valDataLoader
         self.testDataLoader = self.expconfig.testDataLoader
 
         self.save_dict = {'original':{} ,'small':{}}
@@ -99,7 +99,7 @@ class AllTrain(Train):
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
         print("#### TRAIN SET :", len(self.trainDataLoader))
-        print("#### VALID SET :", len(self.valDataLoader))
+   #     print("#### VALID SET :", len(self.valDataLoader))
         total_time = 0.0
         self.save_dict['first_batch_memory'] = ""
         min_loss = 1e10
@@ -135,8 +135,8 @@ class AllTrain(Train):
 
 
             #validation at end of epoch
-            # if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
-            #     validTime = self.validate(epoch)
+            if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
+                self.evaluate()
 
             #take lr sheudler step
             if expcf.lr_scheduler != None:

@@ -4,7 +4,7 @@ from torch.optim import lr_scheduler
 
 
 
-def get_scheduler(optimizer, opt, lr, decay=None):
+def get_scheduler(optimizer, opt, lr, decay=None, max_epochs=None):
     scheduler = None
     if opt == "lambdarule_1":
         def lambda_rule(epoch):
@@ -48,6 +48,16 @@ def get_scheduler(optimizer, opt, lr, decay=None):
         def lambda_rule(epoch):
             return 1/(1 + decay*epoch)
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
-    return scheduler
+    
+    if opt == 'poly':
+        def lambda_rule(epoch):
+            return (1 - epoch / max_epochs)**exponent
+        scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
+
+        
 
 
+
+
+
+    return scheduler    

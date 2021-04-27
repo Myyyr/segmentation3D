@@ -9,7 +9,7 @@ import torchio as tio
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
-    def __init__(self, expConfig, mode="train", n_iter=250, return_full_image=False):
+    def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48), return_full_image=False):
         super(PatchedMultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
         self.labelPath = expConfig.labelpath
@@ -34,7 +34,10 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         #lazily open file
         self.openFileIfNotOpen()
 
-        item_index = int(index%self.n_files)
+        if self.return_full_image:
+            item_index = int(index%self.n_files)
+        else:
+            item_index = index
         
         index = self.used_split[item_index]
 
@@ -69,14 +72,16 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             
 
-            input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
-            target = target[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            ptc_input = input[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
-            input = torch.reshape(input, (ps_w, ps_h, ps_d))
-            return input, target
+            ptc_input = torch.reshape(ptc_input, (ps_w, ps_h, ps_d))
+            if self.return_full_image:
+                return (ptc_input, input), labels
+            return ptc_input, labels
 
         if self.mode == 'test':
-            pid = torch.from_numpy(np.array([self.data_splits[index]]))
+            pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
 
 
             ps_w, ps_h, ps_d = self.patch_size
@@ -86,16 +91,14 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 exit(0)
             nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
             input = torch.reshape(input[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            # input = input.permute((0,1,2,,4,5,6))
-
-            #target = torch.reshape(target, (n**3, int(w/ps_w), int(d/ps_d), int(h/ps_h)))
-
             return pid, input, target
 
 
     def __len__(self):
-        return self.n_iter
-
+        self.openFileIfNotOpen()
+        if self.mode == 'train':
+            return self.n_iter
+        return len(self.n_files)
         # return self.file["images_" + self.mode].shape[0]
 
     def openFileIfNotOpen(self):
@@ -105,11 +108,11 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             self.labelFile = h5py.File(self.labelPath, "r")
 
         if self.mode == 'train':
-            # self.used_split = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
+            self.used_pids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
             self.used_split = [6,17, 3,16,22,27,10,28, 7, 29, 23, 13,  1,  9,  5, 15, 11, 12, 24, 14,  8]
 
         else:
-            # self.used_split = [32, 33, 34, 35, 36, 37, 38, 39, 40]
+            self.used_pids = [32, 33, 34, 35, 36, 37, 38, 39, 40]
             self.used_split = [18, 20, 25, 19, 21,  0,  4,  2, 26]
         self.n_files = len(self.used_split)
             
