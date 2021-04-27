@@ -28,7 +28,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         for i in os.listdir(self.filePath):
             pid = i.split('/')[-1].replace('.npy', '').replace('000', '').replace('00', '')
-            self.file[str(pid)] = i
+            self.file[str(pid)] = os.path.join(self.filePath, i)
 
 
         if self.mode == 'train':
