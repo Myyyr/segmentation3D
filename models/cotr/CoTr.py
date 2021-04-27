@@ -141,6 +141,7 @@ class U_ResTran3D(nn.Module):
 
 
     def forward(self, inputs):
+        inputs = inputs.permute(0,1,4,2,3)
         # # %%%%%%%%%%%%% CoTr
         x_convs = self.backbone(inputs)
         x_fea, masks, x_posemb = self.posi_mask(x_convs)
