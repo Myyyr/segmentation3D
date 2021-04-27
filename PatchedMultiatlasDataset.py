@@ -26,7 +26,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.return_full_image = return_full_image
         self.n_classes = 14
 
-        for i in os.lisdir(self.filePath):
+        for i in os.listdir(self.filePath):
             pid = i.split('/')[-1].replace('.npy', '').replace('000', '').replace('00', '')
             self.file[str(pid)] = i
 
