@@ -175,11 +175,11 @@ class U_ResTran3D(nn.Module):
 
         result = self.upsamplex2(x)
         result = self.cls_conv(result)
-        a = [i.mean().item() for i in [inputs, ds0, ds1, ds2, result]]
-        print(a)
-        for k in a:
-            if math.isnan(k):
-                exit(0)
+        # a = [i.mean().item() for i in [inputs, ds0, ds1, ds2, result]]
+        # print(a)
+        # for k in a:
+        #     if math.isnan(k):
+        #         exit(0)
         return [result, ds0, ds1, ds2]
 
 
