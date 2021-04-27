@@ -10,7 +10,7 @@ from torch.nn.modules.loss import _Loss
 from torch.autograd import Function, Variable
 from torch import nn, Tensor
 from nnunet.training.loss_functions.TopK_loss import TopKLoss
-from nnunet.training.loss_functions.crossentropy import RobustCrossEntropyLoss
+# from nnunet.training.loss_functions.crossentropy import RobustCrossEntropyLoss
 from nnunet.utilities.nd_softmax import softmax_helper
 from nnunet.utilities.tensor_utilities import sum_tensor
 
@@ -245,6 +245,7 @@ class DC_and_CE_loss(nn.Module):
         :param target:
         :return:
         """
+        print(target.shape)
         if self.ignore_label is not None:
             assert target.shape[1] == 1, 'not implemented for one hot encoding'
             mask = target != self.ignore_label
@@ -252,7 +253,8 @@ class DC_and_CE_loss(nn.Module):
             mask = mask.float()
         else:
             mask = None
-
+        print(target.shape)
+        
         dc_loss = self.dc(net_output, target, loss_mask=mask) if self.weight_dice != 0 else 0
         if self.log_dice:
             dc_loss = -torch.log(-dc_loss)
