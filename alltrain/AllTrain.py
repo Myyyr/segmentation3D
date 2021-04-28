@@ -260,7 +260,7 @@ class AllTrain(Train):
                     for x in range(nw):
                         for y in range(nh):
                             for z in range(nd):
-                                out_xyz = expcf.net(inputs[:,x,y,z,...])
+                                out_xyz = expcf.net(inputs[:,:,x,y,z,...])
                                 outputs[:, :, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d] = out_xyz
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
             dices = {}
