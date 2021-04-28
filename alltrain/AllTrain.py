@@ -247,7 +247,7 @@ class AllTrain(Train):
                 else:
                     # print(inputs.shape)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
-                    print(inputs.shape)
+                    # print(inputs.shape)
                     b, nw, nh, nd, w, h, d = inputs.shape
 
                     # print(labels.shape)
