@@ -75,7 +75,8 @@ class AllTrain(Train):
 
     def back_step(self, expcf, loss):
         loss.backward()
-
+        if expcf.clip:
+            torch.nn.utils.clip_grad_norm_(expcf.net.parameters(), 12)
         #update params
         expcf.optimizer.step()
         if expcf.debug:
