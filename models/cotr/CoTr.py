@@ -153,14 +153,14 @@ class U_ResTran3D(nn.Module):
         # # x = self.transposeconv_stage2(x_trans.transpose(-1, -2).view(x_convs[-1].shape))
         # # skip2 = x_convs[-2]
         # Multi-scale   
-        print(inputs.shape)
-        print(x_convs[-1].shape)
-        print(x_trans.shape)
-        print(x_trans[:, -512::].shape)
-        print(x_trans[:, -512::].transpose(-1, -2).shape)
+        # print(inputs.shape)
+        # print(x_convs[-1].shape)
+        # print(x_trans.shape)
+        # print(x_trans[:, -512::].shape)
+        # print(x_trans[:, -512::].transpose(-1, -2).shape)
         x = self.transposeconv_stage2(x_trans[:, -512::].transpose(-1, -2).view(x_convs[-1].shape)) # x_trans length: 12*24*24+6*12*12=7776
         skip2 = x_trans[:, 0:-512].transpose(-1, -2).view(x_convs[-2].shape)
-        exit(0)
+        # exit(0)
         x = x + skip2
         x = self.stage2_de(x)
         ds2 = self.ds2_cls_conv(x)
