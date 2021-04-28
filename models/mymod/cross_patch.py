@@ -4,10 +4,11 @@ import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
 from models.mymod.transTools import Trans2D
 from models.networks_other import init_weights
+import numpy as np
 
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [32, 64, 128], n_classes=14, in_channels=1, n_heads=8, dim='2d', bn = True, up_mode='biline'):
+    def __init__(self, filters = [32, 64, 128], patch_size = [2,2,2], d_model = ,n_classes=14, in_channels=1, n_heads=8, dim='2d', bn = True, up_mode='biline'):
         super(CrossPatch3DTr, self).__init__()
 
         self.in_channels = in_channels
@@ -28,7 +29,7 @@ class CrossPatch3DTr(nn.Module):
 
         
         # Transformer for self attention
-        self.linear = nn.Linear(filters[2])
+        self.linear = nn.Linear((filters[2]))
 
 
         # upsampling

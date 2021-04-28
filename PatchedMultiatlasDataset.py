@@ -42,6 +42,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
 
     def __getitem__(self, index):
+        print(index)
         # update the seed to avoid workers sample the same augmentation parameters
         np.random.seed(datetime.datetime.now().second + datetime.datetime.now().microsecond)
 
