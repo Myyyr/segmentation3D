@@ -95,8 +95,8 @@ class AllTrain(Train):
         del loss
 
     def train(self):
-        self.evaluate()
-        exit(0)
+        # self.evaluate()
+        # exit(0)
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
@@ -280,7 +280,7 @@ class AllTrain(Train):
                 dices['means'][self.expconfig.classes_name[i]] = np.mean(classes_dices[self.expconfig.classes_name[i]])
             dices['means']['mean_overall_orgs'] = np.mean(list(dices['means'].values()))
 
-        print(dices)
+        print(dices['means'])
         with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
             json.dump(dices, f, indent=4)
 
