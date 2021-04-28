@@ -37,6 +37,7 @@ class ExpConfig():
         self.patch_size=(128,128,128)
         # n_layers=6
         self.clip = True
+        self.patched = True
         # GPU
         self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
