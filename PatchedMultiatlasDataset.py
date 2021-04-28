@@ -116,7 +116,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         # self.openFileIfNotOpen()
         if self.mode == 'train':
             return self.n_iter
-        return len(self.n_files)
+        return self.n_files
         # return self.file["images_" + self.mode].shape[0]
 
     # def openFileIfNotOpen(self):
