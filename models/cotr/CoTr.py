@@ -94,7 +94,7 @@ class U_ResTran3D(nn.Module):
 
         self.MODEL_NUM_CLASSES = num_classes
 
-        self.upsamplex2 = nn.Upsample(scale_factor=(1,2,2), mode='trilinear')
+        self.upsamplex2 = nn.Upsample(scale_factor=(2,2,2), mode='trilinear')
 
         self.transposeconv_stage2 = nn.ConvTranspose3d(384, 384, kernel_size=(2,2,2), stride=(2,2,2), bias=False)
         self.transposeconv_stage1 = nn.ConvTranspose3d(384, 192, kernel_size=(2,2,2), stride=(2,2,2), bias=False)
@@ -156,10 +156,10 @@ class U_ResTran3D(nn.Module):
         print(inputs.shape)
         print(x_convs[-1].shape)
         print(x_trans.shape)
-        print(x_trans[:, 6912::].shape)
-        print(x_trans[:, 6912::].transpose(-1, -2).shape)
-        x = self.transposeconv_stage2(x_trans[:, 6912::].transpose(-1, -2).view(x_convs[-1].shape)) # x_trans length: 12*24*24+6*12*12=7776
-        skip2 = x_trans[:, 0:6912].transpose(-1, -2).view(x_convs[-2].shape)
+        print(x_trans[:, -512::].shape)
+        print(x_trans[:, -512::].transpose(-1, -2).shape)
+        x = self.transposeconv_stage2(x_trans[:, -512::].transpose(-1, -2).view(x_convs[-1].shape)) # x_trans length: 12*24*24+6*12*12=7776
+        skip2 = x_trans[:, 0:-512].transpose(-1, -2).view(x_convs[-2].shape)
         exit(0)
         x = x + skip2
         x = self.stage2_de(x)
