@@ -210,6 +210,7 @@ class ResTranUnet(SegmentationNetwork):
         self.do_ds = deep_supervision
 
     def forward(self, x):
+        print(x.shape)
         x = x.permute(0,1,4,2,3)
         seg_output = self.U_ResTran3D(x)
         if self._deep_supervision and self.do_ds:
