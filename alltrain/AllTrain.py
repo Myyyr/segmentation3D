@@ -228,7 +228,7 @@ class AllTrain(Train):
             expcf.net.eval()
 
             dice = {}
-            for pid in expcf.testDataset.data_splits:
+            for pid in expcf.testDataset.used_pids:
                 dice[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
 
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
@@ -265,7 +265,7 @@ class AllTrain(Train):
             for i in range(self.classes):
                 classes_dices[self.expconfig.classes_name[i]] = []
 
-            for pid in expcf.testDataset.data_splits:
+            for pid in expcf.testDataset.used_pids:
                 dices[str(pid)] = {}
                 for i in range(self.classes):
                     dices[str(pid)][self.expconfig.classes_name[i]] = dice[str(pid)].get_dice_scores()[self.expconfig.classes_name[i]]
