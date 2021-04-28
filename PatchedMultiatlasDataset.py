@@ -110,7 +110,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 exit(0)
             nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
             image = torch.reshape(image[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            return pid, image, labels
+            return pid, image[None, ...], labels
 
 
     def __len__(self):
