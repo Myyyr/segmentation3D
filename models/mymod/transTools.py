@@ -35,7 +35,7 @@ class CrossAttention(nn.Module):
 
     def forward(self, X):
         # Normalization
-        X = self.norm(X)
+        X = self.norm1(X)
 
         # Separation Region/FullImage into Xq / (Xk&v)
         Xq, Xkv = X[:,0,:], X[:,1:,:]
