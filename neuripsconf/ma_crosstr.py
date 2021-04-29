@@ -45,7 +45,7 @@ class ExpConfig():
 
         # Model
         self.n_classes = 14
-        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[2,2,2],d_model=1024,n_classes=self.n_classes,n_cheads=2,n_sheads=8,bn=True,up_mode='deconv',n_strans=6)
+        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],d_model=128,n_classes=self.n_classes,n_cheads=2,n_sheads=8,bn=True,up_mode='deconv',n_strans=6)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
