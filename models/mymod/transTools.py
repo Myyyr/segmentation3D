@@ -23,7 +23,7 @@ class CrossAttention(nn.Module):
             wv = nn.Linear(self.d_model, self.d_model)
             self.all_w.append({'Q':wq, 'K':wk, 'V':wv})
 
-        self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model, biais=False)
+        self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model)
         self.norm2 = nn.LayerNorm(d_model, eps=1e-5)
 
         self.feed_forward = nn.Linear(d_model, d_model)
