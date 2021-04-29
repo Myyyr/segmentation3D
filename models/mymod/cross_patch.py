@@ -166,6 +166,9 @@ class CrossPatch3DTr(nn.Module):
         ## Permute and Reshape
         _, c, h, w, d = skip3.shape
         Z = Z.permute(0,2,1)
+        print(Z.shape)
+        print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
+        exit(0)
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
