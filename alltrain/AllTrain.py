@@ -13,6 +13,7 @@ import numpy as np
 import torch.nn.functional as F
 
 import alltrain.DiceScore as dc
+import numpy as np
 
 def optimizer_to(optim, device):
     for param in optim.state.values():
@@ -189,7 +190,7 @@ class AllTrain(Train):
         return ret
 
 
-    def evaluate(self):
+    def evaluate(self, vizonly=False):
         print("-"*20, "\nEVALUATION ...")
         expcf = self.expconfig
 
@@ -235,6 +236,11 @@ class AllTrain(Train):
                                     inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     out_xyz = expcf.net(torch.cat([inptc, inputs], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
+                    if vizonly:
+                        np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
+                        np.save('./viz_inputs.npy', inputs.cpu().numpy())
+                        np.save('./viz_target.npy', labels.cpu().numpy())
+                        exit(0)
 
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
             dices = {}
