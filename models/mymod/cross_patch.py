@@ -139,7 +139,8 @@ class CrossPatch3DTr(nn.Module):
         A = X[:,:,1:,...]
 
         # Encode the interest region
-        R, (skip1, skip2, skip3) = self.encoder(R, True)
+        R, S = self.encoder(R, True)
+        skip1, skip2, skip3 = S
 
         # Encode all regions with no gradient
         YA = []
