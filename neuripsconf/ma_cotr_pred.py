@@ -51,7 +51,7 @@ class ExpConfig():
         print("N PARAMS : {}".format(self.n_parameters))
 
         # self.model_path = './checkpoints/models/cotr.pth'
-        self.model_path = './checkpoints/models/400/ma_cotr_v400_split_0.json'
+        self.model_path = './checkpoints/models/400/mod.pt'
         
          
         
