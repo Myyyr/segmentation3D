@@ -70,7 +70,7 @@ class CrossAttention(nn.Module):
 
 
     def attention(self, Q, K, V):
-        M = torch.matmul(Q,K)/(self.d**0.5)
+        M = torch.matmul(Q,K)/(self.d_model**0.5)
         A = nn.functional.softmax(M, dim = -1)
         return torch.matmul(A,V)
 
