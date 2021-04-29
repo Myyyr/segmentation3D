@@ -4,6 +4,75 @@ import math
 from models.networks_other import init_weights
 
 
+class CrossAttention(object):
+    """docstring for CrossAttention"""
+    def __init__(self, d_model, n_heads = 2):
+        super(CrossAttention, self).__init__()
+        
+        self.d_model = d_model
+        self.n_heads = n_heads
+
+        self.all_w = []
+        for i in range(self.n_heads):
+            wq = nn.Linear(self.d, self.d)
+            wk = nn.Linear(self.d, self.d)
+            wv = nn.Linear(self.d, self.d)
+            self.all_w.append({'Q':wq, 'K':wk, 'V':wv})
+
+        self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model, biais=False)
+        #initialise the blocks
+        for m in self.children():
+            init_weights(m, init_type='kaiming')        
+
+
+    def forward(self, Xq, Xkv):
+
+        Z = []
+        # Compute attention for all heads
+        for i in range(self.n_heads):
+            # Get Queries, Keys, Values
+            Q = self.all_w['Q'](Xq)
+            K = self.all_w['K'](Xkv)
+            V = self.all_w['V'](Xkv)
+
+            # Get attention
+            Z += [self.attention(Q, K.permute(0,2,1), V)]
+            
+        # Concate and get the final projected Z
+        Z = torch.cat(Z, dim=2)
+        Z = self.wo(Z)
+
+        return Z
+
+
+
+    def attention(self, Q, K, V):
+        M = torch.matmul(Q,K)/(self.d**0.5)
+        A = nn.functional.softmax(M, dim = -1)
+        return torch.matmul(A,V)
+
+
+
+class PositionalEncoding(nn.Module):
+
+    def __init__(self, d_model, dropout=0.1, max_len=5000):
+        super(PositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() * (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + self.pe[:x.size(0), :]
+        return self.dropout(x)
+
+
+
 def positionalencoding2d(d_model, height, width):
     """
     :param d_model: dimension of the model

@@ -2,19 +2,24 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
-from models.mymod.transTools import Trans2D
+from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
 
+
+
+
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [32, 64, 128], patch_size = [2,2,2], d_model = ,n_classes=14, in_channels=1, n_heads=8, dim='2d', bn = True, up_mode='biline'):
+    def __init__(self, filters = [32, 64, 128], patch_size = [2,2,2], d_model = 1024,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, dim='2d', bn = True, up_mode='biline', n_strans=6):
         super(CrossPatch3DTr, self).__init__()
 
         self.in_channels = in_channels
         self.dim = dim
         self.filters = filters
         self.n_heads = n_heads
+        self.d_model = d_model
+        self.patch_size = patch_size
 
         
         # CNN encoder
@@ -29,10 +34,16 @@ class CrossPatch3DTr(nn.Module):
 
         
         # Transformer for self attention
-        self.linear = nn.Linear((filters[2]))
+        self.linear = nn.Linear(filters[2]*np.prod(self.patch_size), self.d_model)
+        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
+        trans_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_heads)
+        self.self_trans = nn.TransformerEncoder(trans_layer, n_strans)
+
+        # Transformer for cross attention
+        self.cross_trans = CrossAttention(self.d_model, n_cheads)
 
 
-        # upsampling
+        # upsampling !!!! CHECK THAT SHIT !!!!
         self.up_concat4 = UnetUp3D(filters[4], filters[3], bn=bn, up_mode=up_mode)
         self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
         self.up_concat2 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
