@@ -36,14 +36,14 @@ class CrossAttention(nn.Module):
 
     def forward(self, X, rseq=512):
         # Normalization
-        print('###X',X.shape)
+        # print('###X',X.shape)
         X = self.norm1(X)
-        print('###X',X.shape)
+        # print('###X',X.shape)
 
         # Separation Region/FullImage into Xq / (Xk&v)
         Xkv, Xq = X[:,:rseq,:], X[:,rseq:,:]
-        print('###Xq',Xq.shape)
-        print('###Xkv',Xkv.shape)
+        # print('###Xq',Xq.shape)
+        # print('###Xkv',Xkv.shape)
 
         Z = []
         # Compute attention for all heads
@@ -57,11 +57,10 @@ class CrossAttention(nn.Module):
             Z += [self.attention(Q, K.permute(0,2,1), V)]
             
         # Concate and get the final projected Z
-        # print('###Z',Z.shape)
         Z = torch.cat(Z, dim=2)
-        print('###Z',Z.shape)
+        # print('###Z',Z.shape)
         Z = self.wo(Z)
-        print('###Z',Z.shape)
+        # print('###Z',Z.shape)
 
         # skip connection
         Z = Z + Xq

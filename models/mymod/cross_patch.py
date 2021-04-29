@@ -174,13 +174,14 @@ class CrossPatch3DTr(nn.Module):
         Z = Z.permute(0,2,1)
         # print('skip3.shape', skip3.shape)
         # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
+        
+        print(Z.shape)
+        exit(0)
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
-        # print(Z.shape)
         # Z = self.center(Z)
         # print(Z.shape)
-        # exit(0)
 
         ## Up, skip and conv
         Z = self.up_concat3(skip3, Z)
