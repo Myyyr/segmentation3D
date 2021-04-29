@@ -233,6 +233,7 @@ class AllTrain(Train):
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
+                                    crop = []
                                     inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     out_xyz = expcf.net(torch.cat([inptc, inputs], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
