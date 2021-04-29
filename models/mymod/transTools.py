@@ -18,9 +18,9 @@ class CrossAttention(nn.Module):
 
         self.all_w = []
         for i in range(self.n_heads):
-            wq = nn.Linear(self.d, self.d)
-            wk = nn.Linear(self.d, self.d)
-            wv = nn.Linear(self.d, self.d)
+            wq = nn.Linear(self.d_model, self.d_model)
+            wk = nn.Linear(self.d_model, self.d_model)
+            wv = nn.Linear(self.d_model, self.d_model)
             self.all_w.append({'Q':wq, 'K':wk, 'V':wv})
 
         self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model, biais=False)
