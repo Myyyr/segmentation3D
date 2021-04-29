@@ -65,7 +65,7 @@ class SelfTransEncoder(nn.Module):
 
         # Transformer for self attention
         ## Patch, Reshapping
-        bs,c,h,w,d = Y.shape
+        bs,c,h,w,d = skip4.shape
         s1, s2, s3 = self.patch_size
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
