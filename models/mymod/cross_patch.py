@@ -159,17 +159,18 @@ class CrossPatch3DTr(nn.Module):
         del R
 
         # Cross attention
-        print(A.shape)
-        Z = self.cross_trans(A)
+        # print(A.shape)
+        rseq = R.shape[1]
+        Z = self.cross_trans(A, rseq)
         del A
         
         # Decoder
         ## Permute and Reshape
         _, c, h, w, d = skip3.shape
         Z = Z.permute(0,2,1)
-        print(Z.shape)
-        print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
-        exit(0)
+        # print(Z.shape)
+        # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
+        # exit(0)
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
