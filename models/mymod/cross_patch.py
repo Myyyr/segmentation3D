@@ -128,9 +128,12 @@ class CrossPatch3DTr(nn.Module):
         #                             nn.Conv3d(b,c, 3, padding=1))
 
         ## Decode like 3D UNet
-        self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
-        self.up_concat2 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
-        self.up_concat1 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
+        self.up_concat4 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
+        self.up_concat3 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
+        self.up_concat2 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
+        self.up_concat1 = UnetUp3D(filters[0], filters[0], bn=bn, up_mode=up_mode)
+        
+
         self.final_conv = nn.Conv3d(filters[0], n_classes, 1)
 
         # initialise weights
@@ -170,7 +173,7 @@ class CrossPatch3DTr(nn.Module):
         
         # Decoder
         ## Permute and Reshape
-        _, c, h, w, d = skip3.shape
+        _, c, h, w, d = skip4.shape
         Z = Z.permute(0,2,1)
         # print('skip3.shape', skip3.shape)
         print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
