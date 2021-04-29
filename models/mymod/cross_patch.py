@@ -6,7 +6,7 @@ from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
 
-class SelfTransEncoder(object):
+class SelfTransEncoder(nn.Module):
     """docstring for SelfTransEncoder"""
     def __init__(self, filters = [16, 32, 64, 128], patch_size = [2,2,2], d_model = 1024, in_channels=1, n_sheads=8, bn = True, n_strans=6):
         super(SelfTransEncoder, self).__init__()

@@ -4,7 +4,7 @@ import math
 from models.networks_other import init_weights
 
 
-class CrossAttention(object):
+class CrossAttention(nn.Module):
     """docstring for CrossAttention"""
 
     # !! Maybe add dropout later !!
