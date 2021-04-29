@@ -45,8 +45,8 @@ class SelfTransEncoder(nn.Module):
         
 
     def forward(self, X, ret_skip=True):
-        print(X.shape)
-        exit(0)
+        # print(X.shape)
+        # exit(0)
         # CNN Encoder
         skip1 = self.first_conv(X)
         skip1 = self.conv1(skip1)

@@ -106,7 +106,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 crop = torch.cat(crop, dim=1)
                 # image = torch.reshape(image, (b,nh,nw,nd,ps_h,ps_w,ps_d))
                 # image = torch.reshape(image, (b,nh*nw*nd,ps_h,ps_w,ps_d))
-                print(ptc_input.shape, crop.shape,ptc_input[None,None,...].shape)
+                # print(ptc_input.shape, crop.shape,ptc_input[None,None,...].shape)
                 return torch.cat([ptc_input[None,None,...], crop], 1), labels
             return ptc_input[None, ...], labels
 
