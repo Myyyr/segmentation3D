@@ -124,7 +124,7 @@ class CrossPatch3DTr(nn.Module):
         self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
         self.up_concat2 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
         self.up_concat1 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
-        self.final_conv = self.nn.Conv3d(filters[0], n_classes, 1)
+        self.final_conv = nn.Conv3d(filters[0], n_classes, 1)
 
         # initialise weights
         for m in self.modules():
