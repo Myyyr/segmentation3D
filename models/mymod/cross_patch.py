@@ -159,6 +159,7 @@ class CrossPatch3DTr(nn.Module):
         del R
 
         # Cross attention
+        print(A.shape)
         Z = self.cross_trans(A)
         del A
         
