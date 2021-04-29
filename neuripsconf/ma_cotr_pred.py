@@ -40,7 +40,7 @@ class ExpConfig():
         self.clip = True
         self.patched = True
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
