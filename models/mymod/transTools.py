@@ -44,9 +44,9 @@ class CrossAttention(nn.Module):
         # Compute attention for all heads
         for i in range(self.n_heads):
             # Get Queries, Keys, Values
-            Q = self.all_w['Q'](Xq)
-            K = self.all_w['K'](Xkv)
-            V = self.all_w['V'](Xkv)
+            Q = self.all_w[i]['Q'](Xq)
+            K = self.all_w[i]['K'](Xkv)
+            V = self.all_w[i]['V'](Xkv)
 
             # Get attention
             Z += [self.attention(Q, K.permute(0,2,1), V)]
