@@ -224,6 +224,13 @@ class AllTrain(Train):
                     # ps_w = int(w/nw)
                     # ps_h = int(h/nh)
                     # ps_d = int(d/nd)
+                    crop = []
+                    if expcf.testDataset.return_full_image:
+                        for x in range(nh):
+                            for y in range(nw):
+                                for z in range(nz):
+                                    crop.append(inputs[:,:,x,y,z,...])
+                        crop = torch.cat(crop, dim=1)
                     
                     for x in range(nh):
                         for y in range(nw):
@@ -233,8 +240,7 @@ class AllTrain(Train):
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
-                                    crop = []
-                                    inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
+                                    # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     out_xyz = expcf.net(torch.cat([inptc, inputs], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
