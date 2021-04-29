@@ -57,7 +57,7 @@ class CrossAttention(nn.Module):
             Z += [self.attention(Q, K.permute(0,2,1), V)]
             
         # Concate and get the final projected Z
-        print('###Z',Z.shape)
+        # print('###Z',Z.shape)
         Z = torch.cat(Z, dim=2)
         print('###Z',Z.shape)
         Z = self.wo(Z)
