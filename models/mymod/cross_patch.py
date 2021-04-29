@@ -87,7 +87,8 @@ class SelfTransEncoder(nn.Module):
         ## Permutation
         Y = Y.permute(1,0,2)
 
-        if ret_skip: Y, (skip1, skip2, skip3)
+        if ret_skip: 
+            return Y, (skip1, skip2, skip3)
         return Y
 
 
