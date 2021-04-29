@@ -228,7 +228,7 @@ class AllTrain(Train):
                     if expcf.testDataset.return_full_image:
                         for x in range(nh):
                             for y in range(nw):
-                                for z in range(nz):
+                                for z in range(nd):
                                     crop.append(inputs[:,:,x,y,z,...])
                         crop = torch.cat(crop, dim=1)
                     
