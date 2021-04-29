@@ -173,7 +173,7 @@ class CrossPatch3DTr(nn.Module):
         _, c, h, w, d = skip3.shape
         Z = Z.permute(0,2,1)
         # print('skip3.shape', skip3.shape)
-        # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
+        print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
         
         print(Z.shape)
         exit(0)
