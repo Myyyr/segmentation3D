@@ -99,6 +99,9 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
                 image = torch.reshape(image, (b,nh,nw,nd,ps_h,ps_w,ps_d))
                 image = torch.reshape(image, (b,nh*nw*nd,ps_h,ps_w,ps_d))
+                print(image.shape)
+                print(ptc_input.shape)
+                exit(0)
                 return torch.cat([ptc_input[None,...], image], 1), labels
             return ptc_input[None, ...], labels
 
