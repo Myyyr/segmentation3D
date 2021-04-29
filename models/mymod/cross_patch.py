@@ -6,51 +6,125 @@ from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
 
-
-
-
-class CrossPatch3DTr(nn.Module):
-
-    def __init__(self, filters = [32, 64, 128], patch_size = [2,2,2], d_model = 1024,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, dim='2d', bn = True, up_mode='biline', n_strans=6):
-        super(CrossPatch3DTr, self).__init__()
-
+class SelfTransEncoder(object):
+    """docstring for SelfTransEncoder"""
+    def __init__(self, filters = [16, 32, 64, 128], patch_size = [2,2,2], d_model = 1024, in_channels=1, n_sheads=8, bn = True, n_strans=6):
+        super(SelfTransEncoder, self).__init__()
         self.in_channels = in_channels
-        self.dim = dim
         self.filters = filters
-        self.n_heads = n_heads
+        self.n_sheads = n_sheads
         self.d_model = d_model
         self.patch_size = patch_size
 
         
         # CNN encoder
-        self.conv1 = UNetConv3D(self.in_channels, filters[0], bn=bn)
+        self.first_conv = nn.Conv3d(self.in_channels, filters[0], 1)
+        self.conv1 = UNetConv3D(filters[0], filters[1], bn=bn)
         self.maxpool1 = nn.MaxPool3d(kernel_size=2)
 
-        self.conv2 = UNetConv3D(filters[0], filters[1], bn=bn)
+        self.conv2 = UNetConv3D(filters[1], filters[2], bn=bn)
         self.maxpool2 = nn.MaxPool3d(kernel_size=2)
 
-        self.conv3 = UNetConv3D(filters[1], filters[2], bn=bn)
+        self.conv3 = UNetConv3D(filters[2], filters[3], bn=bn)
         self.maxpool3 = nn.MaxPool3d(kernel_size=2)
 
         
         # Transformer for self attention
-        self.linear = nn.Linear(filters[2]*np.prod(self.patch_size), self.d_model)
-        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
-        trans_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_heads)
+        self.before_d_model = filters[3]*np.prod(self.patch_size)
+        self.linear = nn.Linear(self.before_d_model, self.d_model)
+        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 1000)
+        trans_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_sheads)
         self.self_trans = nn.TransformerEncoder(trans_layer, n_strans)
 
+        # initialise weights
+        for m in self.modules():
+            if isinstance(m, nn.Conv3d):
+                init_weights(m, init_type='kaiming')
+        
+
+    def forward(self, X, ret_skip=True):
+        bs,c,h,w,d = X.shape
+        # CNN Encoder
+        skip1 = self.first_conv(X)
+        del X
+        skip1 = self.conv1(skip1)
+
+        skip2 = self.maxpool1(skip1)
+        if not ret_skip: del skip1
+        skip2 = self.conv2(skip2)
+
+        skip3 = self.maxpool2(skip2)
+        if not ret_skip: del skip2
+        skip3 = self.conv3(skip3)
+
+        Y = self.maxpool3(skip3)
+        if not ret_skip: del skip3
+
+        # Transformer for self attention
+        ## Patch, Reshapping
+        s1, s2, s3 = self.patch_size
+        s = s1*s2*s3
+        n_seq = int(h*w*d/s)
+        Y = torch.reshape(Y, (bs, c, n_seq, s1, s2, s3))
+        Y = torch.reshape(Y, (bs, c, n_seq, s))
+        Y = Y.permute(0,2,1,3) # bs, seq, c, s
+        Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
+        
+        ## Linear projection
+        Y = self.linear(Y)
+
+        ## Positional encodding
+        Y = self.positional_encoder(Y)
+
+        ## Permutation
+        Y = Y.permute(1,0,2) # seq, bs, bef_dmodel # for pytorch tranformer layer
+
+        ## Transformer
+        Y = self.self_trans(Y)
+
+        ## Permutation
+        Y = Y.permute(1,0,2)
+
+        if ret_skip: Y, (skip1, skip2, skip3)
+        return Y
+
+
+class CrossPatch3DTr(nn.Module):
+
+    def __init__(self, filters = [16, 32, 64, 128], patch_size = [2,2,2], d_model = 1024,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6):
+        super(CrossPatch3DTr, self).__init__()
+
+        self.in_channels = in_channels
+        self.filters = filters
+        self.n_sheads = n_sheads
+        self.d_model = d_model
+        self.patch_size = patch_size
+
+
+        # CNN + Trans encoder
+        self.encoder = SelfTransEncoder(filters=filters, patch_size=patch_size, d_model=d_model, in_channels=in_channels, n_sheads=n_sheads, bn=bn, n_strans=n_strans)
+
+
         # Transformer for cross attention
+        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
         self.cross_trans = CrossAttention(self.d_model, n_cheads)
 
 
-        # upsampling !!!! CHECK THAT SHIT !!!!
-        self.up_concat4 = UnetUp3D(filters[4], filters[3], bn=bn, up_mode=up_mode)
+        # CNN decoder 
+        self.before_d_model = filters[3]*np.prod(self.patch_size)
+        ## Rescale progressively feature map from cross attention
+        a = int(self.before_d_model/self.patch_size[0])
+        b = int(a/self.patch_size[1])
+        c = int(b/self.patch_size[2])
+        self.center = nn.Sequential(nn.ConvTranspose3d(self.d_model, a, 2, stride=2),
+                                    nn.Conv3d(a,b, 3, padding=1),
+                                    nn.Conv3d(b,c, 3, padding=1))
+
+        ## Decode like 3D UNet
         self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
         self.up_concat2 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
         self.up_concat1 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
-
-        # final conv (without any concat)
-        self.final = self.nn.Conv3d(filters[0], n_classes, 1)
+        self.final_conv = self.nn.Conv3d(filters[0], n_classes, 1)
 
         # initialise weights
         for m in self.modules():
@@ -58,38 +132,52 @@ class CrossPatch3DTr(nn.Module):
                 init_weights(m, init_type='kaiming')
 
 
-    def forward(self, X, mode=None):
-        conv1 = self.conv1(X)
-        del X
-        maxpool1 = self.maxpool1(conv1)
-        conv2 = self.conv2(maxpool1)
-        maxpool2 = self.maxpool2(conv2)
-        conv3 = self.conv3(maxpool2)
-        maxpool3 = self.maxpool3(conv3)
-        conv4 = self.conv4(maxpool3)
-        maxpool4 = self.maxpool4(conv4)
+    def forward(self, X):        
+        R = X[:,:,0 ,...]
+        A = X[:,:,1:,...]
 
-        center = self.center(maxpool4)
-        center,_,_,_ = self.transformer(center)
+        # Encode the interest region
+        R, (skip1, skip2, skip3) = self.encoder(R, True)
 
-        up4 = self.up_concat4(conv4, center)
-        up3 = self.up_concat3(conv3, up4)
-        up2 = self.up_concat2(conv2, up3)
-        up1 = self.up_concat1(conv1, up2)
-        del maxpool1, maxpool2, maxpool3, maxpool4, center
-        del conv1,conv2,conv3,conv4
-        del up4, up3, up2
+        # Encode all regions with no gradient
+        YA = []
+        bs,na,_,_,_ = A.shape
+        with torch.no_grad():
+            for ra in range(na):
+                YA.append(self.encoder(A[:,:,ra,...], False))
 
-        final = self.final(up1)
-        del up1
+        # Concatenate all feature maps
+        A = torch.cat([R] + YA, 1)
+        del YA, X
+
+        # Positional encodding
+        A = self.positional_encoder(A)
+        del R
+
+        # Cross attention
+        Z = self.cross_trans(A)
+        del A
         
-        return final
+        # Decoder
+        ## Permute and Reshape
+        _, c, h, w, d = skip3.shape
+        Z = Z.permute(0,2,1)
+        Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
-    @staticmethod
-    def apply_argmax_softmax(pred):
-        log_p = F.softmax(pred, dim=1)
+        ## Progressively rescale featue map Z
+        Z = self.center(Z)
 
-        return log_p
+        ## Up, skip and conv
+        Z = self.up_concat3(skip3, Z)
+        del skip3
+        Z = self.up_concat2(skip2, Z)
+        del skip2
+        Z = self.up_concat1(skip1, Z)
+        del skip1
+
+        ## get prediction with final layer
+        Z = self.final_conv(Z)
+        return Z
 
 
 

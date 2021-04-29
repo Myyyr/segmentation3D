@@ -6,11 +6,15 @@ from models.networks_other import init_weights
 
 class CrossAttention(object):
     """docstring for CrossAttention"""
+
+    # !! Maybe add dropout later !!
     def __init__(self, d_model, n_heads = 2):
         super(CrossAttention, self).__init__()
         
         self.d_model = d_model
         self.n_heads = n_heads
+
+        self.norm1 = nn.LayerNorm(d_model, eps=1e-5)
 
         self.all_w = []
         for i in range(self.n_heads):
@@ -20,12 +24,21 @@ class CrossAttention(object):
             self.all_w.append({'Q':wq, 'K':wk, 'V':wv})
 
         self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model, biais=False)
+        self.norm2 = nn.LayerNorm(d_model, eps=1e-5)
+
+        self.feed_forward = nn.Linear(d_model, d_model)
+
         #initialise the blocks
         for m in self.children():
             init_weights(m, init_type='kaiming')        
 
 
-    def forward(self, Xq, Xkv):
+    def forward(self, X):
+        # Normalization
+        X = self.norm(X)
+
+        # Separation Region/FullImage into Xq / (Xk&v)
+        Xq, Xkv = X[:,0,:], X[:,1:,:]
 
         Z = []
         # Compute attention for all heads
@@ -41,6 +54,15 @@ class CrossAttention(object):
         # Concate and get the final projected Z
         Z = torch.cat(Z, dim=2)
         Z = self.wo(Z)
+
+        # skip connection
+        Z = Z + Xq
+
+        # normalization
+        Z = self.norm2(Z)
+
+        # Last feed forward
+        Z = self.feed_forward(Z)
 
         return Z
 

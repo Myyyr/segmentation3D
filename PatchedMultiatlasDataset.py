@@ -94,9 +94,12 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             ptc_input = image[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
-            ptc_input = torch.reshape(ptc_input, (ps_w, ps_h, ps_d))
+            ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))
             if self.return_full_image:
-                return (ptc_input, image), labels
+                nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
+                image = torch.reshape(image, (b,nh,nw,nd,ps_h,ps_w,ps_d))
+                image = torch.reshape(image, (b,nh*nw*nd,ps_h,ps_w,ps_d))
+                return torch.cat([ptc_input[None,...], image], 1), labels
             return ptc_input[None, ...], labels
 
         if self.mode == 'test':
@@ -104,12 +107,12 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
 
             ps_w, ps_h, ps_d = self.patch_size
-            b, w,h,d = image.shape
+            b,w,h,d = image.shape
             if w%ps_w != 0:
                 print("H, W, D must be multiple of patch size")
                 exit(0)
-            nw, nh, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
-            image = torch.reshape(image[0, ...], (nw,nh,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
+            nh, nw, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
+            image = torch.reshape(image[0, ...], (nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
             return pid, image[None, ...], labels
 
 

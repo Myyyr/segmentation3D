@@ -189,39 +189,6 @@ class AllTrain(Train):
         return ret
 
 
-        
-    # def validate(self, epoch):
-    #     expcf = self.expconfig
-    #     startTime = time.time()
-    #     dice = dc.DiceScore(self.expconfig.classes_name)
-
-
-    #     with torch.no_grad():
-    #         expcf.net.eval()
-    #         for i, data in tqdm(enumerate(self.valDataLoader), total = int(len(self.valDataLoader))):
-    #             inputs, labels = data
-    #             inputs, labels = inputs.to(self.device), labels.to(self.device)
-    #             outputs = F.softmax(expcf.net(inputs), dim=1)
-    #             del inputs
-    #             dice(outputs, labels)
-    #             del labels, outputs
-
-    #         for i in range(self.classes):
-    #             self.save_dict['original'][self.expconfig.classes_name[i]] = dice.get_dice_scores()[self.expconfig.classes_name[i]]
-            
-    #         self.save_dict['meanDice'] =  dice.get_mean_dice_score(exeptions = ['background'])
-    #         self.meanDice = dice.get_mean_dice_score(exeptions = ['background'])
-
-    #         self.save_dict['epoch'] = epoch
-    #         self.save_dict['memory'] = str(self.convert_byte(torch.cuda.max_memory_allocated()))
-    #         self.save_dict['training_time'] =  time.time() - self.startingTime
-
-    #         print(self.save_dict)
-
-    #     self.save_results()
-
-    #     return time.time() - startTime
-
     def evaluate(self):
         print("-"*20, "\nEVALUATION ...")
         expcf = self.expconfig
@@ -248,20 +215,27 @@ class AllTrain(Train):
                     # print(inputs.shape)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     # print(inputs.shape)
-                    b, c, nw, nh, nd, w, h, d = inputs.shape
+                    b, c, nh, nw, nd, h, w, d = inputs.shape
 
                     # print(labels.shape)
-                    b, aw, ah, ad = labels.shape
-                    outputs = torch.zeros((b, expcf.n_classes, aw, ah, ad))
+                    b, ah, aw, ad = labels.shape
+                    outputs = torch.zeros((b, expcf.n_classes, ah, aw, ad))
                     # ps_w = int(w/nw)
                     # ps_h = int(h/nh)
                     # ps_d = int(d/nd)
                     
-                    for x in range(nw):
-                        for y in range(nh):
+                    for x in range(nh):
+                        for y in range(nw):
                             for z in range(nd):
-                                out_xyz = expcf.net(inputs[:,:,x,y,z,...])
-                                outputs[:, :, x*w:(x+1)*w, y*h:(y+1)*h, z*d:(z+1)*d] = out_xyz
+                                if not expcf.testDataset.return_full_image:
+                                    out_xyz = expcf.net(inputs[:,:,x,y,z,...])
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
+                                else:
+                                    inptc = inputs[:,:,x,y,z,...]
+                                    inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
+                                    out_xyz = expcf.net(torch.cat([inptc, inputs], 1))
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
+
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
             dices = {}
             classes_dices = {}
