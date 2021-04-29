@@ -120,12 +120,12 @@ class CrossPatch3DTr(nn.Module):
         # CNN decoder 
         self.before_d_model = filters[3]*np.prod(self.patch_size)
         ## Rescale progressively feature map from cross attention
-        a = int(self.before_d_model/self.patch_size[0])
-        b = int(a/self.patch_size[1])
-        c = int(b/self.patch_size[2])
-        self.center = nn.Sequential(nn.ConvTranspose3d(self.d_model, a, 2, stride=2),
-                                    nn.Conv3d(a,b, 3, padding=1),
-                                    nn.Conv3d(b,c, 3, padding=1))
+        # a = int(self.before_d_model/self.patch_size[0])
+        # b = int(a/self.patch_size[1])
+        # c = int(b/self.patch_size[2])
+        # self.center = nn.Sequential(nn.ConvTranspose3d(self.d_model, a, 2, stride=2),
+        #                             nn.Conv3d(a,b, 3, padding=1),
+        #                             nn.Conv3d(b,c, 3, padding=1))
 
         ## Decode like 3D UNet
         self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
@@ -177,10 +177,10 @@ class CrossPatch3DTr(nn.Module):
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
-        print(Z.shape)
-        Z = self.center(Z)
-        print(Z.shape)
-        exit(0)
+        # print(Z.shape)
+        # Z = self.center(Z)
+        # print(Z.shape)
+        # exit(0)
 
         ## Up, skip and conv
         Z = self.up_concat3(skip3, Z)
