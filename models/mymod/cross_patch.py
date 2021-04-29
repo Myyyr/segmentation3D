@@ -156,11 +156,11 @@ class CrossPatch3DTr(nn.Module):
 
         # Positional encodding
         A = self.positional_encoder(A)
+        rseq = R.shape[1]
         del R
 
         # Cross attention
         # print(A.shape)
-        rseq = R.shape[1]
         Z = self.cross_trans(A, rseq)
         del A
         
