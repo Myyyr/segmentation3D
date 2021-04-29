@@ -21,7 +21,8 @@ class CrossAttention(nn.Module):
             wq = nn.Linear(self.d_model, self.d_model)
             wk = nn.Linear(self.d_model, self.d_model)
             wv = nn.Linear(self.d_model, self.d_model)
-            self.all_w.append({'Q':wq, 'K':wk, 'V':wv})
+            self.all_w.append((nn.ModuleList[wq, wk, wv]))
+        self.all_w = nn.ModuleList(self.all_w)
 
         self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model)
         self.norm2 = nn.LayerNorm(d_model, eps=1e-5)
@@ -44,9 +45,9 @@ class CrossAttention(nn.Module):
         # Compute attention for all heads
         for i in range(self.n_heads):
             # Get Queries, Keys, Values
-            Q = self.all_w[i]['Q'](Xq)
-            K = self.all_w[i]['K'](Xkv)
-            V = self.all_w[i]['V'](Xkv)
+            Q = self.all_w[i][0](Xq)
+            K = self.all_w[i][1](Xkv)
+            V = self.all_w[i][2](Xkv)
 
             # Get attention
             Z += [self.attention(Q, K.permute(0,2,1), V)]
