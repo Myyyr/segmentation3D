@@ -83,8 +83,9 @@ class UnetUp2D(nn.Module):
             return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 class UnetUp3D(nn.Module):
-    def __init__(self, in_size, out_size, bn = True):
+    def __init__(self, in_size, out_size, bn = True, up_mode='deconv'):
         super(UnetUp3D, self).__init__()
+        self.up_mode = up_mode
         if self.up_mode == 'triline':
             self.up = nn.Upsample(scale_factor=(2, 2, 2), mode='trilinear')
             self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
