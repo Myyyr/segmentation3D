@@ -145,7 +145,7 @@ class CrossPatch3DTr(nn.Module):
 
         # Encode all regions with no gradient
         YA = []
-        bs,na,_,_,_ = A.shape
+        bs,_,na,_,_,_ = A.shape
         with torch.no_grad():
             for ra in range(na):
                 YA.append(self.encoder(A[:,:,ra,...], False))
