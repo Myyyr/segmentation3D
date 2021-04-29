@@ -21,7 +21,7 @@ class CrossAttention(nn.Module):
             wq = nn.Linear(self.d_model, self.d_model)
             wk = nn.Linear(self.d_model, self.d_model)
             wv = nn.Linear(self.d_model, self.d_model)
-            self.all_w.append((nn.ModuleList[wq, wk, wv]))
+            self.all_w.append(nn.ModuleList([wq, wk, wv]))
         self.all_w = nn.ModuleList(self.all_w)
 
         self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model)
