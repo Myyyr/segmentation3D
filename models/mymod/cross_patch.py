@@ -19,14 +19,16 @@ class SelfTransEncoder(nn.Module):
         
         # CNN encoder
         self.first_conv = nn.Conv3d(self.in_channels, filters[0], 1)
-        self.conv1 = UNetConv3D(filters[0], filters[1], bn=bn)
-        self.maxpool1 = nn.MaxPool3d(kernel_size=2)
+        self.conv1 = UNetConv3D(filters[0], filters[0], bn=bn)
 
-        self.conv2 = UNetConv3D(filters[1], filters[2], bn=bn)
         self.maxpool2 = nn.MaxPool3d(kernel_size=2)
+        self.conv2 = UNetConv3D(filters[0], filters[1], bn=bn)
 
-        self.conv3 = UNetConv3D(filters[2], filters[3], bn=bn)
         self.maxpool3 = nn.MaxPool3d(kernel_size=2)
+        self.conv3 = UNetConv3D(filters[1], filters[2], bn=bn)
+
+        self.maxpool4 = nn.MaxPool3d(kernel_size=2)
+        self.conv4 = UNetConv3D(filters[2], filters[3], bn=bn)
 
         
         # Transformer for self attention
@@ -46,19 +48,20 @@ class SelfTransEncoder(nn.Module):
         
         # CNN Encoder
         skip1 = self.first_conv(X)
-        del X
         skip1 = self.conv1(skip1)
+        del X
 
-        skip2 = self.maxpool1(skip1)
+        skip2 = self.maxpool2(skip1)
         if not ret_skip: del skip1
         skip2 = self.conv2(skip2)
 
-        skip3 = self.maxpool2(skip2)
+        skip3 = self.maxpool3(skip2)
         if not ret_skip: del skip2
         skip3 = self.conv3(skip3)
 
-        Y = self.maxpool3(skip3)
+        skip4 = self.maxpool4(skip3)
         if not ret_skip: del skip3
+        skip4 = self.conv3(skip3)
 
         # Transformer for self attention
         ## Patch, Reshapping
@@ -67,13 +70,14 @@ class SelfTransEncoder(nn.Module):
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
         # print(Y.shape)
-        Y = torch.reshape(Y, (bs, c, n_seq, s1, s2, s3))
+        Y = torch.reshape(skip4, (bs, c, n_seq, s1, s2, s3))
         Y = torch.reshape(Y, (bs, c, n_seq, s))
         Y = Y.permute(0,2,1,3) # bs, seq, c, s
         Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
         
         ## Linear projection
         Y = self.linear(Y)
+        if not ret_skip: del skip4
 
         ## Positional encodding
         Y = self.positional_encoder(Y)
@@ -88,7 +92,7 @@ class SelfTransEncoder(nn.Module):
         Y = Y.permute(1,0,2)
 
         if ret_skip: 
-            return Y, (skip1, skip2, skip3)
+            return Y, (skip1, skip2, skip3, skip4)
         return Y
 
 
@@ -141,7 +145,7 @@ class CrossPatch3DTr(nn.Module):
 
         # Encode the interest region
         R, S = self.encoder(R, True)
-        skip1, skip2, skip3 = S
+        skip1, skip2, skip3, skip4 = S
 
         # Encode all regions with no gradient
         YA = []
@@ -168,14 +172,15 @@ class CrossPatch3DTr(nn.Module):
         ## Permute and Reshape
         _, c, h, w, d = skip3.shape
         Z = Z.permute(0,2,1)
-        print(Z.shape)
-        print('skip3.shape', skip3.shape)
-        print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
-        # exit(0)
+        # print('skip3.shape', skip3.shape)
+        # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
+        print(Z.shape)
         Z = self.center(Z)
+        print(Z.shape)
+        exit(0)
 
         ## Up, skip and conv
         Z = self.up_concat3(skip3, Z)
