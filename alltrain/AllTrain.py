@@ -232,6 +232,7 @@ class AllTrain(Train):
                                     crop.append(inputs[:,:,x,y,z,...])
                         crop = torch.cat(crop, dim=1)
                         print(crop.shape)
+                    print(crop.shape)
                     
                     for x in range(nh):
                         for y in range(nw):
