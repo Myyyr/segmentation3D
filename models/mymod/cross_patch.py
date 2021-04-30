@@ -199,7 +199,7 @@ class CrossPatch3DTr(nn.Module):
         ## Up, skip and conv
         Z = self.up_concat4(skip3, Z)
         # exit(0)
-        del skip3
+        del skip3, skip4
         Z = self.up_concat3(skip2, Z)
         del skip2
         Z = self.up_concat2(skip1, Z)
