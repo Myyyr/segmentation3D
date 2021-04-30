@@ -192,13 +192,13 @@ class CrossPatch3DTr(nn.Module):
         ## Progressively rescale featue map Z
         # Z = self.center(Z)
         # print(Z.shape)
-        print(Z.shape)
-        print(skip3.shape)
+        # print(Z.shape)
+        # print(skip3.shape)
         
 
         ## Up, skip and conv
         Z = self.up_concat4(skip3, Z)
-        exit(0)
+        # exit(0)
         del skip3
         Z = self.up_concat3(skip2, Z)
         del skip2
