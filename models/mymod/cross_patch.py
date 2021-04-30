@@ -180,7 +180,7 @@ class CrossPatch3DTr(nn.Module):
         print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
         
         print(Z.shape)
-        exit(0)
+        # exit(0)
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
 
         ## Progressively rescale featue map Z
