@@ -244,7 +244,7 @@ class AllTrain(Train):
                                     inptc = inputs[:,:,x,y,z,...]
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     print(crop.shape, inptc.shape)  
-                                    print(torch.cat([inptc, crop]).shape)
+                                    print(torch.cat([inptc, crop], 1).shape)
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
