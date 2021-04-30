@@ -241,7 +241,7 @@ class AllTrain(Train):
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
-                                    out_xyz = expcf.net(torch.cat([inptc, inputs], 1))
+                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
