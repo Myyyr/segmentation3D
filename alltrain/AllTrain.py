@@ -66,8 +66,8 @@ class AllTrain(Train):
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
         # print('labels.shape :', labels.shape)
-        print(inputs.shape)
-        exit(0)
+        # print(inputs.shape)
+        # exit(0)
         outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
@@ -97,8 +97,8 @@ class AllTrain(Train):
         del loss
 
     def train(self):
-        # self.evaluate()
-        # exit(0)
+        self.evaluate()
+        exit(0)
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
@@ -246,7 +246,7 @@ class AllTrain(Train):
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     print(crop.shape, inptc.shape)  
                                     print(torch.cat([inptc, crop], 1).shape)
-                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1))
+                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...])
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
