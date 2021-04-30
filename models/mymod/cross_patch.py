@@ -193,7 +193,7 @@ class CrossPatch3DTr(nn.Module):
         # Z = self.center(Z)
         # print(Z.shape)
         print(Z.shape)
-        print(skip.shape)
+        print(skip3.shape)
         
 
         ## Up, skip and conv
