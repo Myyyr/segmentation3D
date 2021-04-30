@@ -66,7 +66,8 @@ class AllTrain(Train):
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
         # print('labels.shape :', labels.shape)
-        # print(inputs.shape)
+        print(inputs.shape)
+        exit(0)
         outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
@@ -96,8 +97,8 @@ class AllTrain(Train):
         del loss
 
     def train(self):
-        self.evaluate()
-        exit(0)
+        # self.evaluate()
+        # exit(0)
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
