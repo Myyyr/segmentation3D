@@ -231,8 +231,8 @@ class AllTrain(Train):
                                 for z in range(nd):
                                     crop.append(inputs[:,:,x,y,z,...])
                         crop = torch.cat(crop, dim=1)
-                        print(crop.shape)
-                    print(crop.shape)
+                        # print(crop.shape)
+                    # print(crop.shape)
                     
                     for x in range(nh):
                         for y in range(nw):
@@ -243,7 +243,7 @@ class AllTrain(Train):
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
-                                    print(crop.shape, inptc.shape, torch.cat([inptc, crop].shape))  
+                                    print(crop.shape, inptc.shape, torch.cat([inptc, crop]).shape)  
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1))
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
