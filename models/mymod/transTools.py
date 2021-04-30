@@ -14,7 +14,9 @@ class CrossAttention(nn.Module):
         self.d_model = d_model
         self.n_heads = n_heads
 
+
         self.norm1 = nn.LayerNorm(d_model, eps=1e-5)
+
 
         self.all_w = []
         for i in range(self.n_heads):

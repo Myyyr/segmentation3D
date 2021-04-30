@@ -114,6 +114,7 @@ class CrossPatch3DTr(nn.Module):
 
 
         # Transformer for cross attention
+        self.avgpool = nn.AvgPool3d((4,4,2), (4,4,2))
         self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
         self.cross_trans = CrossAttention(self.d_model, n_cheads)
 
@@ -150,19 +151,27 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         R, S = self.encoder(R, True)
         skip1, skip2, skip3, skip4 = S
+        bs, c, h, w, d = skip4.shape
 
         # Encode all regions with no gradient
         YA = []
         bs,_,na,_,_,_ = A.shape
         with torch.no_grad():
             for ra in range(na):
-                YA.append(self.encoder(A[:,:,ra,...], False))
+                enc = self.encoder(A[:,:,ra,...], False)
+                enc = enc.permute(0,2,1)
+                enc = torch.reshape(enc, (bs, c, h, w, d))
+                enc = self.avgpool(enc)
+                enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
+                enc = enc.permute(0,2,1)
+                YA.append(enc)
 
         # Concatenate all feature maps
         A = torch.cat([R] + YA, 1)
         del YA, X
 
         # Positional encodding
+
         A = self.positional_encoder(A)
         rseq = R.shape[1]
         del R
@@ -174,7 +183,6 @@ class CrossPatch3DTr(nn.Module):
         
         # Decoder
         ## Permute and Reshape
-        _, c, h, w, d = skip4.shape
         Z = Z.permute(0,2,1)
         # print('skip3.shape', skip3.shape)
         print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
