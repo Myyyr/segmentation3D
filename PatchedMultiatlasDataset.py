@@ -102,7 +102,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             if self.ds != None:
                 labels = self.ds(labels)
-                labels = [torch.from_numpy(l).long() for l in labels]
+                # labels = [torch.from_numpy(l).long() for l in labels]
 
 
             # ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))
