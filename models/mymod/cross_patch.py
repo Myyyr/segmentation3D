@@ -139,9 +139,9 @@ class CrossPatch3DTr(nn.Module):
         self.final_conv = nn.Conv3d(filters[0], n_classes, 1)
 
         # Deep Supervision
-        self.ds_cv1 = nn.Conv3d(filters[2], n_classes, 1)
-        self.ds_cv2 = nn.Conv3d(filters[1], n_classes, 1)
-        self.ds_cv3 = nn.Conv3d(filters[0], n_classes, 1)
+        self.ds_cv1 = nn.Conv3d(filters[3], n_classes, 1)
+        self.ds_cv2 = nn.Conv3d(filters[2], n_classes, 1)
+        self.ds_cv3 = nn.Conv3d(filters[1], n_classes, 1)
 
         # initialise weights
         for m in self.modules():
@@ -202,15 +202,15 @@ class CrossPatch3DTr(nn.Module):
         
 
         ## Up, skip, conv and ds
-        Z = self.up_concat4(skip3, Z)
         ds1 = self.ds_cv1(Z)
+        Z = self.up_concat4(skip3, Z)
         # exit(0)
         del skip3, skip4
-        Z = self.up_concat3(skip2, Z)
         ds2 = self.ds_cv2(Z)
+        Z = self.up_concat3(skip2, Z)
         del skip2
-        Z = self.up_concat2(skip1, Z)
         ds3 = self.ds_cv3(Z)
+        Z = self.up_concat2(skip1, Z)
         del skip1
 
         ## get prediction with final layer
