@@ -29,8 +29,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         self.ds = None
         if ds_scales != None:
-            print(ds_scales)
-            exit(0)
+            # print(ds_scales)
+            # exit(0)
             self.ds = DownsampleSegForDSTransform2(ds_scales=ds_scales)
 
         for i in os.listdir(self.filePath):
