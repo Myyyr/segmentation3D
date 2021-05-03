@@ -46,7 +46,7 @@ class ExpConfig():
 
         # Model
         self.n_classes = 14
-        self.net = ResTranUnet(norm_cfg='IN', activation_cfg='LeakyReLU', img_size=self.patch_size, num_classes=self.n_classes, weight_std=False, deep_supervision=False)
+        self.net = ResTranUnet(norm_cfg='IN', activation_cfg='LeakyReLU', img_size=self.patch_size, num_classes=self.n_classes, weight_std=False, deep_supervision=True)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
