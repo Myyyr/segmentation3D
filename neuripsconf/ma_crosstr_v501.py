@@ -44,7 +44,7 @@ class ExpConfig():
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
 
         # Model
-        number_of_cross_heads = 8
+        number_of_cross_heads = 4
         number_of_self_heads = 4
         number_of_self_layer = 6
 
