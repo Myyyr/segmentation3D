@@ -185,7 +185,7 @@ class U_ResTran3D(nn.Module):
         # for k in a:
         #     if math.isnan(k):
         #         exit(0)
-        return [result, ds0, ds1, ds2]
+        return [result.permute(0,1,3,4,2), ds0.permute(0,1,3,4,2), ds1.permute(0,1,3,4,2), ds2.permute(0,1,3,4,2)]
 
 
 class ResTranUnet(SegmentationNetwork):
@@ -222,4 +222,5 @@ class ResTranUnet(SegmentationNetwork):
             return seg_output
         else:
             # exit(0)
-            return seg_output[0].permute(0,1,3,4,2)
+            return seg_output[0]
+            

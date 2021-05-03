@@ -7,11 +7,12 @@ import random
 import torchio as tio
 import datetime
 import os
+from utils import DownsampleSegForDSTransform2
 # import dataProcessing.augmentation as aug
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
-    def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48), return_full_image=False):
+    def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48), return_full_image=False, ds_scales=(1, 0.5, 0.25)):
         super(PatchedMultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
         # self.labelPath = expConfig.labelpath
@@ -25,6 +26,10 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.n_iter = n_iter
         self.return_full_image = return_full_image
         self.n_classes = 14
+
+        self.ds = None
+        if ds_scales != None:
+            self.ds = DownsampleSegForDSTransform2(ds_scales=ds_scales)
 
         for i in os.listdir(self.filePath):
             pid = i.split('/')[-1].replace('.npy', '').replace('000', '').replace('00', '')
@@ -94,6 +99,10 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             ptc_input = image[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             ptc_input = ptc_input[0,...]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+
+            if self.ds != None:
+                labels = self.ds(labels)
+
 
             # ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))
             if self.return_full_image:

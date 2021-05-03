@@ -65,9 +65,6 @@ class AllTrain(Train):
     def step(self, expcf, inputs, labels, total_loss):
         inputs = inputs.to(self.device)
         labels = labels.to(self.device)
-        # print('labels.shape :', labels.shape)
-        # print(inputs.shape)
-        # exit(0)
         outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
@@ -85,14 +82,8 @@ class AllTrain(Train):
             L1, L2, L3 = [],[],[]
             for l in expcf.net.modules():
                 if type(l) == torch.nn.Conv3d:
-                    #L.append((l.weight.grad).mean().item())
-                    # L1.append(((l.weight).mean().item()))
-                    # L2.append(((l.weight).min().item()))
-                    # L3.append(((l.weight).max().item()))
                     L1.append(torch.norm(l.weight.grad).item())
             print('mean :', L1)
-            # print('min :', L2)
-            # print('max :', L3)
         expcf.optimizer.zero_grad()
         del loss
 
