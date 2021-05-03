@@ -73,7 +73,7 @@ class ExpConfig():
 
         self.loss = DC_and_CE_loss({'batch_dice': True, 'smooth': 1e-5, 'do_bg': False}, {})
 
-
+        self.ds_scales = ((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
         ################# Here we wrap the loss for deep supervision ############
         # we need to know the number of outputs of the network
         net_numpool = 4
@@ -110,7 +110,7 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25)))
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales)
         self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)

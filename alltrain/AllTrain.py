@@ -64,7 +64,10 @@ class AllTrain(Train):
 
     def step(self, expcf, inputs, labels, total_loss):
         inputs = inputs.to(self.device)
-        labels = labels.to(self.device)
+        if expcf.ds_scales = None:
+            labels = labels.to(self.device)
+        else:
+            labels =[l.to(self.device) for l in labels]
         outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
