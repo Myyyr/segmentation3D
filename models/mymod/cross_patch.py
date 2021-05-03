@@ -215,6 +215,7 @@ class CrossPatch3DTr(nn.Module):
 
         ## get prediction with final layer
         Z = self.final_conv(Z)
+        print(Z.shape, ds3.shape, ds2.shape, ds1.shape)
         return [Z, ds3, ds2, ds1]
 
 
