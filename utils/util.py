@@ -36,7 +36,8 @@ class DownsampleSegForDSTransform2(AbstractTransform):
 
 def downsample_seg_for_ds_transform2(seg, ds_scales=((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25)), order=0, cval=0, axes=None):
     if axes is None:
-        axes = list(range(2, len(seg.shape)))
+        # axes = list(range(2, len(seg.shape)))
+        axes = [2,3,4]
     output = []
     for s in ds_scales:
         if all([i == 1 for i in s]):
