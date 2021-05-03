@@ -10,7 +10,7 @@ import torch
 import torchio as tio
 
 from models.mymod.cross_patch import CrossPatch3DTr
-from utils.metrics import DC_and_CE_loss
+from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2
 from nnunet.utilities.nd_softmax import softmax_helper
 
 def count_parameters(model): 
