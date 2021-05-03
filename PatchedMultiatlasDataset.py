@@ -83,7 +83,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         image = torch.from_numpy(image)
         image = image.expand(1,-1,-1,-1)
-        labels = torch.from_numpy(labels).long()
+        # labels = torch.from_numpy(labels).long()
                   
 
         if self.mode == 'train':
@@ -102,6 +102,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             if self.ds != None:
                 labels = self.ds(labels)
+                labels = [torch.from_numpy(l).long() for l in labels]
 
 
             # ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))

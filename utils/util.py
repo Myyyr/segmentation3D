@@ -9,7 +9,7 @@ import json
 import csv
 from skimage.exposure import rescale_intensity
 
-
+import torch
 
 
 from batchgenerators.transforms import AbstractTransform
@@ -50,7 +50,7 @@ def downsample_seg_for_ds_transform2(seg, ds_scales=((1, 1, 1), (0.5, 0.5, 0.5),
             for b in range(seg.shape[0]):
                 for c in range(seg.shape[1]):
                     out_seg[b, c] = resize_segmentation(seg[b, c], new_shape[2:], order, cval)
-            output.append(out_seg)
+            output.append(torch.from_numpy(out_seg))
     return output
 
 
