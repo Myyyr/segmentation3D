@@ -7,7 +7,7 @@ import random
 import torchio as tio
 import datetime
 import os
-from utils import DownsampleSegForDSTransform2
+from utils.util import DownsampleSegForDSTransform2
 # import dataProcessing.augmentation as aug
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
