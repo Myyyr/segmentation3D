@@ -234,7 +234,7 @@ class AllTrain(Train):
                             for z in range(nd):
                                 if not expcf.testDataset.return_full_image:
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
-                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
