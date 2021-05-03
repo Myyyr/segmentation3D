@@ -43,14 +43,16 @@ def downsample_seg_for_ds_transform2(seg, ds_scales=((1, 1, 1), (0.5, 0.5, 0.5),
             output.append(seg)
         else:
             new_shape = np.array(seg.shape).astype(float)
+            print("#1", (new_shape))
             for i, a in enumerate(axes):
                 new_shape[a] *= s[i]
+            print("#2", (new_shape))
             new_shape = np.round(new_shape).astype(int)
             out_seg = np.zeros(new_shape, dtype=seg.dtype)
             for b in range(seg.shape[0]):
                 for c in range(seg.shape[1]):
                     out_seg[b, c] = resize_segmentation(seg[b, c], new_shape[2:], order, cval)
-            print(s,new_shape, out_seg.shape)
+            print("#3", s,new_shape, out_seg.shape)
             output.append(torch.from_numpy(out_seg))
     return output
 
