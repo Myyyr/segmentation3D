@@ -133,10 +133,15 @@ class CrossPatch3DTr(nn.Module):
         self.up_concat4 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
         self.up_concat3 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
         self.up_concat2 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
-        self.up_concat1 = UnetUp3D(filters[0], filters[0], bn=bn, up_mode=up_mode)
+        # self.up_concat1 = UnetUp3D(filters[0], filters[0], bn=bn, up_mode=up_mode)
         
 
         self.final_conv = nn.Conv3d(filters[0], n_classes, 1)
+
+        # Deep Supervision
+        self.ds_cv1 = nn.Conv3d(filters[2], n_classes, 1)
+        self.ds_cv2 = nn.Conv3d(filters[1], n_classes, 1)
+        self.ds_cv3 = nn.Conv3d(filters[0], n_classes, 1)
 
         # initialise weights
         for m in self.modules():
@@ -196,18 +201,21 @@ class CrossPatch3DTr(nn.Module):
         # print(skip3.shape)
         
 
-        ## Up, skip and conv
+        ## Up, skip, conv and ds
         Z = self.up_concat4(skip3, Z)
+        ds1 = self.ds_cv1(Z)
         # exit(0)
         del skip3, skip4
         Z = self.up_concat3(skip2, Z)
+        ds2 = self.ds_cv2(Z)
         del skip2
         Z = self.up_concat2(skip1, Z)
+        ds3 = self.ds_cv3(Z)
         del skip1
 
         ## get prediction with final layer
         Z = self.final_conv(Z)
-        return Z
+        return [Z, ds3, ds2, ds1]
 
 
 
