@@ -43,7 +43,7 @@ class CrossAttention(nn.Module):
         # print('###X',X.shape)
 
         # Separation Region/FullImage into Xq / (Xk&v)
-        Xkv, Xq = X[:,:rseq,:], X[:,rseq:,:]
+        Xq, Xkv = X[:,:rseq,:], X[:,rseq:,:]
         # print('###Xq',Xq.shape)
         # print('###Xkv',Xkv.shape)
 

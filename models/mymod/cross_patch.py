@@ -164,11 +164,11 @@ class CrossPatch3DTr(nn.Module):
         with torch.no_grad():
             for ra in range(na):
                 enc = self.encoder(A[:,:,ra,...], False)
-                enc = enc.permute(0,2,1)
-                enc = torch.reshape(enc, (bs, c, h, w, d))
-                enc = self.avgpool(enc)
-                enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
-                enc = enc.permute(0,2,1)
+                # enc = enc.permute(0,2,1)
+                # enc = torch.reshape(enc, (bs, c, h, w, d))
+                # enc = self.avgpool(enc)
+                # enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
+                # enc = enc.permute(0,2,1)
                 YA.append(enc)
 
         # Concatenate all feature maps
