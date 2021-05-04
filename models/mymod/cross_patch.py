@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, 
+from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, PositionalEncodingPermute3D
 from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
@@ -116,7 +116,8 @@ class CrossPatch3DTr(nn.Module):
 
         # Transformer for cross attention
         # self.avgpool = nn.AvgPool3d((4,4,2), (4,4,2))
-        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
+        # self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
+        self.p_enc_3d = PositionalEncodingPermute3D(filters[-1])
         self.cross_trans = CrossAttention(self.d_model, n_cheads)
 
 
@@ -150,7 +151,7 @@ class CrossPatch3DTr(nn.Module):
                 init_weights(m, init_type='kaiming')
 
 
-    def forward(self, X):        
+    def forward(self, X):      
         R = X[:,:,0 ,...]
         A = X[:,:,1:,...]
 
@@ -158,6 +159,13 @@ class CrossPatch3DTr(nn.Module):
         R, S = self.encoder(R, True)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
+
+        _,_,P,Sh,Sw,Sd = S.shape
+        total_dim = P*Sh*Sw*Sd
+
+        # Create PE
+        z = torch.zeros((bs,c,576//8,576//8,192//8))
+        PE = p_enc_3d(z)
 
         # Encode all regions with no gradient
         YA = []
