@@ -50,7 +50,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
     def pad_or_crop_image(self, x):
         # Get shapes
-        ps = self.patch_size
+        ps = [self.patch_size[-1], self.patch_size[0], self.patch_size[1]] 
         n_reg = self.n_reg
         fs = (ps[0]*n_reg[0], ps[1]*n_reg[1], ps[2]*n_reg[2])
         _,d,u,v = x.shape 
@@ -70,7 +70,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                             (cu-int(ps[1]*n_reg[1]/2)):(cu+int(ps[1]*n_reg[1]/2)),
                             (cv-int(ps[2]*n_reg[2]/2)):(cv+int(ps[2]*n_reg[2]/2))]
         
-        return crx
+        return np.transpose(crx, axes=(0,2,3,1))
     def __getitem__(self, index):
         # print(index)
         # update the seed to avoid workers sample the same augmentation parameters
