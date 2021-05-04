@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch.nn.functional as F
 import torch
-from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D
+from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, 
 from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
