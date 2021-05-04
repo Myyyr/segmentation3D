@@ -48,7 +48,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.n_files = len(self.used_split)
 
 
-    def pad_or_crop_image(sekf, x):
+    def pad_or_crop_image(self, x):
         # Get shapes
         ps = self.patch_size
         n_reg = self.n_reg
