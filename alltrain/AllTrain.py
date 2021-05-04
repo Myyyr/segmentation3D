@@ -31,7 +31,7 @@ def optimizer_to(optim, device):
 
 class AllTrain(Train):
 
-    def __init__(self, expconfig, split = 0):
+    def __init__(self, expconfig, tensorboard = False, split = 0):
         super(AllTrain, self).__init__(expconfig)
         self.expconfig = expconfig
         self.split = split
@@ -42,8 +42,9 @@ class AllTrain(Train):
         optimizer_to(self.expconfig.optimizer, self.device)
         torch.cuda.empty_cache()
 
-
-        self.tb = SummaryWriter(comment=expconfig.experiment_name)
+        self.tensorboard = tensorboard
+        if tensorboard:
+            self.tb = SummaryWriter(comment=expconfig.experiment_name)
 
         self.bestMeanDice = 0
         self.bestMeanDiceEpoch = 0
@@ -142,8 +143,9 @@ class AllTrain(Train):
 
             # total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
-            self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
-            self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
+            if self.tensorboard:
+                self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
+                self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
             # self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
             #     self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)
@@ -166,7 +168,8 @@ class AllTrain(Train):
                 self.saveToDisk(epoch)
 
         self.evaluate()
-        self.tb.close()
+        if self.tensorboard:
+            self.tb.close()
 
     def convert_byte(self, v):
         units = {'Bytes':1,'KB':1e-3, 'MB':1e-6, 'GB':1e-9}
