@@ -65,6 +65,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         pad_x = np.pad(x, ((0,0),pad_d,pad_u,pad_v), 'minimum')
 
         # Crop
+        cd,cu,cv = pad_x.shape[1]//2,pad_x.shape[2]//2,pad_x.shape[3]//2
         crx = pad_x[:,(cd-int(ps[0]*n_reg[0]/2)):(cd+int(ps[0]*n_reg[0]/2)),
                             (cu-int(ps[1]*n_reg[1]/2)):(cu+int(ps[1]*n_reg[1]/2)),
                             (cv-int(ps[2]*n_reg[2]/2)):(cv+int(ps[2]*n_reg[2]/2))]
