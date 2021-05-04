@@ -90,9 +90,9 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         #load from hdf5 file
         file = np.load(self.file[str(index)])
-        print(file.shape)
+        # print(file.shape)
         file = self.pad_or_crop_image(file)
-        print(file.shape)
+        # print(file.shape)
         image = file[0,...]
         labels = file[1,...]
             
