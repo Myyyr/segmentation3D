@@ -28,7 +28,8 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        self.labelpath = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas//512_512_256/"
+        # self.labelpath = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas//512_512_256/"
+        self.labelpath = '/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/nnUNet_preprocessed/Task017_BCV/nnUNetData_plans_v2.1_stage1/'
         self.datapath = self.labelpath
 
 
