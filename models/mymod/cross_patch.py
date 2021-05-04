@@ -18,8 +18,9 @@ class SelfTransEncoder(nn.Module):
 
         
         # CNN encoder
-        self.first_conv = nn.Conv3d(self.in_channels, filters[0], 1)
-        self.conv1 = UNetConv3D(filters[0], filters[0], bn=bn)
+        # self.first_conv = nn.Conv3d(self.in_channels, filters[0], 1)
+        # self.conv1 = UNetConv3D(filters[0], filters[0], bn=bn)
+        self.conv1 = UNetConv3D(self.in_channels, filters[0], bn=bn)
 
         self.maxpool2 = nn.MaxPool3d(kernel_size=2)
         self.conv2 = UNetConv3D(filters[0], filters[1], bn=bn)
@@ -114,7 +115,7 @@ class CrossPatch3DTr(nn.Module):
 
 
         # Transformer for cross attention
-        self.avgpool = nn.AvgPool3d((4,4,2), (4,4,2))
+        # self.avgpool = nn.AvgPool3d((4,4,2), (4,4,2))
         self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 20000)
         self.cross_trans = CrossAttention(self.d_model, n_cheads)
 
