@@ -75,6 +75,7 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip3
         skip4 = self.conv4(skip4)
 
+        print(skip4.shape)
         # Transformer for self attention
         ## Patch, Reshapping
         bs,c,h,w,d = skip4.shape
