@@ -94,7 +94,7 @@ class ExpConfig():
         self.loss = MultipleOutputLoss2(self.loss, self.ds_loss_weights)
         ################# END ###################
 
-        self.batchsize = 1
+        self.batchsize = 2
         self.lr_rate = 2e-2
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
