@@ -1,7 +1,7 @@
 import torch.nn as nn
 import torch
 from models.networks_other import init_weights
-
+import numpy as np
 
 class PositionalEncoding3D(nn.Module):
     # https://github.com/tatp22/multidim-positional-encoding
