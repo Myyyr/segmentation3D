@@ -47,6 +47,7 @@ class SelfTransEncoder(nn.Module):
 
 
     def apply_positional_encoding(self, pos, pe, x):
+        print(pos.shape, pe.shape, x.shape)
         bs, c, h, w, d = x.shape[0]
         dh, dw, dd = h//2, w//2, d//2
         for i in range(bs):
