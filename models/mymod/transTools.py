@@ -56,7 +56,9 @@ class CrossAttention(nn.Module):
             V = self.all_w[i][2](Xkv)
 
             # Get attention
-            Z += [self.attention(Q, K.permute(0,2,1), V)]
+            # Z += [self.attention(Q, K.permute(0,2,1), V)]
+            Z += [self.attention(Q, K, V)]
+
             
         # Concate and get the final projected Z
         Z = torch.cat(Z, dim=2)
