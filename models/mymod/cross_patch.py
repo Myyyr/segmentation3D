@@ -81,11 +81,11 @@ class SelfTransEncoder(nn.Module):
         s1, s2, s3 = self.patch_size
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
-        print(Y.shape)
         Y = torch.reshape(skip4, (bs, c, n_seq, s1, s2, s3))
         Y = torch.reshape(Y, (bs, c, n_seq, s))
         Y = Y.permute(0,2,1,3) # bs, seq, c, s
         Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
+        print(Y.shape)
         
         ## Linear projection
         Y = self.linear(Y)
