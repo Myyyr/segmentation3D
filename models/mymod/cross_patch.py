@@ -189,6 +189,7 @@ class CrossPatch3DTr(nn.Module):
         posA = pos[:,1:,...]
 
         # Encode the interest region
+        print('posR.shape' ,posR.shape)
         R, S = self.encoder(R, True, PE, posR)
         R = apply_positional_encoding(posR, PE, R)
         skip1, skip2, skip3, skip4 = S
