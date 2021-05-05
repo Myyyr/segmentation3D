@@ -92,7 +92,7 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip4
 
         ## Positional encodding
-        pritn(pos, pe.shape, Y.shape)
+        print(pos, pe.shape, Y.shape)
         Y = self.apply_positional_encoding(pos, pe, Y)
         # Y = self.positional_encoder(Y)
 
