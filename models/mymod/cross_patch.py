@@ -110,6 +110,7 @@ class SelfTransEncoder(nn.Module):
         ## Permutation
         # Y = Y.permute(1,0,2)
         Y = rearrange(Y, 'n b d -> b n d')
+        Y = rearrange(T, 'b (h w d) (p1 p2 p3 c) -> b c (h p1) (w p2) (d p3)', p1=s1, p2=s2, p3=s3, c=self.filters[-1], h=h, w=w, d=d)
 
         if ret_skip: 
             return Y, (skip1, skip2, skip3, skip4)
@@ -168,7 +169,7 @@ class CrossPatch3DTr(nn.Module):
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
 
-    def apply_positional_encoding(self, pos, pe, x):        
+    def apply_positional_encoding(self, pos, pe, x):     
         bs, c, h, w, d = x.shape        
         for i in range(bs):
             a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
