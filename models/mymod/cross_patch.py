@@ -176,7 +176,7 @@ class CrossPatch3DTr(nn.Module):
         c = self.filters[-1]
         bs = X.shape[0]
         z = torch.zeros((bs,c,(Sh*3)//8,(Sw*3)//8,(Sd*4)//8))
-        PE = p_enc_3d(z)
+        PE = self.p_enc_3d(z)
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
 
