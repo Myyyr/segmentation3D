@@ -46,14 +46,10 @@ class SelfTransEncoder(nn.Module):
                 init_weights(m, init_type='kaiming')
 
 
-    def apply_positional_encoding(self, pos, pe, x):
-        print(pos.shape, pe.shape, x.shape)
-        bs, c, h, w, d = x.shape
-        # dh, dw, dd = h//2, w//2, d//2
+    def apply_positional_encoding(self, pos, pe, x):        
+        bs, c, h, w, d = x.shape        
         for i in range(bs):
-            print(pos[i,...])
             a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
-            print(a,b,c)
             x[i, ...] +=  pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
@@ -79,13 +75,10 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip3
         skip4 = self.conv4(skip4)
 
-        print(skip4.shape)
 
         # Transformer for self attention
         ## Positional encodding
-        print(pos.shape, pe.shape, skip4.shape)
         skip4 = self.apply_positional_encoding(pos, pe, skip4)
-        exit(0)
 
 
         ## Patch, Reshapping
@@ -97,7 +90,6 @@ class SelfTransEncoder(nn.Module):
         Y = torch.reshape(Y, (bs, c, n_seq, s))
         Y = Y.permute(0,2,1,3) # bs, seq, c, s
         Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
-        print(Y.shape)
         
         ## Linear projection
         Y = self.linear(Y)
@@ -171,11 +163,11 @@ class CrossPatch3DTr(nn.Module):
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
 
-    def apply_positional_encoding(self, pos, pe, x):
-        bs, c, h, w, d = x.shape[0]
-        dh, dw, dd = h//2, w//2, d//2
+    def apply_positional_encoding(self, pos, pe, x):        
+        bs, c, h, w, d = x.shape        
         for i in range(bs):
-            x[i, ...] +=  pe[i, :, (pos[i,0]-dh):(pos[i,0]+dh), (pos[i,1]-dw):(pos[i,1]+dw), (pos[i,2]-dd):(pos[i,2]+dd)]
+            a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
+            x[i, ...] +=  pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
     def forward(self, X, pos):      
@@ -188,12 +180,10 @@ class CrossPatch3DTr(nn.Module):
         bs = X.shape[0]
         z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
         PE = self.p_enc_3d(z)
-        print('pos.shape' ,pos.shape)
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
 
         # Encode the interest region
-        print('posR.shape' ,posR.shape)
         R, S = self.encoder(R, True, PE, posR)
         R = apply_positional_encoding(posR, PE, R)
         skip1, skip2, skip3, skip4 = S
