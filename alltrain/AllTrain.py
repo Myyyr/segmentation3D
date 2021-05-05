@@ -264,7 +264,7 @@ class AllTrain(Train):
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # pos = torch.from_numpy(np.array([x,y,z]))[None,...]
-                                    in_pos = [torch.from_numpy(np.array(x,y,z))[None, None, ...]]
+                                    in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
                                     in_pos = torch.cat(in_pos+[pos], dim=1)
 
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
