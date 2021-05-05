@@ -170,12 +170,17 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 exit(0)
             nh, nw, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
             crop = torch.zeros(*(nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
+            pos = []
             for x in range(nh):
                 for y in range(nw):
                     for z in range(nd):
                         crop[x,y,z,...] = image[0,x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
+                        pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
+            pos = torch.cat(pos, dim=0)
             # image = torch.cat(crop, dim=1)            
             # image = torch.reshape(image[0, ...], (nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
+            if self.return_full_image: 
+                return pid, pos, crop[None, ...], labels
             return pid, crop[None, ...], labels
 
 
