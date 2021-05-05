@@ -58,8 +58,9 @@ class SelfTransEncoder(nn.Module):
         # print(X.shape)
         # exit(0)
         # CNN Encoder
-        skip1 = self.first_conv(X)
-        skip1 = self.conv1(skip1)
+        # skip1 = self.first_conv(X)
+        # skip1 = self.conv1(skip1)
+        skip1 = self.conv1(X)
         del X
 
         skip2 = self.maxpool2(skip1)
