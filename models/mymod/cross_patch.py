@@ -54,7 +54,7 @@ class SelfTransEncoder(nn.Module):
         return x
 
 
-    def forward(self, X, ret_skip=True, pe, pos):
+    def forward(self, X, ret_skip=True, pe=None, pos=None):
         # print(X.shape)
         # exit(0)
         # CNN Encoder
