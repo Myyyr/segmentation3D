@@ -102,6 +102,7 @@ class AllTrain(Train):
                     L1.append(torch.norm(l.weight.grad).item())
             print('mean :', L1)
         expcf.optimizer.zero_grad()
+        torch.cuda.empty_cache()
         del loss
 
     def train(self):
@@ -127,7 +128,7 @@ class AllTrain(Train):
             self.save_dict['epoch'] = epoch
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
-                print('e', epoch, i)
+                # print('e', epoch, i)
                 #load data
                 if not expcf.trainDataset.return_full_image:
                     inputs, labels = data
@@ -135,6 +136,7 @@ class AllTrain(Train):
                 else:
                     pos, inputs, labels = data
                     loss, total_loss = self.step(expcf, inputs, labels, total_loss, pos)
+                    del pos
                 # self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
                 del inputs, labels
                 self.back_step(expcf, loss)
