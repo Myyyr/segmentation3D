@@ -48,10 +48,11 @@ class SelfTransEncoder(nn.Module):
 
 
     def apply_positional_encoding(self, pos, pe, x):        
-        bs, c, h, w, d = x.shape        
+        bs, c, h, w, d = x.shape   
+        ret = torch.zeros(x.shape).float().cuda()     
         for i in range(bs):
             a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
-            x[i, ...] +=  pe[i, :, a:a+h, b:b+w, c:c+d]
+            ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
 
@@ -169,11 +170,12 @@ class CrossPatch3DTr(nn.Module):
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
 
-    def apply_positional_encoding(self, pos, pe, x):     
-        bs, c, h, w, d = x.shape        
+    def apply_positional_encoding(self, pos, pe, x):        
+        bs, c, h, w, d = x.shape   
+        ret = torch.zeros(x.shape).float().cuda()     
         for i in range(bs):
             a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
-            x[i, ...] +=  pe[i, :, a:a+h, b:b+w, c:c+d]
+            ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
     def forward(self, X, pos):      
@@ -238,7 +240,7 @@ class CrossPatch3DTr(nn.Module):
         # Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
         Z = rearrange(Z, ('b n c -> b c n'))
         Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
-        print(Z.shape)
+        # print(Z.shape)
         ## Progressively rescale featue map Z
         # Z = self.center(Z)
         # print(Z.shape)
