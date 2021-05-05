@@ -192,6 +192,7 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         R, S = self.encoder(R, True, PE, posR)
         R = self.apply_positional_encoding(posR, PE, R)
+        R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
 
@@ -209,6 +210,7 @@ class CrossPatch3DTr(nn.Module):
                 # enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
                 # enc = enc.permute(0,2,1)
                 enc = self.apply_positional_encoding(posA[:,ra,...], PE, enc)
+                enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
                 YA.append(enc)
 
         # Concatenate all feature maps
@@ -218,7 +220,7 @@ class CrossPatch3DTr(nn.Module):
         # Positional encodding
 
         # A = self.positional_encoder(A)
-        # rseq = R.shape[1]
+        rseq = R.shape[1]
         # del R
 
         # Cross attention
