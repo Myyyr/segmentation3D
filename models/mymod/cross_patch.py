@@ -110,7 +110,7 @@ class SelfTransEncoder(nn.Module):
         ## Permutation
         # Y = Y.permute(1,0,2)
         Y = rearrange(Y, 'n b d -> b n d')
-        Y = rearrange(T, 'b (h w d) (p1 p2 p3 c) -> b c (h p1) (w p2) (d p3)', p1=s1, p2=s2, p3=s3, c=self.filters[-1], h=h, w=w, d=d)
+        Y = rearrange(Y, 'b (h w d) (p1 p2 p3 c) -> b c (h p1) (w p2) (d p3)', p1=s1, p2=s2, p3=s3, c=self.filters[-1], h=h, w=w, d=d)
 
         if ret_skip: 
             return Y, (skip1, skip2, skip3, skip4)
