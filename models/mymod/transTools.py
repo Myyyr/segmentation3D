@@ -83,7 +83,7 @@ class CrossAttention(nn.Module):
         # exit(0)
         # M = torch.matmul(Q,K)/(self.d_model**0.5)
         M = torch.einsum('b i d, b j d -> b i j', Q, K)/(self.d_model**0.5)
-        prin(M.shape)
+        print(M.shape)
         A = nn.functional.softmax(M, dim = -1)
         return torch.matmul(A,V)
 
