@@ -49,12 +49,12 @@ class SelfTransEncoder(nn.Module):
     def apply_positional_encoding(self, pos, pe, x):
         print(pos.shape, pe.shape, x.shape)
         bs, c, h, w, d = x.shape
-        dh, dw, dd = h//2, w//2, d//2
+        # dh, dw, dd = h//2, w//2, d//2
         for i in range(bs):
             print(pos[i,...])
             a,b,c = (pos[i,0]//8).item(), (pos[i,1]//8).item(), (pos[i,2]//8).item()
             print(a,b,c)
-            x[i, ...] +=  pe[i, :, (a-dh):(a+dh), (b-dw):(b+dw), (c-dd):(c+dd)]
+            x[i, ...] +=  pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
 
