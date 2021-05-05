@@ -55,7 +55,7 @@ class SelfTransEncoder(nn.Module):
 
 
     def forward(self, X, ret_skip=True, pe=None, pos=None):
-        print(X.shape)
+        # print(X.shape)
         # exit(0)
         # CNN Encoder
         # skip1 = self.first_conv(X)
@@ -185,7 +185,7 @@ class CrossPatch3DTr(nn.Module):
 
         # Encode the interest region
         R, S = self.encoder(R, True, PE, posR)
-        R = apply_positional_encoding(posR, PE, R)
+        R = self.apply_positional_encoding(posR, PE, R)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
 
