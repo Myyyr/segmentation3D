@@ -71,26 +71,26 @@ class AllTrain(Train):
             labels =[l.to(self.device) for l in labels]
 
         if pos != None:
-            print('#1', torch.cuda.memory_allocated()/(1024**3), 'GB')
-            print('#1', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
+            # print('#1', torch.cuda.memory_allocated()/(1024**3), 'GB')
+            # print('#1', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
             outputs = expcf.net(inputs, pos)
-            print('#2', torch.cuda.memory_allocated()/(1024**3), 'GB')
-            print('#2', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
+            # print('#2', torch.cuda.memory_allocated()/(1024**3), 'GB')
+            # print('#2', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
             del pos
         else:
             outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
-        print('#3', torch.cuda.memory_allocated()/(1024**3), 'GB')
-        print('#3', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
+        # print('#3', torch.cuda.memory_allocated()/(1024**3), 'GB')
+        # print('#3', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
         total_loss += loss.item()
         del outputs, labels
         return loss, total_loss
 
     def back_step(self, expcf, loss):
         loss.backward()
-        print('#4', torch.cuda.memory_allocated()/(1024**3), 'GB')
-        print('#4', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
+        # print('#4', torch.cuda.memory_allocated()/(1024**3), 'GB')
+        # print('#4', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
         if expcf.clip:
             torch.nn.utils.clip_grad_norm_(expcf.net.parameters(), 12)
         #update params
