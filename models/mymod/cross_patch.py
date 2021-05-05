@@ -55,7 +55,7 @@ class SelfTransEncoder(nn.Module):
 
 
     def forward(self, X, ret_skip=True, pe=None, pos=None):
-        # print(X.shape)
+        print(X.shape)
         # exit(0)
         # CNN Encoder
         # skip1 = self.first_conv(X)
@@ -81,7 +81,7 @@ class SelfTransEncoder(nn.Module):
         s1, s2, s3 = self.patch_size
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
-        # print(Y.shape)
+        print(Y.shape)
         Y = torch.reshape(skip4, (bs, c, n_seq, s1, s2, s3))
         Y = torch.reshape(Y, (bs, c, n_seq, s))
         Y = Y.permute(0,2,1,3) # bs, seq, c, s
