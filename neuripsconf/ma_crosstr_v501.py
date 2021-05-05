@@ -27,15 +27,15 @@ class ExpConfig():
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        self.labelpath = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas//512_512_256/"
+        self.labelpath = '/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/nnUNet_preprocessed/Task017_BCV/nnUNetData_plans_v2.1_stage1/'
         self.datapath = self.labelpath
 
 
         self.input_shape = [512,512,256]
         self.filters = [16, 32, 64, 128]
         # skip_idx = [1,3,5,6]
-        self.patch_size=(128,128,128)
-        # self.patch_size=(192,192,48)
+        # self.patch_size=(128,128,128)
+        self.patch_size=(192,192,48)
         # n_layers=6
         self.clip = False
         self.patched = True
