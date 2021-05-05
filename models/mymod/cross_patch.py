@@ -5,6 +5,7 @@ from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, Posit
 from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
+from einops import rearrange
 
 class SelfTransEncoder(nn.Module):
     """docstring for SelfTransEncoder"""
@@ -86,10 +87,13 @@ class SelfTransEncoder(nn.Module):
         s1, s2, s3 = self.patch_size
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
-        Y = torch.reshape(skip4, (bs, c, n_seq, s1, s2, s3))
-        Y = torch.reshape(Y, (bs, c, n_seq, s))
-        Y = Y.permute(0,2,1,3) # bs, seq, c, s
-        Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
+        Y = rearrange(skip4, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=s1, p2=s2, p3=s3)
+        # Y = torch.reshape(skip4, (bs, c, n_seq, s1, s2, s3))
+        # Y = torch.reshape(Y, (bs, c, n_seq, s))
+        # Y = Y.permute(0,2,1,3) # bs, seq, c, s
+        # Y = torch.reshape(Y, (bs,n_seq,self.before_d_model))
+        print(Y.shape)
+        exit(0)
         
         ## Linear projection
         Y = self.linear(Y)
@@ -202,7 +206,7 @@ class CrossPatch3DTr(nn.Module):
                 # enc = self.avgpool(enc)
                 # enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
                 # enc = enc.permute(0,2,1)
-                enc = apply_positional_encoding(posA[:,ra,...], PE, enc)
+                enc = self.apply_positional_encoding(posA[:,ra,...], PE, enc)
                 YA.append(enc)
 
         # Concatenate all feature maps
