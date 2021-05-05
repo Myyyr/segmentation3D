@@ -225,6 +225,7 @@ class CrossPatch3DTr(nn.Module):
 
         # Cross attention
         # print(A.shape)
+        print(Z.shape, rseq, R.shape)
         Z = self.cross_trans(A, rseq)
         del A
         
@@ -235,7 +236,7 @@ class CrossPatch3DTr(nn.Module):
         # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
         
         Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
-
+        Z = rearrange(Z, (''))
         ## Progressively rescale featue map Z
         # Z = self.center(Z)
         # print(Z.shape)
