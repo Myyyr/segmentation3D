@@ -76,7 +76,13 @@ class SelfTransEncoder(nn.Module):
         skip4 = self.conv4(skip4)
 
         print(skip4.shape)
+
         # Transformer for self attention
+        ## Positional encodding
+        print(pos, pe.shape, Y.shape)
+        Y = self.apply_positional_encoding(pos, pe, Y)
+
+        
         ## Patch, Reshapping
         bs,c,h,w,d = skip4.shape
         s1, s2, s3 = self.patch_size
@@ -92,9 +98,6 @@ class SelfTransEncoder(nn.Module):
         Y = self.linear(Y)
         if not ret_skip: del skip4
 
-        ## Positional encodding
-        print(pos, pe.shape, Y.shape)
-        Y = self.apply_positional_encoding(pos, pe, Y)
         # Y = self.positional_encoder(Y)
 
         ## Permutation
