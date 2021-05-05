@@ -106,8 +106,8 @@ class AllTrain(Train):
         del loss
 
     def train(self):
-        self.evaluate()
-        exit(0)
+        # self.evaluate()
+        # exit(0)
         expcf = self.expconfig
         expcf.optimizer.zero_grad()
         print("#### EXPERIMENT : {} | ID : {} ####".format(expcf.experiment_name, expcf.id))
@@ -155,7 +155,9 @@ class AllTrain(Train):
 
             #validation at end of epoch
             if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
-                self.evaluate()
+                val_dice = self.evaluate()
+                if self.tensorboard:
+                    self.tb.add_scalar("val", val_dice, epoch)
 
             #take lr sheudler step
             if expcf.lr_scheduler != None:
@@ -164,7 +166,7 @@ class AllTrain(Train):
             # total_time += validTime
             # self.tb.add_scalar("totalTime", total_time, epoch)
             if self.tensorboard:
-                self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
+                # self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
                 self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
             # self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
@@ -304,6 +306,8 @@ class AllTrain(Train):
         print(dices['means'])
         with open(os.path.join(self.expconfig.checkpointsBasePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'_evaluation_'+'.json'), 'w') as f:
             json.dump(dices, f, indent=4)
+
+        return dices['means']['mean_overall_orgs']
 
 
     # def evaluate3D(self):
