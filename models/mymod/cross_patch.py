@@ -82,6 +82,7 @@ class SelfTransEncoder(nn.Module):
         ## Positional encodding
         print(pos, pe.shape, skip4.shape)
         skip4 = self.apply_positional_encoding(pos, pe, skip4)
+        exit(0)
 
 
         ## Patch, Reshapping
