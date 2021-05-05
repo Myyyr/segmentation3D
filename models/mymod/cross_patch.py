@@ -102,13 +102,14 @@ class SelfTransEncoder(nn.Module):
         # Y = self.positional_encoder(Y)
 
         ## Permutation
-        Y = Y.permute(1,0,2) # seq, bs, bef_dmodel # for pytorch tranformer layer
+        Y = rearrange(Y, 'b n d -> n b d') #Y.permute(1,0,2) # seq, bs, bef_dmodel # for pytorch tranformer layer
 
         ## Transformer
         Y = self.self_trans(Y)
 
         ## Permutation
-        Y = Y.permute(1,0,2)
+        # Y = Y.permute(1,0,2)
+        Y = rearrange(Y, 'n b d -> b n d')
 
         if ret_skip: 
             return Y, (skip1, skip2, skip3, skip4)
