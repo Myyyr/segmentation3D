@@ -272,7 +272,9 @@ class AllTrain(Train):
                                     # print(torch.cat([inptc, crop], 1).shape)
 
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos)
-                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
+
+                                    # print(out_xyz.shape)
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
                     if vizonly:
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
                         np.save('./viz_inputs.npy', inputs.cpu().numpy())
@@ -280,6 +282,8 @@ class AllTrain(Train):
                         exit(0)
 
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
+                torch.cuda.empty_cache()
+
             dices = {}
             classes_dices = {}
             for i in range(self.classes):
