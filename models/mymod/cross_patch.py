@@ -35,7 +35,8 @@ class SelfTransEncoder(nn.Module):
         # Transformer for self attention
         self.before_d_model = filters[3]*np.prod(self.patch_size)
         self.linear = nn.Linear(self.before_d_model, self.d_model)
-        self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 1000)
+        # self.positional_encoder = PositionalEncoding(self.d_model, dropout=0.1, max_len = 1000)
+        # self.p_enc_3d = PositionalEncodingPermute3D(filters[-1])
         trans_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_sheads)
         self.self_trans = nn.TransformerEncoder(trans_layer, n_strans)
 
@@ -43,9 +44,17 @@ class SelfTransEncoder(nn.Module):
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
-        
 
-    def forward(self, X, ret_skip=True):
+
+    def apply_positional_encoding(self, pos, pe, x):
+        bs, c, h, w, d = x.shape[0]
+        dh, dw, dd = h//2, w//2, d//2
+        for i in range(bs):
+            x[i, ...] +=  pe[i, :, (pos[i,0]-dh):(pos[i,0]+dh), (pos[i,1]-dw):(pos[i,1]+dw), (pos[i,2]-dd):(pos[i,2]+dd)]
+        return x
+
+
+    def forward(self, X, ret_skip=True, pe, pos):
         # print(X.shape)
         # exit(0)
         # CNN Encoder
@@ -82,7 +91,8 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip4
 
         ## Positional encodding
-        Y = self.positional_encoder(Y)
+        Y = self.apply_positional_encoding(pos, pe, Y)
+        # Y = self.positional_encoder(Y)
 
         ## Permutation
         Y = Y.permute(1,0,2) # seq, bs, bef_dmodel # for pytorch tranformer layer
@@ -150,34 +160,46 @@ class CrossPatch3DTr(nn.Module):
             if isinstance(m, nn.Conv3d):
                 init_weights(m, init_type='kaiming')
 
+    def apply_positional_encoding(self, pos, pe, x):
+        bs, c, h, w, d = x.shape[0]
+        dh, dw, dd = h//2, w//2, d//2
+        for i in range(bs):
+            x[i, ...] +=  pe[i, :, (pos[i,0]-dh):(pos[i,0]+dh), (pos[i,1]-dw):(pos[i,1]+dw), (pos[i,2]-dd):(pos[i,2]+dd)]
+        return x
 
-    def forward(self, X):      
+    def forward(self, X, pos):      
         R = X[:,:,0 ,...]
         A = X[:,:,1:,...]
 
+        # Create PE
+        Sh,Sw,Sd = (24,24,6)
+        c = self.filters[-1]
+        bs = X.shape[0]
+        z = torch.zeros((bs,c,(Sh*3)//8,(Sw*3)//8,(Sd*4)//8))
+        PE = p_enc_3d(z)
+        posR = pos[:,0 ,...]
+        posA = pos[:,1:,...]
+
         # Encode the interest region
-        R, S = self.encoder(R, True)
+        R, S = self.encoder(R, True, PE, posR)
+        R = apply_positional_encoding(posR, PE, R)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
 
-        _,_,P,Sh,Sw,Sd = S.shape
-        total_dim = P*Sh*Sw*Sd
-
-        # Create PE
-        z = torch.zeros((bs,c,576//8,576//8,192//8))
-        PE = p_enc_3d(z)
+        
 
         # Encode all regions with no gradient
         YA = []
         bs,_,na,_,_,_ = A.shape
         with torch.no_grad():
             for ra in range(na):
-                enc = self.encoder(A[:,:,ra,...], False)
+                enc = self.encoder(A[:,:,ra,...], False, PE, posA[:,ra,...])
                 # enc = enc.permute(0,2,1)
                 # enc = torch.reshape(enc, (bs, c, h, w, d))
                 # enc = self.avgpool(enc)
                 # enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
                 # enc = enc.permute(0,2,1)
+                enc = apply_positional_encoding(posA[:,ra,...], PE, enc)
                 YA.append(enc)
 
         # Concatenate all feature maps
@@ -186,9 +208,9 @@ class CrossPatch3DTr(nn.Module):
 
         # Positional encodding
 
-        A = self.positional_encoder(A)
-        rseq = R.shape[1]
-        del R
+        # A = self.positional_encoder(A)
+        # rseq = R.shape[1]
+        # del R
 
         # Cross attention
         # print(A.shape)

@@ -127,6 +127,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             y = random.randint(0, w- ps_w)
             z = random.randint(0, d- ps_d)
 
+            idx = (x,y,z)
+
             
 
             ptc_input = image[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
@@ -142,15 +144,19 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             if self.return_full_image:
                 nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
                 crop = []
+                pos = [idx]
                 for x in range(nh):
                     for y in range(nw):
                         for z in range(nd):
                             crop.append(image[:,None,x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d])
+                            pos.append((x,y,z))
                 crop = torch.cat(crop, dim=1)
                 # image = torch.reshape(image, (b,nh,nw,nd,ps_h,ps_w,ps_d))
                 # image = torch.reshape(image, (b,nh*nw*nd,ps_h,ps_w,ps_d))
                 # print(ptc_input.shape, crop.shape,ptc_input[None,None,...].shape)
-                return torch.cat([ptc_input[None,None,...], crop], 1), labels
+                pos = torch.from_numpy(np.array(idx))
+                
+                return pos, torch.cat([ptc_input[None,None,...], crop], 1), labels
             return ptc_input[None, ...], labels
 
         if self.mode == 'test':

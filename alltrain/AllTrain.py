@@ -63,13 +63,18 @@ class AllTrain(Train):
         self.classes = self.expconfig.n_classes
 
 
-    def step(self, expcf, inputs, labels, total_loss):
+    def step(self, expcf, inputs, labels, total_loss, pos = None):
         inputs = inputs.to(self.device)
         if expcf.ds_scales == None:
             labels = labels.to(self.device)
         else:
             labels =[l.to(self.device) for l in labels]
-        outputs = expcf.net(inputs)
+
+        if pos != None:
+            outputs = expcf.net(inputs, pos)
+            del pos
+        else:
+            outputs = expcf.net(inputs)
         del inputs
         loss = expcf.loss(outputs, labels)
         total_loss += loss.item()
@@ -115,8 +120,12 @@ class AllTrain(Train):
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
                 #load data
-                inputs, labels = data
-                loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+                if not expcf.trainDataset.return_full_image:
+                    inputs, labels = data
+                    loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+                else:
+                    pos, inputs, labels = data
+                    loss, total_loss = self.step(expcf, inputs, labels, total_loss, pos)
                 # self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
                 del inputs, labels
                 self.back_step(expcf, loss)
@@ -240,10 +249,13 @@ class AllTrain(Train):
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
+                                    pos = torch.from_numpy(np.array([x,y,z]))[None,...]
+
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     # print(crop.shape, inptc.shape)  
                                     # print(torch.cat([inptc, crop], 1).shape)
-                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...])
+
+                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], pos)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
                     if vizonly:
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
