@@ -52,7 +52,7 @@ class SelfTransEncoder(nn.Module):
         dh, dw, dd = h//2, w//2, d//2
         for i in range(bs):
             print(pos[i,...])
-            x[i, ...] +=  pe[i, :, (pos[i,0]-dh):(pos[i,0]+dh), (pos[i,1]-dw):(pos[i,1]+dw), (pos[i,2]-dd):(pos[i,2]+dd)]
+            x[i, ...] +=  pe[i, :, (pos[i,0]//8-dh):(pos[i,0]//8+dh), (pos[i,1]//8-dw):(pos[i,1]//8+dw), (pos[i,2]//8-dd):(pos[i,2]//8+dd)]
         return x
 
 
