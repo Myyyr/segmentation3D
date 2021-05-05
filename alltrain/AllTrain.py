@@ -122,6 +122,7 @@ class AllTrain(Train):
             self.save_dict['epoch'] = epoch
 
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
+                print('e', epoch, i)
                 #load data
                 if not expcf.trainDataset.return_full_image:
                     inputs, labels = data
