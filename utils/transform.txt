@@ -16,14 +16,17 @@ gamma transformation
     "gamma_range": (0.7, 1.5),
     "p_gamma": 0.3,
 
+
+flipping
+"mirror_axes": (0, 1, 2),
+
 # In cotr setup, stage=1 -> do_dummy_2d = True
 
 
 contrast
 p_per_sample=0.15
 
-X flipping
-"mirror_axes": (0, 1, 2),
+
 
 
 X gaussian noise
