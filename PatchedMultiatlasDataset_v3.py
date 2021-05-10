@@ -231,7 +231,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             pos = torch.cat(pos, dim=0)
             # image = torch.cat(crop, dim=1)            
             # image = torch.reshape(image[0, ...], (nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            if self.return_full_image: 
+            if self.return_pos: 
                 return pid, pos, crop[None, ...], labels
             return pid, crop[None, ...], labels
 
