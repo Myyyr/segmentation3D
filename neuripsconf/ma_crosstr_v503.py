@@ -16,6 +16,8 @@ from nnunet.utilities.nd_softmax import softmax_helper
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+# TRAINING NO CROSS
+
 
 class ExpConfig():
     def __init__(self):
@@ -50,7 +52,7 @@ class ExpConfig():
         number_of_self_layer = 4
 
         self.n_classes = 14
-        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],d_model=128,n_classes=self.n_classes,n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,bn=True,up_mode='deconv',n_strans=number_of_self_layer)
+        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],d_model=128,n_classes=self.n_classes,n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,bn=True,up_mode='deconv',n_strans=number_of_self_layer, do_cross=False)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
@@ -113,8 +115,8 @@ class ExpConfig():
     def set_data(self, split = 0):
         # Data
         # print(self.ds_scales)s
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=True, ds_scales=self.ds_scales, do_tr=True)
-        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=True, ds_scales=None, do_tr=False)
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True)
+        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)
 

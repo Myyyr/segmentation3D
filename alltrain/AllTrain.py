@@ -190,6 +190,7 @@ class AllTrain(Train):
                 self.saveToDisk(epoch)
 
         self.evaluate()
+        self.saveToDisk(epoch, 'last')
         if self.tensorboard:
             self.tb.close()
 
@@ -356,7 +357,7 @@ class AllTrain(Train):
 
 
 
-    def saveToDisk(self, epoch):
+    def saveToDisk(self, epoch, txt=""):
 
         print("SAVE MODEL ...")
 
@@ -370,14 +371,14 @@ class AllTrain(Train):
 
         #save dict
         basePath = self.expconfig.checkpointsBasePathMod + "{}".format(self.expconfig.id)
-        path = basePath + "/mod.pt".format(epoch)
+        path = basePath + "/mod"+txt+".pt".format(epoch)
         
 
         if not os.path.exists(basePath):
             os.makedirs(basePath)
         torch.save(saveDict, path)
 
-        with open(os.path.join(basePath, self.expconfig.experiment_name+'_split_'+str(self.split)+'.json'), 'w') as f:
+        with open(os.path.join(basePath, self.expconfig.experiment_name+'_split_'+str(self.split)+txt+'.json'), 'w') as f:
             json.dump(self.save_dict, f)
 
 
