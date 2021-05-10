@@ -121,11 +121,11 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         #Transform if we have to
         if self.do_tr:
-            data = {'image':file[0,...], 'target':file[1,...]}
+            data = {'data':file[0,...], 'seg':file[1,...]}
             data = self.tr(data)
 
-            image = data['image']
-            labels = data['target']
+            image = data['data']
+            labels = data['seg']
         else:
             # print(file.shape)
             image = file[0,...]
