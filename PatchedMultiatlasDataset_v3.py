@@ -30,7 +30,7 @@ from utils.transform import TransformData
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
-    def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48),n_reg = (4, 3, 3), return_full_image=False, ds_scales=(1, 0.5, 0.25), do_tr=True):
+    def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48),n_reg = (4, 3, 3), return_full_image=False, ds_scales=(1, 0.5, 0.25), do_tr=True, return_pos=True):
         super(PatchedMultiAtlasDataset, self).__init__()
         self.filePath = expConfig.datapath
         # self.labelPath = expConfig.labelpath
@@ -45,6 +45,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.return_full_image = return_full_image
         self.n_classes = 14
         self.n_reg = n_reg
+
+         = return_pos
 
         self.ds = None
         if ds_scales != None:
@@ -197,6 +199,15 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 pos = torch.cat(pos, dim=0)
                 
                 return pos, torch.cat([ptc_input[None,None,...], crop], 1), labels
+            if self.return_pos:
+                nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
+                pos = [torch.from_numpy(np.array(idx))[None,...]]
+                for x in range(nh):
+                    for y in range(nw):
+                        for z in range(nd):
+                            pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
+                pos = torch.cat(pos, dim=0)
+                return pos, ptc_input[None, ...], labels
             return ptc_input[None, ...], labels
 
         if self.mode == 'test':
