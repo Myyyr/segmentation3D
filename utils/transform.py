@@ -74,7 +74,7 @@ class TransformData():
   #                                                 pin_memory=pin_memory)
 
     def __call__(self, data_dict):
-        return self.tr(data_dict)
+        return self.tr(**data_dict)
 
 
 
