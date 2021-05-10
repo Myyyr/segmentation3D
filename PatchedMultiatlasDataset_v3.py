@@ -215,6 +215,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
 
             ps_w, ps_h, ps_d = self.patch_size
+            image = torch.from_numpy(image)
             w,h,d = image.shape
             if w%ps_w != 0:
                 print("H, W, D must be multiple of patch size")
