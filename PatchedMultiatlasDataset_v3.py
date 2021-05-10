@@ -46,7 +46,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         self.n_classes = 14
         self.n_reg = n_reg
 
-         = return_pos
+        self.return_pos = return_pos
 
         self.ds = None
         if ds_scales != None:
