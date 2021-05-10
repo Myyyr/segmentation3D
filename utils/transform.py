@@ -23,7 +23,7 @@ from batchgenerators.dataloading import MultiThreadedAugmenter
 
 class TransformData():
     def __init__(self):
-        patch_size = (576,576,192)
+        patch_size = (192,192,48)
 
         rotation_z = (-180. / 360 * 2. * np.pi, 180. / 360 * 2. * np.pi)
         rotation_y = (-30. / 360 * 2. * np.pi, 30. / 360 * 2. * np.pi)

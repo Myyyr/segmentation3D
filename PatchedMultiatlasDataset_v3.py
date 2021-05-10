@@ -119,24 +119,12 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         # print(file.shape)
         file = self.pad_or_crop_image(file)
 
-        #Transform if we have to
-        if self.do_tr:
-            # print("-->before transform")
-            data = {'data':file[0,...][None, None, ...], 'seg':file[1,...][None, None, ...]}
-            # print(data['data'].shape, data['seg'].shape)
-            data = self.tr(data)
-            # print(data['data'].shape, data['seg'].shape)
-            # print("middl transform")
+        
 
-            image = data['data'][0,0,...]
-            labels = data['seg'][0,0,...]
-            # print("-->after transform")
-            # exit(0)
-
-        else:
-            # print(file.shape)
-            image = file[0,...]
-            labels = file[1,...]
+        # else:
+        #     # print(file.shape)
+        image = file[0,...]
+        labels = file[1,...]
             
 
         #Prepare data depeinding on soft/hard augmentation scheme
@@ -151,13 +139,13 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             # labels = np.array(sub['labels'])[0,...]
 
 
-        image = torch.from_numpy(image)
-        image = image.expand(1,-1,-1,-1)
+        # image = torch.from_numpy(image)
+        # image = image.expand(1,-1,-1,-1)
         # labels = torch.from_numpy(labels).long()
                   
 
         if self.mode == 'train':
-            b, w,h,d = image.shape
+            w,h,d = image.shape
             ps_h, ps_w, ps_d = self.patch_size
 
             x = random.randint(0, h- ps_h)
@@ -168,9 +156,24 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             
 
-            ptc_input = image[:,x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+            ptc_input = image[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
             ptc_input = ptc_input[0,...]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
+
+            #Transform if we have to
+            if self.do_tr:
+                # print("-->before transform")
+                data = {'data':ptc_input[None, None, ...], 'seg':labels[None, None, ...]}
+                # print(data['data'].shape, data['seg'].shape)
+                data = self.tr(data)
+                # print(data['data'].shape, data['seg'].shape)
+                # print("middl transform")
+
+                ptc_input = data['data'][0,0,...]
+                labels = data['seg'][0,0,...]
+                # print("-->after transform")
+                # exit(0)
+            ptc_input = torch.from_numpy(ptc_input)
 
             if self.ds != None:
                 labels = self.ds(labels)
