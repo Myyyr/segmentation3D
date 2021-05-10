@@ -157,7 +157,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             
 
             ptc_input = image[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
-            ptc_input = ptc_input[0,...]
+            # ptc_input = ptc_input[0,...]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
             #Transform if we have to
