@@ -42,20 +42,20 @@ class TransformData():
 
         # Precise to the transform module that segmentation have multiple channels
         # and give it the axis of this channels.
-        self.tr += [SegChannelSelectionTransform([0])]
+        # self.tr += [SegChannelSelectionTransform([0])]
 
 
         # Spatial transormation : rotation, scaling
         # self.tr += [Convert3DTo2DTransform()]
-        # self.tr += [SpatialTransform(
-        #     patch_size, patch_center_dist_from_border=None, do_elastic_deform=False,
-        #     do_rotation=True, angle_x=rotation_x, angle_y=rotation_y,angle_z=rotation_z, 
-        #     do_scale=True, scale=scale_range,
-        #     border_mode_data="constant", border_cval_data=0, order_data=3, border_mode_seg="constant",
-        #     border_cval_seg=-1,
-        #     order_seg=1, random_crop=False, p_el_per_sample=0.2,
-        #     p_scale_per_sample=p_scale, p_rot_per_sample=p_rot,
-        #     independent_scale_for_each_axis=False)]
+        self.tr += [SpatialTransform(
+            patch_size, patch_center_dist_from_border=None, do_elastic_deform=False,
+            do_rotation=True, angle_x=rotation_x, angle_y=rotation_y,angle_z=rotation_z, 
+            do_scale=True, scale=scale_range,
+            border_mode_data="constant", border_cval_data=0, order_data=3, border_mode_seg="constant",
+            border_cval_seg=-1,
+            order_seg=1, random_crop=False, p_el_per_sample=0.2,
+            p_scale_per_sample=p_scale, p_rot_per_sample=p_rot,
+            independent_scale_for_each_axis=False)]
         # # self.tr += [Convert2DTo3DTransform()]
 
         # # Gamma transfomation
