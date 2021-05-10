@@ -46,7 +46,7 @@ class TransformData():
 
 
         # Spatial transormation : rotation, scaling
-        self.tr += [Convert3DTo2DTransform()]
+        # self.tr += [Convert3DTo2DTransform()]
         self.tr += [SpatialTransform(
             patch_size, patch_center_dist_from_border=None, do_elastic_deform=False,
             do_rotation=True, angle_x=rotation_x, angle_y=rotation_y,angle_z=rotation_z, 
@@ -56,7 +56,7 @@ class TransformData():
             order_seg=1, random_crop=False, p_el_per_sample=0.2,
             p_scale_per_sample=p_scale, p_rot_per_sample=p_rot,
             independent_scale_for_each_axis=False)]
-        self.tr += [Convert2DTo3DTransform()]
+        # self.tr += [Convert2DTo3DTransform()]
 
         # Gamma transfomation
         self.tr += [GammaTransform(gamma_range, False, True, 
