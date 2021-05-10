@@ -130,7 +130,7 @@ class AllTrain(Train):
             for i, data in tqdm(enumerate(self.trainDataLoader), total = int(len(self.trainDataLoader))) :
                 # print('e', epoch, i)
                 #load data
-                if not expcf.trainDataset.return_full_image:
+                if not expcf.trainDataset.return_full_image and not expcf.trainDataset.return_pos:
                     inputs, labels = data
                     loss, total_loss = self.step(expcf, inputs, labels, total_loss)
                 else:
@@ -261,7 +261,14 @@ class AllTrain(Train):
                     for x in range(nh):
                         for y in range(nw):
                             for z in range(nd):
-                                if not expcf.testDataset.return_full_image:
+                                if  expcf.trainDataset.return_pos and not expcf.testDataset.return_full_image:
+                                    in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
+                                    in_pos = torch.cat(in_pos+[pos], dim=1)
+
+                                    out_xyz = expcf.net(inputs[:,:,x,y,z,...], in_pos)
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
+                                    
+                                elif not expcf.testDataset.return_full_image :
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
                                 else:
