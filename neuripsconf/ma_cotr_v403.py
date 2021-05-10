@@ -113,8 +113,8 @@ class ExpConfig():
         # Data
         self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True)
         self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False)
-        self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=1, batch_size=self.batchsize, shuffle=True)
-        self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=1, batch_size=1, shuffle=False)
+        self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=self.batchsize, shuffle=True)
+        self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
 
     def load_model(self):
         print('LOAD MODEL ...')
