@@ -124,6 +124,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             print("before transform")
             data = {'data':file[0,...], 'seg':file[1,...]}
             data = self.tr(data)
+            print("middl transform")
 
             image = data['data']
             labels = data['seg']
