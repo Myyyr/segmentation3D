@@ -25,9 +25,9 @@ class TransformData():
     def __init__(self):
         patch_size = (576,576,192)
 
-        rotation_x = (-180. / 360 * 2. * np.pi, 180. / 360 * 2. * np.pi)
+        rotation_z = (-180. / 360 * 2. * np.pi, 180. / 360 * 2. * np.pi)
         rotation_y = (-30. / 360 * 2. * np.pi, 30. / 360 * 2. * np.pi)
-        rotation_z = (-30. / 360 * 2. * np.pi, 30. / 360 * 2. * np.pi)
+        rotation_x = (-30. / 360 * 2. * np.pi, 30. / 360 * 2. * np.pi)
 
         scale_range = (0.7, 1.4)
         p_scale = 0.2
