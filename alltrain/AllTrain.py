@@ -223,7 +223,7 @@ class AllTrain(Train):
                 dice[str(pid)] = dc.DiceScore(self.expconfig.classes_name)
 
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
-                if not expcf.testDataset.return_full_image:
+                if not expcf.testDataset.return_pos: 
                     pid, inputs, labels = data
                 else: 
                     pid, pos, inputs, labels = data
@@ -267,7 +267,7 @@ class AllTrain(Train):
 
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...], in_pos)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
-                                    
+
                                 elif not expcf.testDataset.return_full_image :
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
