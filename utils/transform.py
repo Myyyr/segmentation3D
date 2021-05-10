@@ -47,24 +47,24 @@ class TransformData():
 
         # Spatial transormation : rotation, scaling
         # self.tr += [Convert3DTo2DTransform()]
-        self.tr += [SpatialTransform(
-            patch_size, patch_center_dist_from_border=None, do_elastic_deform=False,
-            do_rotation=True, angle_x=rotation_x, angle_y=rotation_y,angle_z=rotation_z, 
-            do_scale=True, scale=scale_range,
-            border_mode_data="constant", border_cval_data=0, order_data=3, border_mode_seg="constant",
-            border_cval_seg=-1,
-            order_seg=1, random_crop=False, p_el_per_sample=0.2,
-            p_scale_per_sample=p_scale, p_rot_per_sample=p_rot,
-            independent_scale_for_each_axis=False)]
-        # self.tr += [Convert2DTo3DTransform()]
+        # self.tr += [SpatialTransform(
+        #     patch_size, patch_center_dist_from_border=None, do_elastic_deform=False,
+        #     do_rotation=True, angle_x=rotation_x, angle_y=rotation_y,angle_z=rotation_z, 
+        #     do_scale=True, scale=scale_range,
+        #     border_mode_data="constant", border_cval_data=0, order_data=3, border_mode_seg="constant",
+        #     border_cval_seg=-1,
+        #     order_seg=1, random_crop=False, p_el_per_sample=0.2,
+        #     p_scale_per_sample=p_scale, p_rot_per_sample=p_rot,
+        #     independent_scale_for_each_axis=False)]
+        # # self.tr += [Convert2DTo3DTransform()]
 
-        # Gamma transfomation
-        self.tr += [GammaTransform(gamma_range, False, True, 
-                                retain_stats=gamma_retain_stats,
-                                p_per_sample=p_gamma)]
+        # # Gamma transfomation
+        # self.tr += [GammaTransform(gamma_range, False, True, 
+        #                         retain_stats=gamma_retain_stats,
+        #                         p_per_sample=p_gamma)]
 
-        # Mirroting
-        self.tr += [MirrorTransform((0, 1, 2))]
+        # # Mirroting
+        # self.tr += [MirrorTransform((0, 1, 2))]
 
 
         # Create the composed transform module
