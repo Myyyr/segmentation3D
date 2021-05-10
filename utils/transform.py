@@ -3,7 +3,7 @@
 
 from batchgenerators.transforms.color_transforms import ContrastAugmentationTransform
 
-from batchgenerators.transforms import SegChannelSelectionTransform, SpatialTransform, MirrorTransform, GammaTransform
+from batchgenerators.transforms import SegChannelSelectionTransform, SpatialTransform, MirrorTransform, GammaTransform, Compose
 
 from nnunet.training.data_augmentation.custom_transforms import Convert3DTo2DTransform, Convert2DTo3DTransform
 
@@ -12,7 +12,7 @@ from batchgenerators.transforms.utility_transforms import RemoveLabelTransform
 from batchgenerators.dataloading import MultiThreadedAugmenter
 ##################################################################################
 ## Now we have to build a new a dataloader from "batchgenerators". Don't know	##
-## how hard it is, but we get to far to stop there !!!!!!!! 					##
+## how hard it is, but we went to far too stop there !!!!!!!!  					##
 ##  										    								##
 ## https://github.com/MIC-DKFZ/batchgenerators/tree/master/batchgenerators	    ##
 ##       																		##
@@ -69,12 +69,12 @@ class TransformData():
 
 		# Create the composed transform module
 		self.tr = Compose(self.tr)
-		batchgenerator_train = MultiThreadedAugmenter(dataloader_train, tr_transforms, params.get('num_threads'),
-                                                  params.get("num_cached_per_thread"), seeds=seeds_train,
-                                                  pin_memory=pin_memory)
+		# batchgenerator_train = MultiThreadedAugmenter(dataloader_train, tr_transforms, params.get('num_threads'),
+  #                                                 params.get("num_cached_per_thread"), seeds=seeds_train,
+  #                                                 pin_memory=pin_memory)
 
-	def __call__(self):
-		pass
+	def __call__(self, data_dict):
+		return self.tr(data_dict)
 
 
 
