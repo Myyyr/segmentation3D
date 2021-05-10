@@ -225,7 +225,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             for x in range(nh):
                 for y in range(nw):
                     for z in range(nd):
-                        crop[x,y,z,...] = image[0,x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
+                        crop[x,y,z,...] = image[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
                         pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
             pos = torch.cat(pos, dim=0)
             # image = torch.cat(crop, dim=1)            
