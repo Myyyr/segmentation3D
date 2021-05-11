@@ -15,7 +15,62 @@ import torch
 from batchgenerators.transforms import AbstractTransform
 from batchgenerators.augmentations.utils import convert_seg_image_to_one_hot_encoding_batched, resize_segmentation
 
+def nbp(n,pn):
+    return n//pn + 0**(1*(n%pn==0))
 
+def get_strides(n, pn):
+    xn = nbp(n,pn)
+    if n%pn ==0 :
+        return [pn for i in range(xn-1)]
+    r = xn*pn - n
+    r1 = r//(xn-1)
+    l = [pn - r1 for i in range(xn-1)]
+    
+    r2 = r%(xn-1)
+    for i in range(r2):
+        l[i] -= 1
+    return l
+
+def get_idx(n,pn):
+    sn = get_strides(n,pn)
+    #print(sn)
+    l = [0]
+    for i in range(len(sn)):
+        l.append(l[-1]+sn[i])
+    return l
+
+def get_all_crops(inp, ps):
+    h,w,d = inp.shape
+    ph,pw,pd = ps
+    
+    nh = nbp(h, ph)
+    nw = nbp(w, pw)
+    nd = nbp(d, pd)
+
+    print(nh, nw, nd)
+    
+    idx_h = get_idx(h,ph)
+    idx_w = get_idx(w,pw)
+    idx_d = get_idx(d,pd)
+    
+    print(idx_h, idx_w, idx_d)
+    
+    all_crops = np.zeros((nh,nw,nd,ph,pw,pd))
+
+    all_count = np.zeros((h,w,d))
+
+    for x in range(nh):
+        for y in range(nw):
+            for z in range(nd):
+                tmp = inp[idx_h[x]:idx_h[x]+ph, idx_w[y]:idx_w[y]+pw, idx_d[z]:idx_d[z]+pd]
+                all_crops[x,y,z,...] = tmp
+                all_count[idx_h[x]:idx_h[x]+ph, idx_w[y]:idx_w[y]+pw, idx_d[z]:idx_d[z]+pd]+=np.ones((ph,pw,pd))
+    
+    
+    return all_crops, all_count, idx_h, idx_w, idx_d
+
+
+    
 class DownsampleSegForDSTransform2(AbstractTransform):
     '''
     data_dict['output_key'] will be a list of segmentations scaled according to ds_scales
