@@ -143,7 +143,7 @@ class UnetUp3D(nn.Module):
             self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
         elif self.up_mode == 'deconv':
             self.up = nn.ConvTranspose3d(in_size, out_size, 2, stride=2)
-            self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
+            self.conv1 = UNetConv3D(out_size*2, out_size, bn=bn)
 
         #initialise the blocks
         for m in self.children():
