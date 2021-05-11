@@ -41,6 +41,9 @@ class SelfTransEncoder(nn.Module):
         trans_layer = nn.TransformerEncoderLayer(d_model=self.d_model, nhead=self.n_sheads)
         self.self_trans = nn.TransformerEncoder(trans_layer, n_strans)
 
+        # Feed Forward projection
+        self.last = nn.Linear(self.d_model, self.before_d_model)
+
         # initialise weights
         for m in self.modules():
             if isinstance(m, nn.Conv3d):
@@ -107,6 +110,9 @@ class SelfTransEncoder(nn.Module):
 
         ## Transformer
         Y = self.self_trans(Y)
+
+        ## Projection
+        Y = self.last(Y) 
 
         ## Permutation
         # Y = Y.permute(1,0,2)
