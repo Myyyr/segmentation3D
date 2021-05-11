@@ -35,7 +35,7 @@ class ExpConfig():
 
         self.input_shape = [512,512,256]
         # self.filters = [16, 32, 64, 128]
-        self.filters = [64, 192, 320, 576]
+        self.filters = [64, 192, 448, 704]
 
         # skip_idx = [1,3,5,6]
         # self.patch_size=(128,128,128)
