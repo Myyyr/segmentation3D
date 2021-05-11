@@ -50,7 +50,7 @@ class ExpConfig():
 
         # Model
         number_of_cross_heads = 1
-        number_of_self_heads = 1
+        number_of_self_heads = 8
         number_of_self_layer = 1
 
         self.n_classes = 14
