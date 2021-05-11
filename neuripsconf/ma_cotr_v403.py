@@ -52,8 +52,8 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/cotr.pth'
-        # self.model_path = './checkpoints/models/300/mod.pth'
+        # self.model_path = './checkpoints/models/cotr.pth'
+        self.model_path = './checkpoints/models/403/mod.pth'
         
          
         
@@ -67,7 +67,7 @@ class ExpConfig():
 
 
         # Training
-        self.start_epoch = 0
+        self.start_epoch = 317
         self.epoch = 1000
 
         # self.loss = torch.nn.CrossEntropyLoss()
