@@ -4,7 +4,7 @@ import os
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from PatchedVPDataset_v3 import *
+from PatchedVPDataset_v1 import *
 from torch.utils.data import DataLoader
 import torch
 import torchio as tio
