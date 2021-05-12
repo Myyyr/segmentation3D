@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 import torch
 import torchio as tio
 
-from models.cotr.CoTr_v0 import ResTranUnet
+from models.cotr.CoTr import ResTranUnet
 from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2
 from nnunet.utilities.nd_softmax import softmax_helper
 # from utils.metrics import MultipleOutputLoss2
