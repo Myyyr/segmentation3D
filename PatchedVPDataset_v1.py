@@ -58,7 +58,7 @@ class PatchedVPDataset(torch.utils.data.Dataset):
             self.used_pids = []
             for l in range(len(SPLITS)):
                 if l!=split:
-                    self.used_pids += [i for i in l]
+                    self.used_pids += [i for i in SPLITS[l]]
         else:
             self.used_pids = SPLITS[split]
 
