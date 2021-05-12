@@ -62,7 +62,7 @@ class PatchedVPDataset(torch.utils.data.Dataset):
         else:
             self.used_pids = SPLITS[split]
 
-        self.n_files = len(self.used_split)
+        self.n_files = len(self.used_pids)
 
         self.do_tr = do_tr
         if self.do_tr:
