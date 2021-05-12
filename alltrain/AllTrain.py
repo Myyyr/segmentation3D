@@ -275,7 +275,7 @@ class AllTrain(Train):
 
                                 elif not expcf.testDataset.return_full_image :
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
-                                    print(out_xyz.shape)
+                                    print(out_xyz[0].shape)
                                     print(outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d].shape)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
                                 else:
