@@ -249,7 +249,7 @@ class AllTrain(Train):
 
                     # print(labels.shape)
                     b, ah, aw, ad = labels.shape
-                    outputs = torch.zeros((b, expcf.n_classes, ah, aw, ad))
+                    outputs = torch.zeros((b, expcf.n_classes, ah, aw, ad)).float().cuda()
                     # ps_w = int(w/nw)
                     # ps_h = int(h/nh)
                     # ps_d = int(d/nd)
