@@ -151,7 +151,7 @@ class PatchedVPDataset(torch.utils.data.Dataset):
         if self.mode == 'test':
             pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
 
-            crop, all_counts, _,_,_ = get_all_crops(image, self.patch_size)
+            crop, all_counts, idh,idw,idd = get_all_crops(image, self.patch_size)
             crop = torch.from_numpy(crop).float()
             all_counts = torch.from_numpy(all_counts).float()
             # ps_w, ps_h, ps_d = self.patch_size
@@ -173,7 +173,7 @@ class PatchedVPDataset(torch.utils.data.Dataset):
             # image = torch.reshape(image[0, ...], (nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
             # if self.return_pos: 
             #     return pid, pos, crop[None, ...], labels
-            return pid, crop[None, ...], labels, all_counts[...]
+            return pid, crop[None, ...], labels, all_counts[...], (idh,idw,idd)
 
 
     def __len__(self):

@@ -227,7 +227,7 @@ class AllTrain(Train):
                     if len(data) == 3:
                         pid, inputs, labels = data
                     else:
-                        pid, inputs, labels, all_counts = data
+                        pid, inputs, labels, all_counts, idx = data
                 else: 
                     pid, pos, inputs, labels = data
                 pid = int(pid[0,0].item())
@@ -241,7 +241,7 @@ class AllTrain(Train):
                     del labels, outputs
                 else:
                     # print(inputs.shape)
-                    if len(data) == 4:
+                    if len(data) == 5:
                         all_counts = all_counts.to(self.device)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     # print(inputs.shape)
@@ -275,9 +275,10 @@ class AllTrain(Train):
 
                                 elif not expcf.testDataset.return_full_image :
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
-                                    print(out_xyz[0].shape)
-                                    print(outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d].shape)
-                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
+                                    if len(data)==5:
+                                        outputs[:, :, idx[0][x]:idx[0][x]+h, idx[1][y]:idx[1][y]+w, idx[2][z]:idx[2][z]+d] += out_xyz[0]
+                                    else:
+                                        outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # pos = torch.from_numpy(np.array([x,y,z]))[None,...]
@@ -298,7 +299,7 @@ class AllTrain(Train):
                         np.save('./viz_target.npy', labels.cpu().numpy())
                         exit(0)
 
-                    if len(data) == 4:
+                    if len(data) == 5:
                         outputs = outputs/all_counts
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
                 torch.cuda.empty_cache()

@@ -47,18 +47,10 @@ def get_all_crops(inp, ps):
     nw = nbp(w, pw)
     nd = nbp(d, pd)
 
-    print(nh, nw, nd)
-
-    
     idx_h = get_idx(h,ph)
     idx_w = get_idx(w,pw)
     idx_d = get_idx(d,pd)
 
-    print(idx_h)
-    print(idx_w)
-    print(idx_d)
-
-    
     
     all_crops = np.zeros((nh,nw,nd,ph,pw,pd))
 
