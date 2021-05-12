@@ -152,8 +152,8 @@ class PatchedVPDataset(torch.utils.data.Dataset):
             pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
 
             crop, all_counts, _,_,_ = get_all_crops(image, self.patch_size)
-            crop = torch.from_numpy(crop)
-            all_counts = torch.from_numpy(all_counts)
+            crop = torch.from_numpy(crop).float()
+            all_counts = torch.from_numpy(all_counts).float()
             # ps_w, ps_h, ps_d = self.patch_size
             # image = torch.from_numpy(image)
             # w,h,d = image.shape

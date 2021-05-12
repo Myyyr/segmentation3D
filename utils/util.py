@@ -47,13 +47,11 @@ def get_all_crops(inp, ps):
     nw = nbp(w, pw)
     nd = nbp(d, pd)
 
-    print(nh, nw, nd)
     
     idx_h = get_idx(h,ph)
     idx_w = get_idx(w,pw)
     idx_d = get_idx(d,pd)
     
-    print(idx_h, idx_w, idx_d)
     
     all_crops = np.zeros((nh,nw,nd,ph,pw,pd))
 
@@ -99,7 +97,6 @@ def downsample_seg_for_ds_transform2(seg, ds_scales=((1, 1, 1), (0.5, 0.5, 0.5),
             output.append(seg)
         else:
             new_shape = np.array(seg.shape).astype(float)
-            # print("#1", (new_shape))
             for i, a in enumerate(axes):
                 new_shape[a] *= s[i]
             # print("#2", (new_shape))
