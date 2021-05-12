@@ -381,6 +381,7 @@ class AllTrain(Train):
         #gather things to save
         saveDict = {"net_state_dict": self.expconfig.net.state_dict(),
                     "optimizer_state_dict": self.expconfig.optimizer.state_dict(),
+                    "scheduler":self.expconfig.lr_scheduler.state_dict(),
                     "epoch": epoch
                     }
         if self.expconfig.lr_scheduler != None:
