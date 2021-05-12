@@ -22,10 +22,12 @@ class PatchedVPDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
     def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48),n_reg = (4, 3, 3), return_full_image=False, ds_scales=(1, 0.5, 0.25), do_tr=True, return_pos=False, split=0):
         super(PatchedVPDataset, self).__init__()
-        self.filePath = expConfig.datapath
+        self.filePath = os.path.join(expConfig.datapath, "3d_images/")
+        self.labelfilePath = os.path.join(expConfig.datapath, "3d_annotations/")
         # self.labelPath = expConfig.labelpath
         self.mode = mode
         self.file = {}
+        self.labelfile = {}
         # self.labelFile = None
         self.patch_size = patch_size
         #augmentation settings
@@ -46,6 +48,10 @@ class PatchedVPDataset(torch.utils.data.Dataset):
             if ".npy" in i:
                 pid = i.replace('.npy', '').replace('bcv_', '')
                 self.file[str(pid)] = os.path.join(self.filePath, i)
+        for i in os.listdir(self.labelfilePath):
+            if ".npy" in i:
+                pid = i.replace('.npy', '').replace('bcv_', '')
+                self.labelfile[str(pid)] = os.path.join(self.labelfilePath, i)
 
 
         if self.mode == 'train':
@@ -75,9 +81,11 @@ class PatchedVPDataset(torch.utils.data.Dataset):
         
 
         index = self.used_pids[item_index]
-        file = np.load(self.file[str(index)])
-        image = file[0,...]
-        labels = file[1,...]
+        # file = np.load(self.file[str(index)])
+        # image = file[0,...]
+        # labels = file[1,...]
+        image = np.load(self.file[str(index)])
+        labels = np.load(self.labelfile[str(index)])
             
 
         #Prepare data depeinding on soft/hard augmentation scheme
@@ -143,27 +151,29 @@ class PatchedVPDataset(torch.utils.data.Dataset):
         if self.mode == 'test':
             pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
 
-
-            ps_w, ps_h, ps_d = self.patch_size
-            image = torch.from_numpy(image)
-            w,h,d = image.shape
-            if w%ps_w != 0:
-                print("H, W, D must be multiple of patch size")
-                exit(0)
-            nh, nw, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
-            crop = torch.zeros(*(nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            pos = []
-            for x in range(nh):
-                for y in range(nw):
-                    for z in range(nd):
-                        crop[x,y,z,...] = image[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
-                        pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
-            pos = torch.cat(pos, dim=0)
+            crop, all_counts, _,_,_ = get_all_crops(image, self.patch_size)
+            crop = torch.from_numpy(crop)
+            all_counts = torch.from_numpy(all_counts)
+            # ps_w, ps_h, ps_d = self.patch_size
+            # image = torch.from_numpy(image)
+            # w,h,d = image.shape
+            # if w%ps_w != 0:
+            #     print("H, W, D must be multiple of patch size")
+            #     exit(0)
+            # nh, nw, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
+            # crop = torch.zeros(*(nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
+            # pos = []
+            # for x in range(nh):
+            #     for y in range(nw):
+            #         for z in range(nd):
+            #             crop[x,y,z,...] = image[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
+            #             pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
+            # pos = torch.cat(pos, dim=0)
             # image = torch.cat(crop, dim=1)            
             # image = torch.reshape(image[0, ...], (nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
-            if self.return_pos: 
-                return pid, pos, crop[None, ...], labels
-            return pid, crop[None, ...], labels
+            # if self.return_pos: 
+            #     return pid, pos, crop[None, ...], labels
+            return pid, crop[None, ...], labels, all_counts[...]
 
 
     def __len__(self):

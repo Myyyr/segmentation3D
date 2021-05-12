@@ -224,7 +224,10 @@ class AllTrain(Train):
 
             for i, data in tqdm(enumerate(self.testDataLoader), total = int(len(self.testDataLoader))):
                 if not expcf.testDataset.return_pos: 
-                    pid, inputs, labels = data
+                    if len(data) == 3:
+                        pid, inputs, labels = data
+                    else:
+                        pid, inputs, labels, all_counts = data
                 else: 
                     pid, pos, inputs, labels = data
                 pid = int(pid[0,0].item())
@@ -238,6 +241,8 @@ class AllTrain(Train):
                     del labels, outputs
                 else:
                     # print(inputs.shape)
+                    if len(data) == 4:
+                        all_counts = all_counts.to(self.device)
                     inputs, labels = inputs.to(self.device), labels.to(self.device)
                     # print(inputs.shape)
                     b, c, nh, nw, nd, h, w, d = inputs.shape
@@ -270,7 +275,7 @@ class AllTrain(Train):
 
                                 elif not expcf.testDataset.return_full_image :
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...])
-                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
+                                    outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
                                     # pos = torch.from_numpy(np.array([x,y,z]))[None,...]
@@ -291,6 +296,8 @@ class AllTrain(Train):
                         np.save('./viz_target.npy', labels.cpu().numpy())
                         exit(0)
 
+                    if len(data) == 4:
+                        outputs = outputs/all_counts
                     dice[str(pid)](F.softmax(outputs, dim=1).detach().cuda(), labels)
                 torch.cuda.empty_cache()
 
