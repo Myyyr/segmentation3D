@@ -192,8 +192,12 @@ class CrossPatch3DTr(nn.Module):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
+
+            encoder_grad = torch.enable_grad
         else:
             R = X
+
+            encoder_grad = torch.no_grad
 
         # Create PE
         Sh,Sw,Sd = (24,24,6)
@@ -205,7 +209,8 @@ class CrossPatch3DTr(nn.Module):
         posA = pos[:,1:,...]
 
         # Encode the interest region
-        R, S = self.encoder(R, True, PE, posR)
+        with encoder_grad():
+            R, S = self.encoder(R, True, PE, posR)
         skip1, skip2, skip3, skip4, skip5 = S
         bs, c, h, w, d = skip5.shape    
 
@@ -221,11 +226,6 @@ class CrossPatch3DTr(nn.Module):
             with torch.no_grad():
                 for ra in range(na):
                     enc = self.encoder(A[:,:,ra,...], False, PE, posA[:,ra,...])
-                    # enc = enc.permute(0,2,1)
-                    # enc = torch.reshape(enc, (bs, c, h, w, d))
-                    # enc = self.avgpool(enc)
-                    # enc = torch.reshape(enc, (bs, c, int(h/4)*int(w/4)*int(d/2)))
-                    # enc = enc.permute(0,2,1)
 
                     # Positional encodding
                     enc = self.apply_positional_encoding(posA[:,ra,...], PE, enc)
@@ -236,33 +236,17 @@ class CrossPatch3DTr(nn.Module):
             A = torch.cat([R] + YA, 1)
             del YA, X
 
-
-            # A = self.positional_encoder(A)
             rseq = R.shape[1]
-            # del R
 
             # Cross attention
-            # print(A.shape)
-            # print(A.shape, rseq, R.shape)
             Z = self.cross_trans(A, rseq)
             del A
-
             
             # Decoder
             ## Permute and Reshape
-            # Z = Z.permute(0,2,1)
-            # print('skip3.shape', skip3.shape)
-            # print((bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
-            
-            # Z = torch.reshape(Z, (bs, self.d_model, int(h/self.patch_size[0]), int(h/self.patch_size[1]), int(h/self.patch_size[2])))
             Z = rearrange(Z, ('b n c -> b c n'))
             Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
-            # print(Z.shape)
-            ## Progressively rescale featue map Z
-            # Z = self.center(Z)
-            # print(Z.shape)
-            # print(Z.shape)
-            # print(skip3.shape)
+            
 
         else:
             Z = R
