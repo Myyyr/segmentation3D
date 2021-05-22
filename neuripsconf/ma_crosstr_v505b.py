@@ -66,7 +66,7 @@ class ExpConfig():
 
         # self.model_path = './checkpoints/models/crosstr_big.pth'
         # self.model_path = './checkpoints/models/300/mod.pth'
-        self.model_path = 'checkpoints/models/504/modlast.pt'
+        self.model_path = 'checkpoints/models/505/modlast.pt'
         
          
         
