@@ -188,8 +188,10 @@ class CrossPatch3DTr(nn.Module):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
+            encoder_grad = torch.enable_grad
         else:
             R = X
+            encoder_grad = torch.no_grad
 
         # Create PE
         Sh,Sw,Sd = (24,24,6)
@@ -201,7 +203,8 @@ class CrossPatch3DTr(nn.Module):
         posA = pos[:,1:,...]
 
         # Encode the interest region
-        R, S = self.encoder(R, True, PE, posR)
+        with encoder_grad():
+            R, S = self.encoder(R, True, PE, posR)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape    
 
