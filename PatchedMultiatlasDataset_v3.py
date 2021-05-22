@@ -198,9 +198,9 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 # print(ptc_input.shape, crop.shape,ptc_input[None,None,...].shape)
                 pos = torch.cat(pos, dim=0)
 
-                print(ptc_input.shape)
+                # print(ptc_input.shape)
                 
-                return pos, torch.cat([ptc_input[None,...], crop], 1), labels
+                return pos, torch.cat([ptc_input[None,...], crop], 0), labels
             if self.return_pos:
                 # nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
                 # pos = [torch.from_numpy(np.array(idx))[None,...]]
