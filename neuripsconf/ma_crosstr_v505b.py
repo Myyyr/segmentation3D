@@ -35,7 +35,7 @@ class ExpConfig():
 
         self.input_shape = [512,512,256]
         # self.filters = [16, 32, 64, 128]
-        self.filters = [64, 192, 320, 448]
+        self.filters = [64, 192, 384, 576]
         d_model=self.filters[-1]
 
         # skip_idx = [1,3,5,6]
@@ -66,7 +66,7 @@ class ExpConfig():
 
         # self.model_path = './checkpoints/models/crosstr_big.pth'
         # self.model_path = './checkpoints/models/300/mod.pth'
-        self.model_path = 'checkpoints/models/505/modlast.pt'
+        self.model_path = 'checkpoints/models/505/mod.pt'
         
          
         
