@@ -188,10 +188,10 @@ class CrossPatch3DTr(nn.Module):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
-            encoder_grad = torch.enable_grad
+            encoder_grad = torch.no_grad
         else:
             R = X
-            encoder_grad = torch.no_grad
+            encoder_grad = torch.enable_grad
 
         # Create PE
         Sh,Sw,Sd = (24,24,6)
