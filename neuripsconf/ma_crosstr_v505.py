@@ -36,7 +36,7 @@ class ExpConfig():
         self.input_shape = [512,512,256]
         # self.filters = [16, 32, 64, 128]
         # self.filters = [64, 192, 448, 704]
-        self.filters = [64, 160, 320, 600]
+        self.filters = [60, 160, 340, 600]
         d_model = self.filters[-1]
 
         # skip_idx = [1,3,5,6]
