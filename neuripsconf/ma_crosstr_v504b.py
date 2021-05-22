@@ -54,7 +54,7 @@ class ExpConfig():
         number_of_self_layer = 1
 
         self.n_classes = 14
-        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],d_model=128,n_classes=self.n_classes,n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,bn=True,up_mode='deconv',n_strans=number_of_self_layer, do_cross=False)
+        self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],d_model=128,n_classes=self.n_classes,n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,bn=True,up_mode='deconv',n_strans=number_of_self_layer, do_cross=True)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
@@ -100,7 +100,7 @@ class ExpConfig():
         ################# END ###################
 
         self.batchsize = 2
-        self.lr_rate = 2e-4
+        self.lr_rate = 1e-3
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-6, momentum=0.99)
