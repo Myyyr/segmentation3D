@@ -202,7 +202,7 @@ class CrossPatch3DTr(nn.Module):
         ## have to adapt the positionnal enccoding size.
         ## (Sh, Sw, Sd) is the spatial size of the bottleneck.
         ## (3,3,4) is the image size divided by the patch size.
-        Sh,Sw,Sd = (12,12,4)
+        Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
         bs = X.shape[0]
         z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
