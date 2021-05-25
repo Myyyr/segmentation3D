@@ -288,7 +288,7 @@ class AllTrain(Train):
                                     # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
                                     # print(crop.shape, inptc.shape)  
                                     # print(torch.cat([inptc, crop], 1).shape)
-
+                                    print("OK")
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True)
 
                                     # print(out_xyz.shape)
