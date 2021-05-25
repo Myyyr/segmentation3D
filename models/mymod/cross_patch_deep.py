@@ -91,7 +91,7 @@ class SelfTransEncoder(nn.Module):
 
         # Transformer for self attention
         ## Positional encodding
-        print(pe.shape, skip5.shape)
+        # print(pe.shape, skip5.shape)
         skip5 = self.apply_positional_encoding(pos, pe, skip5)
 
 
