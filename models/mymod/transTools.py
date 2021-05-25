@@ -20,13 +20,13 @@ class CrossAttention(nn.Module):
 
         self.all_w = []
         for i in range(self.n_heads):
-            wq = nn.Linear(self.d_model, self.d_model)
-            wk = nn.Linear(self.d_model, self.d_model)
-            wv = nn.Linear(self.d_model, self.d_model)
+            wq = nn.Linear(self.d_model, self.d_model, bias=False)
+            wk = nn.Linear(self.d_model, self.d_model, bias=False)
+            wv = nn.Linear(self.d_model, self.d_model, bias=False)
             self.all_w.append(nn.ModuleList([wq, wk, wv]))
         self.all_w = nn.ModuleList(self.all_w)
 
-        self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model)
+        self.wo = nn.Linear(self.d_model*self.n_heads, self.d_model, bias=False)
         self.norm2 = nn.LayerNorm(d_model, eps=1e-5)
 
         self.feed_forward = nn.Linear(d_model, d_model)

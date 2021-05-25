@@ -9,7 +9,7 @@ from einops import rearrange
 
 class SelfTransEncoder(nn.Module):
     """docstring for SelfTransEncoder"""
-    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 1024, in_channels=1, n_sheads=8, bn = True, n_strans=6):
+    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256, in_channels=1, n_sheads=8, bn = True, n_strans=6):
         super(SelfTransEncoder, self).__init__()
         self.in_channels = in_channels
         self.filters = filters
@@ -100,10 +100,11 @@ class SelfTransEncoder(nn.Module):
         s = s1*s2*s3
         n_seq = int(h*w*d/s)
         Y = rearrange(skip5, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=s1, p2=s2, p3=s3)
-        
+        del skip5
+
         ## Linear projection
         Y = self.linear(Y)
-        if not ret_skip: del skip5
+        # if not ret_skip: del skip5
 
         # Y = self.positional_encoder(Y)
 
@@ -122,13 +123,13 @@ class SelfTransEncoder(nn.Module):
         Y = rearrange(Y, 'b (h w d) (p1 p2 p3 c) -> b c (h p1) (w p2) (d p3)', p1=s1, p2=s2, p3=s3, c=self.filters[-1], h=h, w=w, d=d)
 
         if ret_skip: 
-            return Y, (skip1, skip2, skip3, skip4, skip5)
+            return Y, (skip1, skip2, skip3, skip4)
         return Y
 
 
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 1024,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False):
+    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False):
         super(CrossPatch3DTr, self).__init__()
 
         self.in_channels = in_channels
@@ -160,11 +161,10 @@ class CrossPatch3DTr(nn.Module):
         #                             nn.Conv3d(b,c, 3, padding=1))
 
         ## Decode like 3D UNet
-        self.up_concat5 = UnetUp3D(filters[4], filters[3], bn=bn, up_mode=up_mode)
-        self.up_concat4 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
-        self.up_concat3 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
-        self.up_concat2 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
-        # self.up_concat1 = UnetUp3D(filters[0], filters[0], bn=bn, up_mode=up_mode)
+        self.up_concat4 = UnetUp3D(filters[4], filters[3], bn=bn, up_mode=up_mode)
+        self.up_concat3 = UnetUp3D(filters[3], filters[2], bn=bn, up_mode=up_mode)
+        self.up_concat2 = UnetUp3D(filters[2], filters[1], bn=bn, up_mode=up_mode)
+        self.up_concat1 = UnetUp3D(filters[1], filters[0], bn=bn, up_mode=up_mode)
         
 
         self.final_conv = nn.Conv3d(filters[0], n_classes, 1)
@@ -192,15 +192,17 @@ class CrossPatch3DTr(nn.Module):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
-
-            encoder_grad = torch.enable_grad
+            encoder_grad = torch.no_grad
         else:
             R = X
-
-            encoder_grad = torch.no_grad
+            encoder_grad = torch.enable_grad
 
         # Create PE
-        Sh,Sw,Sd = (24,24,6)
+        ## Be carefull here if you change region size or bottleneck qpatial size you
+        ## have to adapt the positionnal enccoding size.
+        ## (Sh, Sw, Sd) is the spatial size of the bottleneck.
+        ## (3,3,4) is the image size divided by the patch size.
+        Sh,Sw,Sd = (12,12,4)
         c = self.filters[-1]
         bs = X.shape[0]
         z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
@@ -211,8 +213,13 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         with encoder_grad():
             R, S = self.encoder(R, True, PE, posR)
-        skip1, skip2, skip3, skip4, skip5 = S
-        bs, c, h, w, d = skip5.shape    
+        skip1, skip2, skip3, skip4 = S
+        bs, c, h, w, d = skip4.shape
+        c = c*2
+        h = h//2
+        w = w//2
+        d = d//2
+
 
         if self.do_cross:
             R = self.apply_positional_encoding(posR, PE, R)
@@ -253,15 +260,16 @@ class CrossPatch3DTr(nn.Module):
         
 
         ## Up, skip, conv and ds
+        Z = self.up_concat4(skip4, Z)
         ds1 = self.ds_cv1(Z)
-        Z = self.up_concat4(skip3, Z)
-        # exit(0)
-        del skip3, skip4
+        del skip4
+        Z = self.up_concat3(skip3, Z)
         ds2 = self.ds_cv2(Z)
-        Z = self.up_concat3(skip2, Z)
-        del skip2
+        del skip3
+        Z = self.up_concat2(skip2, Z)
         ds3 = self.ds_cv3(Z)
-        Z = self.up_concat2(skip1, Z)
+        del skip2
+        Z = self.up_concat1(skip1, Z)
         del skip1
 
         ## get prediction with final layer
