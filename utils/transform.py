@@ -64,7 +64,7 @@ class TransformData():
                                 p_per_sample=p_gamma)]
 
         # # Mirroting
-        self.tr += [MirrorTransform((0, 1, 2))]
+        # self.tr += [MirrorTransform((0, 1, 2))]
 
 
         # Create the composed transform module
