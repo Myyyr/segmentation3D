@@ -190,7 +190,7 @@ class CrossPatch3DTr(nn.Module):
             ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
-    def forward(self, X, pos):
+    def forward(self, X, pos, val=False):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
@@ -198,6 +198,8 @@ class CrossPatch3DTr(nn.Module):
         else:
             R = X
             encoder_grad = torch.enable_grad
+        if val:
+            encoder_grad = torch.no_grad
 
         # Create PE
         ## Be carefull here if you change region size or bottleneck qpatial size you
