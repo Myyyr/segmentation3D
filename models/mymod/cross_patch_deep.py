@@ -84,9 +84,9 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip3
         skip4 = self.conv4(skip4)
 
-        skip5 = self.maxpool4(skip4)
+        skip5 = self.maxpool5(skip4)
         if not ret_skip: del skip4
-        skip5 = self.conv5(skip4)
+        skip5 = self.conv5(skip5)
 
 
         # Transformer for self attention
@@ -132,6 +132,7 @@ class CrossPatch3DTr(nn.Module):
 
     def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False):
         super(CrossPatch3DTr, self).__init__()
+        self.PE = None
 
         self.in_channels = in_channels
         self.filters = filters
@@ -206,14 +207,15 @@ class CrossPatch3DTr(nn.Module):
         Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
         bs = X.shape[0]
-        z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
-        PE = self.p_enc_3d(z)
+        if self.PE==None:
+            z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
+            self.PE = self.p_enc_3d(z)
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
 
         # Encode the interest region
         with encoder_grad():
-            R, S = self.encoder(R, True, PE, posR)
+            R, S = self.encoder(R, True, self.PE, posR)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
         c = c*2
@@ -223,7 +225,7 @@ class CrossPatch3DTr(nn.Module):
 
 
         if self.do_cross:
-            R = self.apply_positional_encoding(posR, PE, R)
+            R = self.apply_positional_encoding(posR, self.PE, R)
             R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
 
         
@@ -233,10 +235,10 @@ class CrossPatch3DTr(nn.Module):
             bs,_,na,_,_,_ = A.shape
             with torch.no_grad():
                 for ra in range(na):
-                    enc = self.encoder(A[:,:,ra,...], False, PE, posA[:,ra,...])
+                    enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
 
                     # Positional encodding
-                    enc = self.apply_positional_encoding(posA[:,ra,...], PE, enc)
+                    enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
                     enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
                     YA.append(enc)
 
@@ -275,7 +277,6 @@ class CrossPatch3DTr(nn.Module):
 
         ## get prediction with final layer
         Z = self.final_conv(Z)
-        # print(Z.shape, ds3.shape, ds2.shape, ds1.shape)
         return [Z, ds3, ds2, ds1]
 
 
