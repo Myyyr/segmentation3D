@@ -134,7 +134,7 @@ class UnetUp2D(nn.Module):
             return self.conv1(torch.cat([inputs1, outputs2], 1))
 
 class UnetUp3D(nn.Module):
-    def __init__(self, in_size, out_size, bn = True, up_mode='deconv'):
+    def __init__(self, in_size, out_size, bn = True, up_mode='deconv', kernel=(2,2,2), stride=(2,2,2)):
         super(UnetUp3D, self).__init__()
         self.up_mode = up_mode
         if self.up_mode == 'triline':
@@ -142,7 +142,7 @@ class UnetUp3D(nn.Module):
             self.conv0 = nn.Conv3d(in_size, out_size, kernel_size=(2,2,2))
             self.conv1 = UNetConv3D(in_size, out_size, bn=bn)
         elif self.up_mode == 'deconv':
-            self.up = nn.ConvTranspose3d(in_size, out_size, 2, stride=2)
+            self.up = nn.ConvTranspose3d(in_size, out_size, kernel, stride=stride)
             self.conv1 = UNetConv3D(out_size*2, out_size, bn=bn)
 
         #initialise the blocks

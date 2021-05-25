@@ -9,53 +9,64 @@ from torch.utils.data import DataLoader
 import torch
 import torchio as tio
 
-from models.cotr.CoTr_v0 import ResTranUnet
-from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2
+from models.mymod.cross_patch_deep import CrossPatch3DTr
+from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2   
 from nnunet.utilities.nd_softmax import softmax_helper
-# from utils.metrics import MultipleOutputLoss2
 
 def count_parameters(model): 
     return sum(p.numel() for p in model.parameters() if p.requires_grad)
 
+# TRAINING NO CROSS
+# BIGGER MODEL
 
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = "406"
-        self.experiment_name = "ma_cotr_v{}".format(self.id)
+        self.id = "507"
+        self.experiment_name = "ma_crosstr_v{}".format(self.id)
         self.debug = False
 
         # System
         self.checkpointsBasePath = "./checkpoints/"
         self.checkpointsBasePathMod = self.checkpointsBasePath + 'models/'
-        # self.labelpath = "/local/DEEPLEARNING/MULTI_ATLAS/multi_atlas//512_512_256/"
         self.labelpath = '/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/nnUNet_preprocessed/Task017_BCV/nnUNetData_plans_v2.1_stage1/'
         self.datapath = self.labelpath
 
 
         self.input_shape = [512,512,256]
-        # filters = [4, 8, 16, 32]
+        # self.filters = [32, 64, 128, 256, 512, 1024] # P = ?
+        self.filters = [16, 32, 64, 128, 256, 512] # P = ?
+
+        # d_model = self.filters[-1]
+
         # skip_idx = [1,3,5,6]
         # self.patch_size=(128,128,128)
         self.patch_size=(192,192,48)
         # n_layers=6
-        self.clip = True
+        self.clip = False
         self.patched = True
         # GPU
         self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
+        # torch.backends.cudnn.benchmark = False
 
         # Model
+        number_of_cross_heads = 1
+        number_of_self_heads = 1
+        number_of_self_layer = 1
+
         self.n_classes = 14
-        self.net = ResTranUnet(norm_cfg='IN', activation_cfg='LeakyReLU', 
-                            img_size=self.patch_size, num_classes=self.n_classes, 
-                            weight_std=False, deep_supervision=True)
+        self.net = CrossPatch3DTr(filters=self.filters,use_trans=[1,1,1,1,1,1],
+                                n_classes=self.n_classes,
+                                n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
+                                bn=True,up_mode='deconv',
+                                n_strans=number_of_self_layer, do_cross=False)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/cotr.pth'
-        # self.model_path = './checkpoints/models/403/mod.pt'
+        self.model_path = './checkpoints/models/extended_deep_crosstr.pth'
+        # self.model_path = './checkpoints/models/300/mod.pth'
         
          
         
@@ -75,8 +86,7 @@ class ExpConfig():
         # self.loss = torch.nn.CrossEntropyLoss()
 
         self.loss = DC_and_CE_loss({'batch_dice': True, 'smooth': 1e-5, 'do_bg': False}, {})
-
-        self.ds_scales = ((1,1,1), (1, 1, 1), (0.5, 0.5, 1), (0.25, 0.25, 0.5))
+        self.ds_scales = ((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25))
         ################# Here we wrap the loss for deep supervision ############
         # we need to know the number of outputs of the network
         net_numpool = 4
@@ -93,7 +103,6 @@ class ExpConfig():
         # now wrap the loss
         self.loss = MultipleOutputLoss2(self.loss, self.ds_loss_weights)
         ################# END ###################
-
 
         self.batchsize = 2
         self.lr_rate = 1e-2
@@ -113,10 +122,11 @@ class ExpConfig():
         
     def set_data(self, split = 0):
         # Data
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True, return_pos=False)
-        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=False)
-        self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=8, batch_size=self.batchsize, shuffle=True)
-        self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=8, batch_size=1, shuffle=False)
+        # print(self.ds_scales)s
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
+        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
+        self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=self.batchsize, shuffle=True)
+        self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
 
     def load_model(self):
         print('LOAD MODEL ...')

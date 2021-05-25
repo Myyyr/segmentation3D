@@ -132,20 +132,6 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         #Prepare data depeinding on soft/hard augmentation scheme
         n_classes = self.n_classes
 
-
-        # if self.transform != None and self.mode=="train":
-        #     sub = tio.Subject(image = tio.ScalarImage(tensor = image[None, :,:,:]), 
-        #                       labels = tio.LabelMap(tensor = labels[None, :,:,:]))
-        #     sub = self.transform(sub)
-            # image = np.array(sub['image'])[0,...]
-            # labels = np.array(sub['labels'])[0,...]
-
-
-        # image = torch.from_numpy(image)
-        # image = image.expand(1,-1,-1,-1)
-        # labels = torch.from_numpy(labels).long()
-                  
-
         if self.mode == 'train':
             w,h,d = image.shape
             ps_h, ps_w, ps_d = self.patch_size
@@ -193,22 +179,12 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                             crop.append(torch.from_numpy(image[None,x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]))
                             pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
                 crop = torch.cat(crop, dim=0)
-                # image = torch.reshape(image, (b,nh,nw,nd,ps_h,ps_w,ps_d))
-                # image = torch.reshape(image, (b,nh*nw*nd,ps_h,ps_w,ps_d))
-                # print(ptc_input.shape, crop.shape,ptc_input[None,None,...].shape)
                 pos = torch.cat(pos, dim=0)
 
                 # print(ptc_input.shape)
                 
                 return pos, torch.cat([ptc_input[None,...], crop], 0)[None,...], labels
             if self.return_pos:
-                # nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
-                # pos = [torch.from_numpy(np.array(idx))[None,...]]
-                # for x in range(nh):
-                #     for y in range(nw):
-                #         for z in range(nd):
-                #             pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
-                # pos = torch.cat(pos, dim=0)
                 pos = torch.from_numpy(np.array(idx))[None,...]
                 return pos, ptc_input[None, ...], labels
             return ptc_input[None, ...], labels
@@ -244,23 +220,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         if self.mode == 'train':
             return self.n_iter
         return self.n_files
-        # return self.file["images_" + self.mode].shape[0]
-
-    # def openFileIfNotOpen(self):
-    #     if self.file == None:
-    #         self.file = h5py.File(self.filePath, "r")
-    #     if self.labelFile == None:
-    #         self.labelFile = h5py.File(self.labelPath, "r")
-
-    #     if self.mode == 'train':
-    #         self.used_pids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
-    #         self.used_split = [6,17, 3,16,22,27,10,28, 7, 29, 23, 13,  1,  9,  5, 15, 11, 12, 24, 14,  8]
-
-    #     else:
-    #         self.used_pids = [32, 33, 34, 35, 36, 37, 38, 39, 40]
-            # self.used_split = [18, 20, 25, 19, 21,  0,  4,  2, 26]
-        # self.n_files = len(self.used_split)
-            
+        
     def _toEvaluationOneHot(self, labels):
         shape = labels.shape
         out = np.zeros([shape[0], shape[1], shape[2], self.n_classes], dtype=np.float32)
