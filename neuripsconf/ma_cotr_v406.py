@@ -76,7 +76,7 @@ class ExpConfig():
 
         self.loss = DC_and_CE_loss({'batch_dice': True, 'smooth': 1e-5, 'do_bg': False}, {})
 
-        self.ds_scales = ((1,1,1), (1, 1, 1), (0.5, 0.5, 1), (0.25, 0.25, 0.5))
+        self.ds_scales = ((1, 1, 1), (0.5, 0.5, 1), (0.25, 0.25, 0.5), (0.125, 0.125,0.25))
         ################# Here we wrap the loss for deep supervision ############
         # we need to know the number of outputs of the network
         net_numpool = 4
