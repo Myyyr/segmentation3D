@@ -269,7 +269,6 @@ class AllTrain(Train):
                                 if  expcf.trainDataset.return_pos and not expcf.testDataset.return_full_image:
                                     in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
                                     in_pos = torch.cat(in_pos+[pos], dim=1)
-                                    print("ok")
                                     out_xyz = expcf.net(inputs[:,:,x,y,z,...], in_pos, True)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
 
