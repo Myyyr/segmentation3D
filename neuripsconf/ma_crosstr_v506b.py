@@ -36,7 +36,8 @@ class ExpConfig():
         self.input_shape = [512,512,256]
         # self.filters = [16, 32, 64, 128]
         # self.filters = [64, 192, 448, 704]
-        self.filters = [16, 32, 64, 128, 256]
+        # self.filters = [16, 32, 64, 128, 256]
+        self.filters = [32, 64, 128, 256, 512]
         d_model = self.filters[-1]
 
         # skip_idx = [1,3,5,6]
@@ -53,7 +54,7 @@ class ExpConfig():
         # Model
         number_of_cross_heads = 1
         number_of_self_heads = 8
-        number_of_self_layer = 1
+        number_of_self_layer = 6
 
         self.n_classes = 14
         self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],
@@ -66,7 +67,7 @@ class ExpConfig():
         print("N PARAMS : {}".format(self.n_parameters))
 
         # self.model_path = './checkpoints/models/deep_crosstr.pth'
-        self.model_path = './checkpoints/models/506/mod.pth'
+        self.model_path = './checkpoints/models/506/mod.pt'
         
          
         
