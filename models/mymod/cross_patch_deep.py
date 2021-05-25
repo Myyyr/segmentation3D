@@ -86,7 +86,7 @@ class SelfTransEncoder(nn.Module):
 
         skip5 = self.maxpool4(skip4)
         if not ret_skip: del skip4
-        skip5 = self.conv4(skip4)
+        skip5 = self.conv5(skip4)
 
 
         # Transformer for self attention
