@@ -65,8 +65,8 @@ class ExpConfig():
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/deep_crosstr.pth'
-        # self.model_path = './checkpoints/models/300/mod.pth'
+        # self.model_path = './checkpoints/models/deep_crosstr.pth'
+        self.model_path = './checkpoints/models/506/mod.pth'
         
          
         
