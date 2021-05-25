@@ -289,7 +289,7 @@ class AllTrain(Train):
                                     # print(crop.shape, inptc.shape)  
                                     # print(torch.cat([inptc, crop], 1).shape)
 
-                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos)
+                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True)
 
                                     # print(out_xyz.shape)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
