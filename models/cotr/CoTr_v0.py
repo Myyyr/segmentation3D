@@ -172,7 +172,7 @@ class U_ResTran3D(nn.Module):
 
         result = self.upsamplex2(x)
         result = self.cls_conv(result)
-        print(result.permute(0,1,3,4,2).shape, ds0.permute(0,1,3,4,2).shape, ds1.permute(0,1,3,4,2).shape, ds2.permute(0,1,3,4,2).shape)
+        # print(result.permute(0,1,3,4,2).shape, ds0.permute(0,1,3,4,2).shape, ds1.permute(0,1,3,4,2).shape, ds2.permute(0,1,3,4,2).shape)
         
         return [result.permute(0,1,3,4,2), ds0.permute(0,1,3,4,2), ds1.permute(0,1,3,4,2), ds2.permute(0,1,3,4,2)]
 
