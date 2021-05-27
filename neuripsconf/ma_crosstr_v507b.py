@@ -86,7 +86,7 @@ class ExpConfig():
         # self.loss = torch.nn.CrossEntropyLoss()
 
         self.loss = DC_and_CE_loss({'batch_dice': True, 'smooth': 1e-5, 'do_bg': False}, {})
-        self.ds_scales = ((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25), (0.125,0.125,0.125), , (0.0625,0.0625,0.125))
+        self.ds_scales = ((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25), (0.125,0.125,0.125),(0.0625,0.0625,0.125))
         ################# Here we wrap the loss for deep supervision ############
         # we need to know the number of outputs of the network
         net_numpool = 5
