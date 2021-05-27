@@ -234,7 +234,7 @@ class CrossPatch3DTr(nn.Module):
 
         # Encode the interest region
         with encoder_grad():
-            R, S = self.encoder(R, True, self.PE, posR)
+            R, S = self.encoder(R, True, posR)
         skip1, skip2, skip3, skip4, skip5 = S
         bs, c, h, w, d = skip5.shape
         c = c*2
@@ -254,7 +254,7 @@ class CrossPatch3DTr(nn.Module):
             bs,_,na,_,_,_ = A.shape
             with torch.no_grad():
                 for ra in range(na):
-                    enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
+                    enc = self.encoder(A[:,:,ra,...], False, posA[:,ra,...])
 
                     # Positional encodding
                     enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
