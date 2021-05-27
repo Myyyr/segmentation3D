@@ -121,31 +121,31 @@ class SelfTransEncoder(nn.Module):
         if not ret_skip: del skip1
         skip2 = self.conv2(skip2)
         if self.use_trans[1]:
-            skip2 = self.trans2(x, pos)
+            skip2 = self.trans2(skip2, pos)
 
         skip3 = self.maxpool3(skip2)
         if not ret_skip: del skip2
         skip3 = self.conv3(skip3)
         if self.use_trans[2]:
-            skip3 = self.trans3(x, pos)
+            skip3 = self.trans3(skip3, pos)
 
         skip4 = self.maxpool4(skip3)
         if not ret_skip: del skip3
         skip4 = self.conv4(skip4)
         if self.use_trans[3]:
-            skip4 = self.trans4(x, pos)
+            skip4 = self.trans4(skip4, pos)
 
         skip5 = self.maxpool5(skip4)
         if not ret_skip: del skip4
         skip5 = self.conv5(skip5)
         if self.use_trans[4]:
-            skip5 = self.trans5(x, pos)
+            skip5 = self.trans5(skip5, pos)
 
         skip6 = self.maxpool6(skip5)
         if not ret_skip: del skip5
         skip6 = self.conv6(skip6)
         if self.use_trans[5]:
-            skip6 = self.trans6(x, pos)
+            skip6 = self.trans6(skip6, pos)
 
 
         if ret_skip: 
