@@ -34,8 +34,8 @@ class ExpConfig():
 
 
         self.input_shape = [512,512,256]
-        # self.filters = [32, 64, 128, 256, 512, 1024] # P = ?
-        self.filters = [16, 32, 64, 128, 256, 512] # P = ?
+        self.filters = [32, 64, 128, 256, 512, 1024] # P = ?
+        # self.filters = [16, 32, 64, 128, 256, 512] # P = 28483014
 
         # d_model = self.filters[-1]
 
