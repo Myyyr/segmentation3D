@@ -35,8 +35,8 @@ class ExpConfig():
 
         self.input_shape = [512,512,256]
         # self.filters = [64, 128, 256, 512, 1024, 2048] # P = memory error
-        self.filters = [32, 64, 128, 256, 512, 1024] # P = 106518342
-        # self.filters = [16, 32, 64, 128, 256, 512] # P = 28483014 # 2l 
+        self.filters = [32, 64, 128, 256, 512, 1024] # 1l P = 106518342  # 2l P = 119385670
+        # self.filters = [16, 32, 64, 128, 256, 512] # P = 28483014 
 
 
         # d_model = self.filters[-1]
@@ -55,7 +55,7 @@ class ExpConfig():
         # Model
         number_of_cross_heads = 1
         number_of_self_heads = 8
-        number_of_self_layer = 2
+        number_of_self_layer = 1
 
         self.n_classes = 14
         self.net = CrossPatch3DTr(filters=self.filters,use_trans=[0,0,0,1,1,1],
