@@ -22,7 +22,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = "507"
+        self.id = "507b"
         self.experiment_name = "ma_crosstr_v{}".format(self.id)
         self.debug = False
 
@@ -60,13 +60,13 @@ class ExpConfig():
                                 n_classes=self.n_classes,
                                 n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
-                                n_strans=number_of_self_layer, do_cross=False)
+                                n_strans=number_of_self_layer, do_cross=True)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        self.model_path = './checkpoints/models/extended_deep_crosstr.pth'
-        # self.model_path = './checkpoints/models/300/mod.pth'
+        # self.model_path = './checkpoints/models/extended_deep_crosstr.pth'
+        self.model_path = './checkpoints/models/507/mod.pt'
         
          
         
@@ -115,7 +115,7 @@ class ExpConfig():
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
-
+        self.load_lr = False
         self.load_model()
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
@@ -123,8 +123,8 @@ class ExpConfig():
     def set_data(self, split = 0):
         # Data
         # print(self.ds_scales)s
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
-        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=True, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
+        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=True, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=self.batchsize, shuffle=True)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
 
@@ -139,7 +139,8 @@ class ExpConfig():
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
-            self.lr_scheduler.load_state_dict(a['scheduler'])
+            if self.load_lr:
+                self.lr_scheduler.load_state_dict(a['scheduler'])
 
     def net_stats(self):
         s = 0
