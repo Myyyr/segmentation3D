@@ -67,7 +67,7 @@ class ExpConfig():
         print("N PARAMS : {}".format(self.n_parameters))
 
         # self.model_path = './checkpoints/models/deep_crosstr.pth'
-        self.model_path = './checkpoints/models/506/mod.pt'
+        self.model_path = './checkpoints/models/506/modlast.pt'
         
          
         

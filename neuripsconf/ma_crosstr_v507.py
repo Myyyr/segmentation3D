@@ -35,7 +35,7 @@ class ExpConfig():
 
         self.input_shape = [512,512,256]
         # self.filters = [64, 128, 256, 512, 1024, 2048] # P = memory error
-        self.filters = [32, 64, 128, 256, 512, 1024] # 1l P = 106518342  # 2l P = 119385670
+        self.filters = [32, 64, 128, 256, 512, 1024] # P = 106518342 
         # self.filters = [16, 32, 64, 128, 256, 512] # P = 28483014 
 
 
