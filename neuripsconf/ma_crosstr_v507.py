@@ -9,7 +9,7 @@ from torch.utils.data import DataLoader
 import torch
 import torchio as tio
 
-from models.mymod.cross_patch_deep import CrossPatch3DTr
+from models.mymod.cross_patch_deep_extended import CrossPatch3DTr
 from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2   
 from nnunet.utilities.nd_softmax import softmax_helper
 
