@@ -5,7 +5,7 @@ from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, Posit
 from models.mymod.transTools import PositionalEncoding, CrossAttention
 from models.networks_other import init_weights
 import numpy as np
-from einops import rearrange
+from einops import rearrange, repeat
 
 
 class SimpleTransEncoder(nn.Module):
@@ -278,7 +278,23 @@ class CrossPatch3DTr(nn.Module):
             
 
         else:
-            Z = R
+            bs,_,na,_,_,_ = A.shape
+            R = self.apply_positional_encoding(posR, self.PE, R)
+            R = rearrange(R, 'b c h w d -> b (h w d) c')
+            YA = [R for r in range(na)]
+            A = torch.cat([R] + YA, 1)
+            del YA, X
+
+            rseq = R.shape[1]
+
+            # Cross attention
+            Z = self.cross_trans(A, rseq)
+            del A
+            
+            # Decoder
+            ## Permute and Reshape
+            Z = rearrange(Z, ('b n c -> b c n'))
+            Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
         
 
         ## Up, skip, conv and ds
