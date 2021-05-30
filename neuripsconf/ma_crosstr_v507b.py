@@ -34,8 +34,10 @@ class ExpConfig():
 
 
         self.input_shape = [512,512,256]
-        self.filters = [32, 64, 128, 256, 512, 1024] # P = ?
-        # self.filters = [16, 32, 64, 128, 256, 512] # P = ?
+        # self.filters = [64, 128, 256, 512, 1024, 2048] # P = memory error
+        self.filters = [32, 64, 128, 256, 512, 1024] # P = 106518342 
+        # self.filters = [16, 32, 64, 128, 256, 512] # P = 28483014 
+
 
         # d_model = self.filters[-1]
 
@@ -60,7 +62,7 @@ class ExpConfig():
                                 n_classes=self.n_classes,
                                 n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
-                                n_strans=number_of_self_layer, do_cross=True)
+                                n_strans=number_of_self_layer, do_cross=False)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
@@ -115,7 +117,7 @@ class ExpConfig():
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
-        self.load_lr = False
+
         self.load_model()
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
@@ -139,8 +141,7 @@ class ExpConfig():
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
-            if self.load_lr:
-                self.lr_scheduler.load_state_dict(a['scheduler'])
+            # self.lr_scheduler.load_state_dict(a['scheduler'])
 
     def net_stats(self):
         s = 0
