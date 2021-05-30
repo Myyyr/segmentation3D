@@ -298,7 +298,7 @@ class CrossPatch3DTr(nn.Module):
             # Decoder
             ## Permute and Reshape
             Z = rearrange(Z, ('b n c -> b c n'))
-            print(Z.shape, h, w, d)
+            # print(Z.shape, h, w, d)
             Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
         
 
