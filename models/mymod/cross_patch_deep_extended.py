@@ -238,9 +238,12 @@ class CrossPatch3DTr(nn.Module):
         skip1, skip2, skip3, skip4, skip5 = S
         bs, c, h, w, d = skip5.shape
         c = c*2
-        h = h//2
-        w = w//2
-        d = d//2
+        # h = h//2
+        # w = w//2
+        # d = d//2
+        h = Sh
+        w = Sw
+        d = Sd
 
 
         if self.do_cross:
