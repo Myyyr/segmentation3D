@@ -278,7 +278,8 @@ class CrossPatch3DTr(nn.Module):
             
 
         else:
-            bs,_,na,_,_,_ = A.shape
+            # bs,_,na,_,_,_ = A.shape
+            na = 3*3*4
             R = self.apply_positional_encoding(posR, self.PE, R)
             R = rearrange(R, 'b c h w d -> b (h w d) c')
             YA = [R for r in range(na)]
