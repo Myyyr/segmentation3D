@@ -141,7 +141,7 @@ class ExpConfig():
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
             self.optimizer.load_state_dict(a['optimizer_state_dict'])
-            # self.lr_scheduler.load_state_dict(a['scheduler'])
+            self.lr_scheduler.load_state_dict(a['scheduler'])
 
     def net_stats(self):
         s = 0
