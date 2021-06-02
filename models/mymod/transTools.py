@@ -83,13 +83,14 @@ class CrossAttention(nn.Module):
         # print(Q.shape,K.shape,V.shape)
         # print(torch.cuda.memory_allocated()*4/(1024**3), 'GB')
         # exit(0)
-        # M = torch.matmul(Q,K)/(self.d_model**0.5)
-        M = torch.einsum('b i d, b j d -> b i j', Q, K)/(self.d_model**0.5)
+        M = torch.matmul(Q,K.transpose(-2,-1))/(self.d_model**0.5)
+        # M = torch.einsum('b i d, b j d -> b i j', Q, K)/(self.d_model**0.5)
         # print(M.shape)
         A = nn.functional.softmax(M, dim = -1)
+        del M
 
-        return torch.einsum('b i j, b j d -> b i d', A, V)
-        # return torch.matmul(A,V)
+        # return torch.einsum('b i j, b j d -> b i d', A, V)
+        return torch.matmul(A,V)
 
 
 

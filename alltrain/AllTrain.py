@@ -388,7 +388,7 @@ class AllTrain(Train):
 
         #save dict
         basePath = self.expconfig.checkpointsBasePathMod + "{}".format(self.expconfig.id)
-        path = basePath + "/mod"+txt+".pt".format(epoch)
+        path = basePath + "/mod"+txt+".pth".format(epoch)
         
 
         if not os.path.exists(basePath):
