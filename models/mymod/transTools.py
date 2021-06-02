@@ -88,7 +88,7 @@ class CrossAttention(nn.Module):
         # print(M.shape)
         A = nn.functional.softmax(M, dim = -1)
         del M
-        print("We do it goooood !")
+        # print("We do it goooood !")
         # return torch.einsum('b i j, b j d -> b i d', A, V)
         return torch.matmul(A,V)
 
