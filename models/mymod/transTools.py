@@ -59,7 +59,6 @@ class CrossAttention(nn.Module):
             # Z += [self.attention(Q, K.permute(0,2,1), V)]
             Z += [self.attention(Q, K, V)]
 
-        del X, Xq, Xkv
         # Concate and get the final projected Z
         Z = torch.cat(Z, dim=2)
         # print('###Z',Z.shape)
@@ -68,6 +67,7 @@ class CrossAttention(nn.Module):
 
         # skip connection
         Z1 = Z + Xq
+        del X, Xq, Xkv
 
         # normalization
         Z = self.norm2(Z1)
