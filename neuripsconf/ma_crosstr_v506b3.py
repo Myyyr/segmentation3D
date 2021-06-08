@@ -112,7 +112,7 @@ class ExpConfig():
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
 
         self.optimizer.zero_grad()
-        self.validate_every_k_epochs = 10
+        self.validate_every_k_epochs = 1
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 

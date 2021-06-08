@@ -151,7 +151,7 @@ class AllTrain(Train):
 
             #validation at end of epoch
             if epoch % expcf.validate_every_k_epochs == expcf.validate_every_k_epochs - 1:
-                val_dice = self.evaluate()
+                val_dice = self.evaluate(True)
                 if self.tensorboard:
                     self.tb.add_scalar("val", val_dice, epoch)
 
