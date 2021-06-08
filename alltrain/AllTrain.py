@@ -292,7 +292,7 @@ class AllTrain(Train):
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
                         np.save('./viz_inputs.npy', inputs.cpu().numpy())
                         np.save('./viz_target.npy', labels.cpu().numpy())
-                        exit(0)
+                        # exit(0)
 
                     if len(data) == 5:
                         outputs = outputs/all_counts
