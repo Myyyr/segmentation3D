@@ -14,8 +14,8 @@ class DebugCrossPatch3DTr(nn.Module):
     def __init__(self, base_model,filters = 512, n_classes=14):
         super(DebugCrossPatch3DTr, self).__init__()
 
-        self.base_model = nn.Sequential(*list(base_model.children())[:-7])
-        print(self.base_model)
+        self.base_model = base_model
+        # print(self.base_model)
         self.final_conv = nn.Conv3d(filters, n_classes, 1)
 
         # initialise weights
@@ -25,7 +25,7 @@ class DebugCrossPatch3DTr(nn.Module):
 
     def forward(self, X, pos, val=False):
         out = self.base_model(X, pos, val)
-        print(out.shape)
+        # print(out.shape)
         out = nn.functional.interpolate(out, scale_factor=16)
         return [out]
 

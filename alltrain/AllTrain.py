@@ -117,7 +117,9 @@ class AllTrain(Train):
 
         for epoch in range(expcf.start_epoch, expcf.epoch):
             startTime = time.time()
-            expcf.net.train()
+            # expcf.net.train()
+            expcf.net.eval()
+
 
 
             total_loss = 0
