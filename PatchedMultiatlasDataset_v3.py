@@ -109,7 +109,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         if self.mode == 'train':
             item_index = int(index%self.n_files)
-            print(index, item_index)
+            # print(index, item_index)
         else:
             item_index = index
         
