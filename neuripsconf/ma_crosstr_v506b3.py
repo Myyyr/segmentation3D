@@ -106,7 +106,7 @@ class ExpConfig():
         ################# END ###################
 
         self.batchsize = 2
-        self.lr_rate = 1e-1
+        self.lr_rate = 0
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)

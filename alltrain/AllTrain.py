@@ -71,11 +71,7 @@ class AllTrain(Train):
             labels =[l.to(self.device) for l in labels]
 
         if pos != None:
-            # print('#1', torch.cuda.memory_allocated()/(1024**3), 'GB')
-            # print('#1', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
             outputs = expcf.net(inputs, pos)
-            # print('#2', torch.cuda.memory_allocated()/(1024**3), 'GB')
-            # print('#2', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
             del pos
         else:
             outputs = expcf.net(inputs)
@@ -288,7 +284,7 @@ class AllTrain(Train):
                                     # print(crop.shape, inptc.shape)  
                                     # print(torch.cat([inptc, crop], 1).shape)
                                     # print("OK")
-                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True)
+                                    out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True) 
 
                                     # print(out_xyz.shape)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
