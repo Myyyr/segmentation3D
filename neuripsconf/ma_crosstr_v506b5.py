@@ -22,7 +22,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = "506b3"
+        self.id = "506b5"
         self.experiment_name = "ma_crosstr_v{}".format(self.id)
         self.debug = False
 
