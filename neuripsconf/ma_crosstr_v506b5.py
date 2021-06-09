@@ -109,16 +109,16 @@ class ExpConfig():
         self.lr_rate = 1e-2
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
-        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
 
-        self.optimizer.zero_grad()
-        self.validate_every_k_epochs = 1
-        # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
-        self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
         self.load_lr = False
         self.load_model()
         self.net.reinit_decoder()
+        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
+        self.optimizer.zero_grad()
+        self.validate_every_k_epochs = 1
+        # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
+        self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
