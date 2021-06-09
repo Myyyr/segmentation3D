@@ -290,7 +290,6 @@ class CrossPatch3DTr(nn.Module):
 
         else:
             Z = R
-        Z = R
         
         if debug:
             return Z
