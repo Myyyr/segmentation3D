@@ -10,8 +10,6 @@ import torch
 import torchio as tio
 
 from models.mymod.cross_patch_deep import CrossPatch3DTr
-from models.mymod.debug_cross_patch_deep import DebugCrossPatch3DTr
-
 from utils.metrics import DC_and_CE_loss, MultipleOutputLoss2   
 from nnunet.utilities.nd_softmax import softmax_helper
 
@@ -24,7 +22,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = "506b4"
+        self.id = "506b3"
         self.experiment_name = "ma_crosstr_v{}".format(self.id)
         self.debug = False
 
@@ -92,7 +90,7 @@ class ExpConfig():
         self.ds_scales = ((1, 1, 1), (0.5, 0.5, 0.5), (0.25, 0.25, 0.25), (0.125,0.125,0.125))
         ################# Here we wrap the loss for deep supervision ############
         # we need to know the number of outputs of the network
-        net_numpool = 1
+        net_numpool = 4
 
         # we give each output a weight which decreases exponentially (division by 2) as the resolution decreases
         # this gives higher resolution outputs more weight in the loss
@@ -111,7 +109,7 @@ class ExpConfig():
         self.lr_rate = 1e-2
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
-        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=0, momentum=0, nesterov=False)
+        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
 
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
@@ -120,8 +118,7 @@ class ExpConfig():
 
         self.load_lr = False
         self.load_model()
-
-        self.net = DebugCrossPatch3DTr(self.net, 512, 14)
+        self.net.reinit_decoder()
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
@@ -144,7 +141,7 @@ class ExpConfig():
             a = torch.load(self.model_path)
             self.net.load_state_dict(a['net_state_dict'])
             # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate, weight_decay=0)
-            self.optimizer.load_state_dict(a['optimizer_state_dict'])
+            # self.optimizer.load_state_dict(a['optimizer_state_dict'])
             # self.lr_scheduler.load_state_dict(a['scheduler'])
             if self.load_lr:
                 self.lr_scheduler.load_state_dict(a['scheduler'])

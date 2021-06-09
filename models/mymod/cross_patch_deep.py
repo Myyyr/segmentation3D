@@ -140,6 +140,9 @@ class CrossPatch3DTr(nn.Module):
         self.d_model = d_model
         self.patch_size = patch_size
         self.do_cross = do_cross
+        self.bn = bn
+        self.up_mode = up_mode
+        self.n_classes = n_classes
 
         # CNN + Trans encoder
         self.encoder = SelfTransEncoder(filters=filters, patch_size=patch_size, d_model=d_model, in_channels=in_channels, n_sheads=n_sheads, bn=bn, n_strans=n_strans)
@@ -190,6 +193,28 @@ class CrossPatch3DTr(nn.Module):
             ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
         return x
 
+    def reinit_decoder(self):
+        ## Decode like 3D UNet
+        self.up_concat4 = UnetUp3D(self.filters[4], self.filters[3], bn=self.bn, up_mode=self.up_mode)
+        self.up_concat3 = UnetUp3D(self.filters[3], self.filters[2], bn=self.bn, up_mode=self.up_mode)
+        self.up_concat2 = UnetUp3D(self.filters[2], self.filters[1], bn=self.bn, up_mode=self.up_mode)
+        self.up_concat1 = UnetUp3D(self.filters[1], self.filters[0], bn=self.bn, up_mode=self.up_mode)
+        
+
+        self.final_conv = nn.Conv3d(self.filters[0], self.n_classes, 1)
+
+        # Deep Supervision
+        self.ds_cv1 = nn.Conv3d(self.filters[3], self.n_classes, 1)
+        self.ds_cv2 = nn.Conv3d(self.filters[2], self.n_classes, 1)
+        self.ds_cv3 = nn.Conv3d(self.filters[1], self.n_classes, 1)
+
+        
+        init_weights(self.final_conv , init_type='kaiming')
+        init_weights(self.ds_cv1 , init_type='kaiming')
+        init_weights(self.ds_cv2 , init_type='kaiming')
+        init_weights(self.ds_cv3 , init_type='kaiming')
+
+
     def forward(self, X, pos, val=False, debug=False):
         if self.do_cross:      
             R = X[:,:,0 ,...]
@@ -227,9 +252,9 @@ class CrossPatch3DTr(nn.Module):
 
 
         if self.do_cross:
-            R = self.apply_positional_encoding(posR, self.PE, R)
+            Z = self.apply_positional_encoding(posR, self.PE, R)
             # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
-            R = rearrange(R, 'b c h w d -> b (h w d) c')
+            Z = rearrange(Z, 'b c h w d -> b (h w d) c')
 
         
         
@@ -248,10 +273,10 @@ class CrossPatch3DTr(nn.Module):
                     YA.append(enc)
 
             # Concatenate all feature maps
-            A = torch.cat([R] + YA, 1)
+            A = torch.cat([Z] + YA, 1)
             del YA, X
 
-            rseq = R.shape[1]
+            rseq = Z.shape[1]
 
             # Cross attention
             Z = self.cross_trans(A, rseq)
@@ -265,6 +290,7 @@ class CrossPatch3DTr(nn.Module):
 
         else:
             Z = R
+        Z = R
         
         if debug:
             return Z
