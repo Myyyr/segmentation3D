@@ -195,15 +195,17 @@ class CrossPatch3DTr(nn.Module):
 
     def reinit_decoder(self):
         ## Decode like 3D UNet
+        del self.up_concat4, self.up_concat3, self.up_concat2, self.up_concat1
         self.up_concat4 = UnetUp3D(self.filters[4], self.filters[3], bn=self.bn, up_mode=self.up_mode)
         self.up_concat3 = UnetUp3D(self.filters[3], self.filters[2], bn=self.bn, up_mode=self.up_mode)
         self.up_concat2 = UnetUp3D(self.filters[2], self.filters[1], bn=self.bn, up_mode=self.up_mode)
         self.up_concat1 = UnetUp3D(self.filters[1], self.filters[0], bn=self.bn, up_mode=self.up_mode)
         
-
+        del self.final_conv 
         self.final_conv = nn.Conv3d(self.filters[0], self.n_classes, 1)
 
         # Deep Supervision
+        del self.ds_cv1, self.ds_cv2, self.ds_cv3 
         self.ds_cv1 = nn.Conv3d(self.filters[3], self.n_classes, 1)
         self.ds_cv2 = nn.Conv3d(self.filters[2], self.n_classes, 1)
         self.ds_cv3 = nn.Conv3d(self.filters[1], self.n_classes, 1)
