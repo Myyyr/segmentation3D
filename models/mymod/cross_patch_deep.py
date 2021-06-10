@@ -297,22 +297,26 @@ class CrossPatch3DTr(nn.Module):
             return Z
 
         if not val:
-            with torch.enable_grad():
-                ## Up, skip, conv and ds
-                Z = self.up_concat4(skip4, Z)
-                ds1 = self.ds_cv1(Z)
-                del skip4
-                Z = self.up_concat3(skip3, Z)
-                ds2 = self.ds_cv2(Z)
-                del skip3
-                Z = self.up_concat2(skip2, Z)
-                ds3 = self.ds_cv3(Z)
-                del skip2
-                Z = self.up_concat1(skip1, Z)
-                del skip1
+            grd = torch.enable_grad
+        else:
+            grd = torch.no_grad
+        
+        with grd():
+            ## Up, skip, conv and ds
+            Z = self.up_concat4(skip4, Z)
+            ds1 = self.ds_cv1(Z)
+            del skip4
+            Z = self.up_concat3(skip3, Z)
+            ds2 = self.ds_cv2(Z)
+            del skip3
+            Z = self.up_concat2(skip2, Z)
+            ds3 = self.ds_cv3(Z)
+            del skip2
+            Z = self.up_concat1(skip1, Z)
+            del skip1
 
-                ## get prediction with final layer
-                Z = self.final_conv(Z)
+            ## get prediction with final layer
+            Z = self.final_conv(Z)
             
         return [Z, ds3, ds2, ds1]
 
