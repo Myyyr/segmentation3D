@@ -254,9 +254,9 @@ class CrossPatch3DTr(nn.Module):
 
 
         if self.do_cross:
-            Z = self.apply_positional_encoding(posR, self.PE, R)
+            R = self.apply_positional_encoding(posR, self.PE, R)
             # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
-            Z = rearrange(Z, 'b c h w d -> b (h w d) c')
+            R = rearrange(R, 'b c h w d -> b (h w d) c')
 
         
         
@@ -275,10 +275,10 @@ class CrossPatch3DTr(nn.Module):
                     YA.append(enc)
 
             # Concatenate all feature maps
-            A = torch.cat([Z] + YA, 1)
+            A = torch.cat([R] + YA, 1)
             del YA, X
 
-            rseq = Z.shape[1]
+            rseq = R.shape[1]
 
             # Cross attention
             Z = self.cross_trans(A, rseq)
@@ -296,22 +296,22 @@ class CrossPatch3DTr(nn.Module):
         if debug:
             return Z
 
-        with torch.enable_grad():
-            ## Up, skip, conv and ds
-            Z = self.up_concat4(skip4, Z)
-            ds1 = self.ds_cv1(Z)
-            del skip4
-            Z = self.up_concat3(skip3, Z)
-            ds2 = self.ds_cv2(Z)
-            del skip3
-            Z = self.up_concat2(skip2, Z)
-            ds3 = self.ds_cv3(Z)
-            del skip2
-            Z = self.up_concat1(skip1, Z)
-            del skip1
+        # with torch.enable_grad():
+        ## Up, skip, conv and ds
+        Z = self.up_concat4(skip4, Z)
+        ds1 = self.ds_cv1(Z)
+        del skip4
+        Z = self.up_concat3(skip3, Z)
+        ds2 = self.ds_cv2(Z)
+        del skip3
+        Z = self.up_concat2(skip2, Z)
+        ds3 = self.ds_cv3(Z)
+        del skip2
+        Z = self.up_concat1(skip1, Z)
+        del skip1
 
-            ## get prediction with final layer
-            Z = self.final_conv(Z)
+        ## get prediction with final layer
+        Z = self.final_conv(Z)
             
         return [Z, ds3, ds2, ds1]
 
