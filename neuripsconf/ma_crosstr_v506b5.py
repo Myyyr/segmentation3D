@@ -113,7 +113,7 @@ class ExpConfig():
 
         self.load_lr = False
         self.load_model()
-        self.net.reinit_decoder()
+        # self.net.reinit_decoder()
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
