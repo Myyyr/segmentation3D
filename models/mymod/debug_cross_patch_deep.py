@@ -24,9 +24,9 @@ class DebugCrossPatch3DTr(nn.Module):
                 init_weights(m, init_type='kaiming')
 
     def forward(self, X, pos, val=False):
-        out = self.base_model(X, pos, val)
+        out = self.base_model(X, pos, val,debug=True)
         # print(out.shape)
-        out = nn.functional.interpolate(out[0], scale_factor=16)
+        out = nn.functional.interpolate(out, scale_factor=16)
         return [out]
 
 

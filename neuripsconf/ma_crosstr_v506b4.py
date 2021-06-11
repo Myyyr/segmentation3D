@@ -123,9 +123,9 @@ class ExpConfig():
         self.validate_every_k_epochs = 1
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
-        del self.net.base_model.up_concat4, self.net.base_model.up_concat3, self.net.base_model.up_concat2, self.net.base_model.up_concat1
-        del self.net.base_model.final_conv 
-        del self.net.base_model.ds_cv1, self.net.base_model.ds_cv2, self.net.base_model.ds_cv3
+        # del self.net.base_model.up_concat4, self.net.base_model.up_concat3, self.net.base_model.up_concat2, self.net.base_model.up_concat1
+        # del self.net.base_model.final_conv 
+        # del self.net.base_model.ds_cv1, self.net.base_model.ds_cv2, self.net.base_model.ds_cv3
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
