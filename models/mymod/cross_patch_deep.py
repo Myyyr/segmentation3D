@@ -294,6 +294,7 @@ class CrossPatch3DTr(nn.Module):
             Z = R
 
         if debug:
+            del R
             return Z
 
         if not val:
