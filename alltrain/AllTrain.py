@@ -97,7 +97,7 @@ class AllTrain(Train):
             total_norm += param_norm.item() ** 2
             # print(p.grad.data.norm(2).item())
         total_norm = total_norm ** (1. / 2)
-        print(total_norm)
+        # print(total_norm)
         self.grdnorm.append(total_norm)
 
 
