@@ -91,6 +91,7 @@ class AllTrain(Train):
         # print('#4', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
         # for p in expcf.net.parameters():
         #     # if p != None:
+        total_norm = 0
         for p in list(filter(lambda p: p.grad is not None, expcf.net.parameters())):
             param_norm = p.grad.data.norm(2)
             total_norm += param_norm.item() ** 2
