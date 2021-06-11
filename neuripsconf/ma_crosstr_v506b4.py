@@ -49,7 +49,7 @@ class ExpConfig():
         self.clip = False
         self.patched = True
         # GPU
-        self.gpu = '0'
+        self.gpu = '1'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
         # torch.backends.cudnn.benchmark = False
 
@@ -111,7 +111,6 @@ class ExpConfig():
         self.lr_rate = 1e-2
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
-        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=0, momentum=0, nesterov=False)
 
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
@@ -122,6 +121,7 @@ class ExpConfig():
         self.load_model()
 
         self.net = DebugCrossPatch3DTr(self.net, 512, 14)
+        self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=0, momentum=0, nesterov=False)
 
         # Other
         self.classes_name = ['background','spleen','right kidney','left kidney','gallbladder','esophagus','liver','stomach','aorta','inferior vena cava','portal vein and splenic vein','pancreas','right adrenal gland','left adrenal gland']
