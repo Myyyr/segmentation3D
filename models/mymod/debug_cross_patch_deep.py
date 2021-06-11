@@ -26,7 +26,7 @@ class DebugCrossPatch3DTr(nn.Module):
     def forward(self, X, pos, val=False):
         out = self.base_model(X, pos, val)
         # print(out.shape)
-        out = nn.functional.interpolate(out, scale_factor=16)
+        out = nn.functional.interpolate(out[0], scale_factor=16)
         return [out]
 
 
