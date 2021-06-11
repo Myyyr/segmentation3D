@@ -89,12 +89,15 @@ class AllTrain(Train):
         loss.backward()
         # print('#4', torch.cuda.memory_allocated()/(1024**3), 'GB')
         # print('#4', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
-        for p in expcf.net.parameters():
-            if p != None:
-                param_norm = p.grad.data.norm(2)
-                total_norm += param_norm.item() ** 2
+        # for p in expcf.net.parameters():
+        #     # if p != None:
+        for p in list(filter(lambda p: p.grad is not None, expcf.net.parameters())):
+            param_norm = p.grad.data.norm(2)
+            total_norm += param_norm.item() ** 2
+            # print(p.grad.data.norm(2).item())
         total_norm = total_norm ** (1. / 2)
         print(total_norm)
+        self.grdnorm.append(total_norm)
 
 
         if expcf.clip:
@@ -111,7 +114,6 @@ class AllTrain(Train):
         #     print('mean :', L1)
 
 
-        self.grdnorm.append(total_norm)
 
         expcf.optimizer.zero_grad()
         torch.cuda.empty_cache()
