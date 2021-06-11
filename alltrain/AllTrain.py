@@ -62,6 +62,8 @@ class AllTrain(Train):
 
         self.classes = self.expconfig.n_classes
 
+        self.grdnorm = []
+
 
     def step(self, expcf, inputs, labels, total_loss, pos = None):
         inputs = inputs.to(self.device)
@@ -91,12 +93,20 @@ class AllTrain(Train):
             torch.nn.utils.clip_grad_norm_(expcf.net.parameters(), 12)
         #update params
         expcf.optimizer.step()
-        if expcf.debug:
-            L1, L2, L3 = [],[],[]
-            for l in expcf.net.modules():
-                if type(l) == torch.nn.Conv3d:
-                    L1.append(torch.norm(l.weight.grad).item())
-            print('mean :', L1)
+        # if expcf.debug:
+        #     L1, L2, L3 = [],[],[]
+        #     for l in expcf.net.modules():
+        #         if type(l) == torch.nn.Conv3d:
+        #             L1.append(torch.norm(l.weight.grad).item())
+        #     print('mean :', L1)
+
+        for p in expcf.net.parameters():
+            param_norm = p.grad.data.norm(2)
+            total_norm += param_norm.item() ** 2
+        total_norm = total_norm ** (1. / 2)
+
+        self.grdnorm.append(total_norm)
+
         expcf.optimizer.zero_grad()
         torch.cuda.empty_cache()
         del loss
@@ -117,6 +127,7 @@ class AllTrain(Train):
 
         for epoch in range(expcf.start_epoch, expcf.epoch):
             startTime = time.time()
+            self.grdnorm = []
             # expcf.net.train()
             expcf.net.eval()
 
@@ -166,6 +177,9 @@ class AllTrain(Train):
             if self.tensorboard:
                 # self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
                 self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
+                self.tb.add_scalar("max_grad", max(self.grdnorm), epoch)
+                self.tb.add_scalar("mean_grad", sum(self.grdnorm)/len(self.grdnorm), epoch)
+                
             # self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
             #     self.tb.add_scalar(k+'_ValidDice', self.save_dict['original'][k], epoch)

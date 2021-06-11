@@ -44,7 +44,7 @@ class ExpConfig():
         # self.patch_size=(128,128,128)
         self.patch_size=(192,192,48)
         # n_layers=6
-        self.clip = False
+        self.clip = True
         self.patched = True
         # GPU
         self.gpu = '0'
