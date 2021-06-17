@@ -93,6 +93,7 @@ class MHCrossAttention(nn.Module):
         K = rearrange(K, 'b n (h d) -> b n h d',h=self.heads)
         V = rearrange(V, 'b n (h d) -> b n h d',h=self.heads)
 
+        print(Q.shape, K.shape, V.shape)
         Z = self.attention(Q,K,V)
         del Q, K, V
         Z = rearrange(Z, 'b h n d -> b n (h d)')
