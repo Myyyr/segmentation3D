@@ -55,7 +55,7 @@ class MHCrossAttention(nn.Module):
     def __init__(self, dim, heads = 8, dim_head = 64, dropout = 0.):
         super(MHCrossAttention, self).__init__()
         self.dim = dim
-        inner_dim = dim_head *  heads
+        self.inner_dim = dim_head *  heads
         project_out = not (heads == 1 and dim_head == dim)
 
         self.heads = heads
@@ -68,7 +68,7 @@ class MHCrossAttention(nn.Module):
         self.wv = nn.Linear(self.dim, self.inner_dim, bias = False)
 
         self.to_out = nn.Sequential(
-            nn.Linear(inner_dim, dim),
+            nn.Linear(self.inner_dim, dim),
             nn.Dropout(dropout)
         ) if project_out else nn.Identity()
 
