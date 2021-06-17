@@ -86,8 +86,8 @@ class MHCrossAttention(nn.Module):
         Z = []
         # Compute attention for all heads
         Q = self.wq(Xq)
-        K = self.wk(Xk)
-        V = self.wv(XV)
+        K = self.wk(Xkv)
+        V = self.wv(Xkv)
 
         Q = rearrange(Q, 'b n (h d) -> b n h d',h=self.heads)
         K = rearrange(K, 'b n (h d) -> b n h d',h=self.heads)
