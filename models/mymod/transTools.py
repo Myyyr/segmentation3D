@@ -42,9 +42,9 @@ class MHCrossTransformer(nn.Module):
                 PreNorm(dim, MHCrossAttention(dim, heads = heads, dim_head = dim_head, dropout = dropout)),
                 PreNorm(dim, FeedForward(dim, mlp_dim, dropout = dropout))
             ]))
-    def forward(self, x):
+    def forward(self, x, rseq=512):
         for attn, ff in self.layers:
-            x = attn(x) + x
+            x = attn(x, rseq) + x
             x = ff(x) + x
         return x
 
