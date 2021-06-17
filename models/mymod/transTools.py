@@ -35,7 +35,7 @@ class FeedForward(nn.Module):
 
 class MHCrossTransformer(nn.Module):
     def __init__(self, dim, depth, heads, dim_head, mlp_dim, dropout = 0.):
-        super(MHCrossTransformer).__init__()
+        super(MHCrossTransformer, self).__init__()
         self.layers = nn.ModuleList([])
         for _ in range(depth):
             self.layers.append(nn.ModuleList([
