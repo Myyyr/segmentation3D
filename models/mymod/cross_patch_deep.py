@@ -2,7 +2,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 import torch
 from models.mymod.utils import UNetConv2D, UNetConv3D, UnetUp2D, UnetUp3D, PositionalEncodingPermute3D
-from models.mymod.transTools import PositionalEncoding, CrossAttention
+from models.mymod.transTools import PositionalEncoding, CrossAttention, MHCrossTransformer
 from models.networks_other import init_weights
 import numpy as np
 from einops import rearrange
@@ -215,6 +215,10 @@ class CrossPatch3DTr(nn.Module):
         init_weights(self.ds_cv1 , init_type='kaiming')
         init_weights(self.ds_cv2 , init_type='kaiming')
         init_weights(self.ds_cv3 , init_type='kaiming')
+
+    def reinit_crostrans(self, dim, depth, heads, dim_head, mlp_dim, dropout = 0.):
+        del self.cross_trans
+        self.cross_trans = MHCrossTransformer(dim, depth, heads, dim_head, mlp_dim, dropout)
 
 
     def forward(self, X, pos, val=False, debug=False):
