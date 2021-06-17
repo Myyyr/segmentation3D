@@ -28,7 +28,7 @@ class FeedForward(nn.Module):
             nn.Linear(hidden_dim, dim),
             nn.Dropout(dropout)
         )
-    def forward(self, x):
+    def forward(self, x, rseq=None):
         return self.net(x)
 
 
