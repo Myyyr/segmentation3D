@@ -44,7 +44,7 @@ class MHCrossTransformer(nn.Module):
             ]))
     def forward(self, x, rseq=512):
         for attn, ff in self.layers:
-            x = attn(x, rseq) + x
+            x = attn(x) + x
             x = ff(x) + x
         return x
 
