@@ -14,8 +14,8 @@ class PreNorm(nn.Module):
         super().__init__()
         self.norm = nn.LayerNorm(dim)
         self.fn = fn
-    def forward(self, x, **kwargs):
-        return self.fn(self.norm(x), **kwargs)
+    def forward(self, x, rseq=512, **kwargs):
+        return self.fn(self.norm(x), rseq, **kwargs)
 
 
 class FeedForward(nn.Module):
@@ -44,7 +44,7 @@ class MHCrossTransformer(nn.Module):
             ]))
     def forward(self, x, rseq=512):
         for attn, ff in self.layers:
-            x = attn(x) + x
+            x = attn(x, rseq) + x
             x = ff(x) + x
         return x
 
@@ -78,11 +78,6 @@ class MHCrossAttention(nn.Module):
 
 
     def forward(self, X, rseq=512):
-        # Normalization
-        # print('###X',X.shape)
-        X = self.norm1(X)
-        # print('###X',X.shape)
-
         # Separation Region/FullImage into Xq / (Xk&v)
         Xq, Xkv = X[:,:rseq,:], X[:,rseq:,:]
         # print('###Xq',Xq.shape)
