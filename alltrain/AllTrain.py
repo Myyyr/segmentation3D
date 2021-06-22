@@ -62,7 +62,7 @@ class AllTrain(Train):
 
         self.classes = self.expconfig.n_classes
 
-        self.grdnorm = []
+        self.grdnorm = {'all':[], 'wq':[], 'wk':[], 'wv':[], 'ff':[]}
 
 
     def step(self, expcf, inputs, labels, total_loss, pos = None):
@@ -91,14 +91,25 @@ class AllTrain(Train):
         # print('#4', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
         # for p in expcf.net.parameters():
         #     # if p != None:
-        total_norm = 0
+        
+        enctl = expcf.net.cross_trans.layers[0]
+        lsub_module = [enctl[0].fn.wq, enctl[0].fn.wk, enctl[0].fn.wv, enctl[1].fn]
+        lsub_names  = ['wq', 'wk', 'wv', 'ff']
+
+        for name, sub in zip(lsub_names, lsub_module):
+            total_norm = 0
+            for p in list(filter(lambda p: p.grad is not None, sub.parameters())):
+                param_norm = p.grad.data.norm(2)
+                total_norm += param_norm.item() ** 2
+            total_norm = total_norm ** (1. / 2)
+            self.grdnorm[name].append(total_norm)
+
+
         for p in list(filter(lambda p: p.grad is not None, expcf.net.parameters())):
             param_norm = p.grad.data.norm(2)
             total_norm += param_norm.item() ** 2
-            # print(p.grad.data.norm(2).item())
         total_norm = total_norm ** (1. / 2)
-        # print(total_norm)
-        self.grdnorm.append(total_norm)
+        self.grdnorm['all'].append(total_norm)
 
 
         if expcf.clip:
@@ -136,7 +147,7 @@ class AllTrain(Train):
 
         for epoch in range(expcf.start_epoch, expcf.epoch):
             startTime = time.time()
-            self.grdnorm = []
+            self.grdnorm = {'all':[], 'wq':[], 'wk':[], 'wv':[], 'ff':[]}
             # expcf.net.train()
             expcf.net.eval()
 
@@ -186,8 +197,9 @@ class AllTrain(Train):
             if self.tensorboard:
                 # self.tb.add_scalar("lr", expcf.optimizer.param_groups[0]['lr'], epoch)
                 self.tb.add_scalar("train_loss", total_loss/int(len(self.trainDataLoader)), epoch)
-                self.tb.add_scalar("max_grad", max(self.grdnorm), epoch)
-                self.tb.add_scalar("mean_grad", sum(self.grdnorm)/len(self.grdnorm), epoch)
+                for key in list(self.grdnorm.keys()):
+                    self.tb.add_scalar("max_grad_"+key, max(self.grdnorm[key]), epoch)
+                    self.tb.add_scalar("mean_grad_"+key, sum(self.grdnorm[key])/len(self.grdnorm[key]), epoch)
                 
             # self.tb.add_scalar("ValidMeanDice", self.meanDice, epoch)
             # for k in self.expconfig.classes_name:
