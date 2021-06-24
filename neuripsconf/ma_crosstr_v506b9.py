@@ -23,7 +23,7 @@ def count_parameters(model):
 class ExpConfig():
     def __init__(self):
         # ID and Name
-        self.id = "506b9"
+        self.id = "506b91"
         self.experiment_name = "ma_crosstr_v{}".format(self.id)
         self.debug = False
 
@@ -48,7 +48,7 @@ class ExpConfig():
         self.clip = False
         self.patched = True
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
         # torch.backends.cudnn.benchmark = False
 
