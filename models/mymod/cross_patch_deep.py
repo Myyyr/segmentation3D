@@ -259,40 +259,40 @@ class CrossPatch3DTr(nn.Module):
 
         if self.do_cross:
             Z = R
-            # R = self.apply_positional_encoding(posR, self.PE, R)
-            # # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
-            # R = rearrange(R, 'b c h w d -> b (h w d) c')
+            R = self.apply_positional_encoding(posR, self.PE, R)
+            # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
+            R = rearrange(R, 'b c h w d -> b (h w d) c')
 
         
         
-            # # Encode all regions with no gradient
-            # YA = []
-            # bs,_,na,_,_,_ = A.shape
-            # with torch.no_grad():
-            #     for ra in range(na):
-            #         enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
+            # Encode all regions with no gradient
+            YA = []
+            bs,_,na,_,_,_ = A.shape
+            with torch.no_grad():
+                for ra in range(na):
+                    enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
 
-            #         # Positional encodding
-            #         enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
-            #         # enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
-            #         enc = rearrange(enc, 'b c h w d -> b (h w d) c')
+                    # Positional encodding
+                    enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
+                    # enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
+                    enc = rearrange(enc, 'b c h w d -> b (h w d) c')
 
-            #         YA.append(enc)
+                    YA.append(enc)
 
-            # # Concatenate all feature maps
-            # A = torch.cat([R] + YA, 1)
-            # del YA, X
+            # Concatenate all feature maps
+            A = torch.cat([R] + YA, 1)
+            del YA, X
 
-            # rseq = R.shape[1]
+            rseq = R.shape[1]
 
-            # # Cross attention
-            # Z = self.cross_trans(A, rseq)
-            # del A
+            # Cross attention
+            Z = self.cross_trans(A, rseq)
+            del A
             
-            # # Decoder
-            # ## Permute and Reshape
-            # Z = rearrange(Z, ('b n c -> b c n'))
-            # Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
+            # Decoder
+            ## Permute and Reshape
+            Z = rearrange(Z, ('b n c -> b c n'))
+            Z = rearrange(Z, ('b c (h w d) -> b c h w d'), h=h, w=w, d=d)
             
 
         else:
