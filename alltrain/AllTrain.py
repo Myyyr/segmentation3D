@@ -44,7 +44,7 @@ class AllTrain(Train):
 
         self.tensorboard = tensorboard
         if tensorboard:
-            self.tb = SummaryWriter(log_dir='runs/exp', comment=expconfig.experiment_name)
+            self.tb = SummaryWriter( comment=expconfig.experiment_name)
 
         self.bestMeanDice = 0
         self.bestMeanDiceEpoch = 0
