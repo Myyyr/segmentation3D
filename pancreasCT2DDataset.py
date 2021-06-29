@@ -4,7 +4,6 @@ import datetime
 
 from os import listdir
 from os.path import join
-from tciautils import load_nifti_img, check_exceptions, is_image_file
 
 import torchvision
 import skimage.transform
