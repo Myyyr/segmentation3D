@@ -231,8 +231,6 @@ class CrossPatch3DTr(nn.Module):
 
         if self.enc_grad:
             encoder_grad = torch.enable_grad
-            print("We do grad !!")
-            exit(0)
         else:
             encoder_grad = torch.no_grad
         
@@ -331,6 +329,8 @@ class CrossPatch3DTr(nn.Module):
 
             ## get prediction with final layer
             Z = self.final_conv(Z)
+
+        print("Memory :", convert_bytes(torch.cuda.max_memory_consumption()))
             
         return [Z, ds3, ds2, ds1]
 
