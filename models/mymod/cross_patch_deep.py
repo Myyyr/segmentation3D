@@ -130,7 +130,7 @@ class SelfTransEncoder(nn.Module):
 
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False, enc_grad=True):
+    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=True, enc_grad=True):
         super(CrossPatch3DTr, self).__init__()
         self.PE = None
 
@@ -265,6 +265,7 @@ class CrossPatch3DTr(nn.Module):
 
 
         if self.do_cross:
+            print('We do the cross', na)
             Z = R
             R = self.apply_positional_encoding(posR, self.PE, R)
             # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
