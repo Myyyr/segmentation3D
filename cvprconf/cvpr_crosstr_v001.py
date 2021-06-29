@@ -62,7 +62,7 @@ class ExpConfig():
                                 d_model=d_model,n_classes=self.n_classes,
                                 n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
-                                n_strans=number_of_self_layer, do_cross=False,
+                                n_strans=number_of_self_layer, do_cross=True,
                                 enc_grad=True)
         self.net.inference_apply_nonlin = softmax_helper
         
