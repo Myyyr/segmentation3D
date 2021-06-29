@@ -330,7 +330,7 @@ class CrossPatch3DTr(nn.Module):
 
             ## get prediction with final layer
             Z = self.final_conv(Z)
-        print("Memory : ", convert_bytes(torch.cuda.max_memory_allocated()))            
+        # print("Memory : ", convert_bytes(torch.cuda.max_memory_allocated()))            
         return [Z, ds3, ds2, ds1]
 
 
