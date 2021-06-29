@@ -255,6 +255,7 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         with encoder_grad():
             R, S = self.encoder(R, True, self.PE, posR)
+        R, S = self.encoder(R, True, self.PE, posR)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
         c = c*2
