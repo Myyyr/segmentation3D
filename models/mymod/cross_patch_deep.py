@@ -130,7 +130,7 @@ class SelfTransEncoder(nn.Module):
 
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=True, enc_grad=True):
+    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False, enc_grad=True):
         super(CrossPatch3DTr, self).__init__()
         self.PE = None
 
@@ -255,7 +255,6 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         with encoder_grad():
             R, S = self.encoder(R, True, self.PE, posR)
-        # R, S = self.encoder(R, True, self.PE, posR)
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
         c = c*2
