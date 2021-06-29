@@ -329,10 +329,7 @@ class CrossPatch3DTr(nn.Module):
             del skip1
 
             ## get prediction with final layer
-            Z = self.final_conv(Z)
-
-        print("Memory :", convert_bytes(torch.cuda.max_memory_allocated()))
-            
+            Z = self.final_conv(Z)            
         return [Z, ds3, ds2, ds1]
 
 
