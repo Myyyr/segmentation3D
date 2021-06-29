@@ -130,7 +130,7 @@ class SelfTransEncoder(nn.Module):
 
 class CrossPatch3DTr(nn.Module):
 
-    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False):
+    def __init__(self, filters = [16, 32, 64, 128, 256], patch_size = [1,1,1], d_model = 256,n_classes=14, in_channels=1, n_cheads=2, n_sheads=8, bn = True, up_mode='deconv', n_strans=6, do_cross=False, enc_grad=True):
         super(CrossPatch3DTr, self).__init__()
         self.PE = None
 
@@ -143,6 +143,7 @@ class CrossPatch3DTr(nn.Module):
         self.bn = bn
         self.up_mode = up_mode
         self.n_classes = n_classes
+        self.enc_grad = enc_grad
 
         # CNN + Trans encoder
         self.encoder = SelfTransEncoder(filters=filters, patch_size=patch_size, d_model=d_model, in_channels=in_channels, n_sheads=n_sheads, bn=bn, n_strans=n_strans)
@@ -225,10 +226,15 @@ class CrossPatch3DTr(nn.Module):
         if self.do_cross:      
             R = X[:,:,0 ,...]
             A = X[:,:,1:,...]
-            encoder_grad = torch.no_grad
         else:
             R = X
+
+        if self.enc_grad:
             encoder_grad = torch.enable_grad
+        else:
+            encoder_grad = torch.no_grad
+        
+
         if val:
             encoder_grad = torch.no_grad
 
