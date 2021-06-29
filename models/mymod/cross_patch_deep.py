@@ -264,7 +264,6 @@ class CrossPatch3DTr(nn.Module):
 
 
         if self.do_cross:
-            print('We do the cross', A.shape)
             Z = R
             R = self.apply_positional_encoding(posR, self.PE, R)
             # R = rearrange(R, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
@@ -293,7 +292,8 @@ class CrossPatch3DTr(nn.Module):
             rseq = R.shape[1]
 
             # Cross attention
-            Z = self.cross_trans(A, rseq)
+            with torch.enable_grad():
+                Z = self.cross_trans(A, rseq)
             del A
             
             # Decoder
