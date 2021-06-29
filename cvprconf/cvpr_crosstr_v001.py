@@ -63,7 +63,7 @@ class ExpConfig():
                                 n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
                                 n_strans=number_of_self_layer, do_cross=True,
-                                enc_grad=True)
+                                enc_grad=False)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
