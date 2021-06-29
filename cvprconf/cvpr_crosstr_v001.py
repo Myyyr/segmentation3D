@@ -65,7 +65,7 @@ class ExpConfig():
                                 n_strans=number_of_self_layer, do_cross=True,
                                 enc_grad=True)
         self.net.inference_apply_nonlin = softmax_helper
-        self.n_parameters = count_parameters(self.net)
+        
 
         self.model_path = './checkpoints/models/new_deep_crosstr.pth'
         # self.model_path = './checkpoints/models/506/modlast.pt'
@@ -116,9 +116,10 @@ class ExpConfig():
         self.load_model()
         # self.net.reinit_decoder()
         self.net.reinit_crostrans(dim=d_model, depth=1, heads=number_of_cross_heads, dim_head=d_model, mlp_dim=1024, dropout = 0.1)
+        self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
 
-        
+
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 10
