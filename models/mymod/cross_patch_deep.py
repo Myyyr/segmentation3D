@@ -231,6 +231,8 @@ class CrossPatch3DTr(nn.Module):
 
         if self.enc_grad:
             encoder_grad = torch.enable_grad
+            print("We do grad !!")
+            exit(0)
         else:
             encoder_grad = torch.no_grad
         
