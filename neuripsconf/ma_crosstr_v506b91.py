@@ -62,7 +62,8 @@ class ExpConfig():
                                 d_model=d_model,n_classes=self.n_classes,
                                 n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
-                                n_strans=number_of_self_layer, do_cross=True)
+                                n_strans=number_of_self_layer, do_cross=True,
+                                enc_grad=False)
         self.net.inference_apply_nonlin = softmax_helper
         self.n_parameters = count_parameters(self.net)
         print("N PARAMS : {}".format(self.n_parameters))
@@ -118,7 +119,7 @@ class ExpConfig():
         self.net.reinit_crostrans(dim=d_model, depth=1, heads=number_of_cross_heads, dim_head=d_model, mlp_dim=1024, dropout = 0.1)
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
         self.optimizer.zero_grad()
-        self.validate_every_k_epochs = 1
+        self.validate_every_k_epochs = 10
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
