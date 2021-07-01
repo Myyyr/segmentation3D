@@ -292,8 +292,8 @@ class CrossPatch3DTr(nn.Module):
             rseq = R.shape[1]
 
             # Cross attention
-            with torch.enable_grad():
-                Z = self.cross_trans(A, rseq)
+            # with torch.enable_grad():
+            Z = self.cross_trans(A, rseq)
             del A
             
             # Decoder
