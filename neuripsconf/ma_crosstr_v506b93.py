@@ -48,7 +48,7 @@ class ExpConfig():
         self.clip = False
         self.patched = True
         # GPU
-        self.gpu = '1'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
         # torch.backends.cudnn.benchmark = False
 
@@ -116,7 +116,7 @@ class ExpConfig():
         self.net.reinit_crostrans(dim=d_model, depth=1, heads=number_of_cross_heads, dim_head=d_model, mlp_dim=1024, dropout = 0.1)
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
         self.optimizer.zero_grad()
-        self.validate_every_k_epochs = 10
+        self.validate_every_k_epochs = 1
         # self.decay = (self.lr_rate/self.final_lr_rate - 1)/self.epoch
         self.lr_scheduler = get_scheduler(self.optimizer, "poly", self.lr_rate, max_epochs=self.epoch)
 
@@ -126,7 +126,7 @@ class ExpConfig():
     def set_data(self, split = 0):
         # Data
         # print(self.ds_scales)s
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=True, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=True, ds_scales=self.ds_scales, do_tr=False, return_pos=True)
         self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=True, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=self.batchsize, shuffle=True)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
