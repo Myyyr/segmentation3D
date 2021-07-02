@@ -129,8 +129,8 @@ class ExpConfig():
     def set_data(self, split = 0):
         # Data
         # print(self.ds_scales)s
-        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=True, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
-        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=True, ds_scales=None, do_tr=False, return_pos=True)
+        self.trainDataset = PatchedMultiAtlasDataset(self, mode="train", n_iter=250, patch_size=self.patch_size, return_full_image=False, ds_scales=self.ds_scales, do_tr=True, return_pos=True)
+        self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=self.batchsize, shuffle=True)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
 
