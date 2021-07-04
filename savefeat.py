@@ -11,6 +11,8 @@ device = torch.device("cuda")
 
 exp.net.float().to(device)
 
+exp.set_data()
+
 trainDataLoader = exp.trainDataLoader
 testDataLoader = exp.testDataLoader
 
