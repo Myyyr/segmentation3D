@@ -4,3 +4,4 @@
 # from .MemoryMultiAtlasTrain import *
 # from .Train import *
 from .AllTrain import *
+from .DebugAllTrain import *
