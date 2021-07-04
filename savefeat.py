@@ -1,7 +1,7 @@
 from debug_conf import ExpConfig
 from tqdm import tqdm
 import numpy as np
-
+import torch
 
 savepath = "/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/FEATURES/"
 
