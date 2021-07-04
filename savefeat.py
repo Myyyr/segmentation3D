@@ -40,7 +40,6 @@ for i, data in tqdm(enumerate(testDataLoader), total = int(len(testDataLoader)))
                 in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
                 in_pos = torch.cat(in_pos+[pos], dim=1)
                 out_xyz = exp.net(inputs[:,:,x,y,z,...], in_pos, True, True)
-                print(out_xyz.shape)
                 outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
 
 
