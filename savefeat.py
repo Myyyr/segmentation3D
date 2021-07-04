@@ -25,7 +25,7 @@ for i, data in tqdm(enumerate(testDataLoader), total = int(len(testDataLoader)))
     pid, pos, inputs, labels = data
     pid = int(pid[0,0].item())
 
-    inputs, labels = inputs.to(self.device), labels.to(self.device)
+    inputs, labels = inputs.to(device), labels.to(device)
     b, c, nh, nw, nd, h, w, d = inputs.shape
     b, ah, aw, ad = labels.shape
 
@@ -51,7 +51,7 @@ for i, data in tqdm(enumerate(trainDataLoader), total = int(len(trainDataLoader)
     pid, pos, inputs, labels = data
     pid = int(pid[0,0].item())
 
-    inputs, labels = inputs.to(self.device), labels.to(self.device)
+    inputs, labels = inputs.to(device), labels.to(device)
     b, c, nh, nw, nd, h, w, d = inputs.shape
     b, ah, aw, ad = labels.shape
 
