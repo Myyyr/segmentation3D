@@ -28,8 +28,9 @@ for i, data in tqdm(enumerate(testDataLoader), total = int(len(testDataLoader)))
     inputs, labels = inputs.to(device), labels.to(device)
     b, c, nh, nw, nd, h, w, d = inputs.shape
     b, ah, aw, ad = labels.shape
+    h, w, d = 12, 12, 3
 
-    outputs = torch.zeros((b, 512, 12*nh, 12*nw, 3*nd)).float().cuda()
+    outputs = torch.zeros((b, 512, h*nh, w*nw, d*nd)).float().cuda()
     crop = []
 
 
@@ -56,7 +57,7 @@ for i, data in tqdm(enumerate(trainDataLoader), total = int(len(trainDataLoader)
     b, c, nh, nw, nd, h, w, d = inputs.shape
     b, ah, aw, ad = labels.shape
 
-    outputs = torch.zeros((b, 512, 12*nh, 12*nw, 3*nd)).float().cuda()
+    outputs = torch.zeros((b, 512, h*nh, w*nw, d*nd)).float().cuda()
     crop = []
 
 
