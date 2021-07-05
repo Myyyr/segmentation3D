@@ -231,10 +231,10 @@ class CrossPatch3DTr(nn.Module):
         c = self.filters[-1]
         if not val:
             if self.do_cross:      
-                R = X[][:,:,0 ,...]
-                A = X[][:,:,1:,...]
+                R = X[:,:,0 ,...]
+                A = X[:,:,1:,...]
             else:
-                R = X[]
+                R = X
 
             if self.enc_grad:
                 encoder_grad = torch.enable_grad
