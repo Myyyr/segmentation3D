@@ -60,7 +60,7 @@ class ExpConfig():
         self.n_classes = 14
         self.net = CrossPatch3DTr(filters=self.filters,patch_size=[1,1,1],
                                 d_model=d_model,n_classes=self.n_classes,
-                                n_cheads=number_of_cross_heads,n_sheads=number_of_self_heads,
+                                n_cheads=1,n_sheads=number_of_self_heads,
                                 bn=True,up_mode='deconv',
                                 n_strans=number_of_self_layer, do_cross=True,
                                 enc_grad=False)
