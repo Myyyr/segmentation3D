@@ -134,6 +134,7 @@ class ExpConfig():
         self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=1, shuffle=False)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
+        print("DATSET -----> OK")
 
     def load_model(self):
         print('LOAD MODEL ...')
