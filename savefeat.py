@@ -52,11 +52,11 @@ print("LOAD -----> OK")
 # Train
 for i, data in tqdm(enumerate(trainDataLoader), total = int(len(trainDataLoader))):
     pid, pos, inputs, labels = data
-    print("INPUT -----> OK")
+    # print("INPUT -----> OK")
     pid = int(pid[0,0].item())
 
     inputs, labels = inputs.to(device), labels.to(device)
-    print("DEVICE -----> OK")
+    # print("DEVICE -----> OK")
     b, c, nh, nw, nd, h, w, d = inputs.shape
     b, ah, aw, ad = labels.shape
     h, w, d = 12, 12, 3
@@ -73,10 +73,10 @@ for i, data in tqdm(enumerate(trainDataLoader), total = int(len(trainDataLoader)
                 out_xyz = exp.net(inputs[:,:,x,y,z,...], in_pos, True, True)
                 outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz
 
-    print("FORWARD ALL -----> OK")
+    # print("FORWARD ALL -----> OK")
     outputs = outputs.cpu().numpy()
-    print("NUMPY -----> OK")
+    # print("NUMPY -----> OK")
     np.save(savepath+"train/"+str(pid)+".npy", outputs)
-    print("SAVING -----> OK")
+    # print("SAVING -----> OK")
 
     del outputs
