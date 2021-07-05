@@ -74,7 +74,7 @@ class DebugAllTrain(Train):
             labels =[l.to(self.device) for l in labels]
 
         if pos != None:
-            outputs = expcf.net(inputs, pos)
+            outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4], pos)
             del pos
         else:
             outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4])
