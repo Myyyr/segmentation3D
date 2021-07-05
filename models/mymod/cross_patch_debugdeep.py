@@ -229,17 +229,13 @@ class CrossPatch3DTr(nn.Module):
         ## (3,3,4) is the image size divided by the patch size.
         Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
-        if not val:
+        if val:
             if self.do_cross:      
                 R = X[:,:,0 ,...]
                 A = X[:,:,1:,...]
             else:
                 R = X
-
-            if self.enc_grad:
-                encoder_grad = torch.enable_grad
-            else:
-                encoder_grad = torch.no_grad
+            encoder_grad = torch.no_grad
             
 
             
