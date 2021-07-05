@@ -246,9 +246,10 @@ class CrossPatch3DTr(nn.Module):
                 R, S = self.encoder(R, True, self.PE, posR)
 
         else:
+
             R, S = X[0], X[1:]
             bs = X[0].shape[0]
-            print("We are right here !! ", len(S))
+            print("We are right here !! ", len(X))
 
         # Create PE 
         bs = X.shape[0]
