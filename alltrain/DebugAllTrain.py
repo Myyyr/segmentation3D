@@ -65,10 +65,11 @@ class DebugAllTrain(Train):
         self.grdnorm = {'all':[], 'wq':[], 'wk':[], 'wv':[], 'ff':[]}
 
 
-    def step(self, expcf, inputs, labels, total_loss, pos = None):
+    def step(self, expcf, inputs, labels, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss, pos = None):
         inputs = inputs.to(self.device)
         if expcf.ds_scales == None:
             labels = labels.to(self.device)
+            ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = ptc_input_1.to(self.device), ptc_input_2.to(self.device), ptc_input_3.to(self.device), ptc_input_4.to(self.device)
         else:
             labels =[l.to(self.device) for l in labels]
 
@@ -76,8 +77,8 @@ class DebugAllTrain(Train):
             outputs = expcf.net(inputs, pos)
             del pos
         else:
-            outputs = expcf.net(inputs)
-        del inputs
+            outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4])
+        del inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
         loss = expcf.loss(outputs, labels)
         # print('#3', torch.cuda.memory_allocated()/(1024**3), 'GB')
         # print('#3', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
@@ -157,14 +158,14 @@ class DebugAllTrain(Train):
                 # print('e', epoch, i)
                 #load data
                 if not expcf.trainDataset.return_full_image and not expcf.trainDataset.return_pos:
-                    inputs, labels = data
-                    loss, total_loss = self.step(expcf, inputs, labels, total_loss)
+                    inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = data
+                    loss, total_loss = self.step(expcf, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss)
                 else:
-                    pos, inputs, labels = data
-                    loss, total_loss = self.step(expcf, inputs, labels, total_loss, pos)
+                    pos, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = data
+                    loss, total_loss = self.step(expcf, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss, pos)
                     del pos
                 # self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
-                del inputs, labels
+                del inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
                 self.back_step(expcf, loss)
                 del loss
 
@@ -310,14 +311,8 @@ class DebugAllTrain(Train):
                                         outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
-                                    # pos = torch.from_numpy(np.array([x,y,z]))[None,...]
                                     in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
                                     in_pos = torch.cat(in_pos+[pos], dim=1)
-
-                                    # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
-                                    # print(crop.shape, inptc.shape)  
-                                    # print(torch.cat([inptc, crop], 1).shape)
-                                    # print("OK")
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True) 
 
                                     # print(out_xyz.shape)

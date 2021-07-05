@@ -44,9 +44,26 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 pid = i.replace('.npy', '').replace('bcv_', '')
                 self.file[str(pid)] = [os.path.join(self.l_filePath, i)]
         for i in os.listdir(self.d_filePath):
-            if ".npy" in i:
-                pid = i.replace('.npy', '')
+            if "_0.npy" in i:
+                pid = i.replace('_0.npy', '')
                 self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        for i in os.listdir(self.d_filePath):
+            if "_1.npy" in i:
+                pid = i.replace('_1.npy', '')
+                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        for i in os.listdir(self.d_filePath):
+            if "_2.npy" in i:
+                pid = i.replace('_2.npy', '')
+                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        for i in os.listdir(self.d_filePath):
+            if "_3.npy" in i:
+                pid = i.replace('_3.npy', '')
+                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        for i in os.listdir(self.d_filePath):
+            if "_4.npy" in i:
+                pid = i.replace('_4.npy', '')
+                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+
 
 
 
@@ -118,7 +135,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
         # else:
         #     # print(file.shape)
-        image = np.load(self.file[str(index)][1])[0,...]
+        # image = np.load(self.file[str(index)][1])[0,...]
+        image = [np.load(self.file[str(index)][i])[0,...] for i in range(1,6)]
         labels = file[1,...]
             
 
@@ -133,16 +151,24 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             y = random.randint(0, w- ps_w)
             z = random.randint(0, d- ps_d)
 
-            xi, yi, zi = x//16, y//16, z//16
-            ps_hi = 12
-            ps_wi = 12
-            ps_di = 3
+            # xi, yi, zi = x//16, y//16, z//16
+            xyz = [(x//16, y//16, z//16), (x//8, y//8, z//8),(x//4, y//4, z//4),(x//2, y//2, z//2),(x, y, z)]
+            hwd = [(12,12,3), (24,24,6), (48,48,12), (96,96,24), (192,192,48)]
+            # ps_hi = 12
+            # ps_wi = 12
+            # ps_di = 3
 
             idx = (x,y,z)
 
             
 
-            ptc_input = image[:,xi:(xi+ps_hi),yi:(yi+ps_wi),zi:(zi+ps_di)]
+            # ptc_input = image[:,xi:(xi+ps_hi),yi:(yi+ps_wi),zi:(zi+ps_di)]
+            ptc_input_0 = image[0][:,xyz[0][0]:(xyz[0][0]+hwd[0][0]),xyz[0][1]:(xyz[0][1]+hwd[0][1]),xyz[0][2]:(xyz[0][2]+hwd[0][2])]
+            ptc_input_1 = image[1][:,xyz[1][0]:(xyz[1][0]+hwd[1][0]),xyz[1][1]:(xyz[1][1]+hwd[1][1]),xyz[1][2]:(xyz[1][2]+hwd[1][2])]
+            ptc_input_2 = image[2][:,xyz[2][0]:(xyz[2][0]+hwd[2][0]),xyz[2][1]:(xyz[2][1]+hwd[2][1]),xyz[2][2]:(xyz[2][2]+hwd[2][2])]
+            ptc_input_3 = image[3][:,xyz[3][0]:(xyz[3][0]+hwd[3][0]),xyz[3][1]:(xyz[3][1]+hwd[3][1]),xyz[3][2]:(xyz[3][2]+hwd[3][2])]
+            ptc_input_4 = image[4][:,xyz[4][0]:(xyz[4][0]+hwd[4][0]),xyz[4][1]:(xyz[4][1]+hwd[4][1]),xyz[4][2]:(xyz[4][2]+hwd[4][2])]
+            
             # ptc_input = ptc_input[0,...]
             labels = labels[x:(x+ps_h),y:(y+ps_w),z:(z+ps_d)]
 
@@ -150,16 +176,19 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             if self.do_tr:
                 # print("-->before transform")
                 data = {'data':ptc_input[None, None, ...], 'seg':labels[None, None, ...]}
-                # print(data['data'].shape, data['seg'].shape)
                 data = self.tr(data)
-                # print(data['data'].shape, data['seg'].shape)
-                # print("middl transform")
 
                 ptc_input = data['data'][0,0,...]
                 labels = data['seg'][0,0,...]
-                # print("-->after transform")
-                # exit(0)
-            ptc_input = torch.from_numpy(ptc_input)
+
+            # ptc_input = torch.from_numpy(ptc_input)
+            ptc_input_0 = torch.from_numpy(ptc_input_0)
+            ptc_input_1 = torch.from_numpy(ptc_input_1)
+            ptc_input_2 = torch.from_numpy(ptc_input_2)
+            ptc_input_3 = torch.from_numpy(ptc_input_3)
+            ptc_input_4 = torch.from_numpy(ptc_input_4)
+
+
 
             if self.ds != None:
                 labels = self.ds(labels)
@@ -174,36 +203,36 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 for x in range(nh):
                     for y in range(nw):
                         for z in range(nd):
-                            crop.append(torch.from_numpy(image[None,:,xi*ps_hi:(xi+1)*ps_hi,yi*ps_wi:(yi+1)*ps_wi,zi*ps_di:(zi+1)*ps_di]))
+                            crop.append(torch.from_numpy(image[None,:,xyz[0][0]*hwd[0][0]:(xyz[0][0]+1)*hwd[0][0],xyz[0][1]*hwd[0][1]:(xyz[0][1]+1)*hwd[0][1],xyz[0][2]*hwd[0][2]:(xyz[0][2]+1)*hwd[0][2]]))
                             pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
                 crop = torch.cat(crop, dim=0)
                 pos = torch.cat(pos, dim=0)
 
                 # print(ptc_input.shape)
                 
-                return pos, torch.cat([ptc_input[None,...], crop], 0)[None,...], labels
+                return pos, torch.cat([ptc_input_0[None,...], crop], 0)[None,...], labels, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
             if self.return_pos:
                 pos = torch.from_numpy(np.array(idx))[None,...]
-                return pos, ptc_input[None, ...], labels
-            return ptc_input[None, ...], labels
+                return pos, ptc_input_0[None, ...], labels, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
+            return ptc_input_0[None, ...], labels, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
 
         if self.mode == 'test':
             pid = torch.from_numpy(np.array([self.used_pids[item_index]]))
 
 
-            ps_h, ps_w, ps_d = self.patch_size
-            ps_hi, ps_wi, ps_di = 12,12,3
-
-            image = torch.from_numpy(image)
-            chans,h,w,d = image.shape
-            
-            nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
-            crop = torch.zeros(*(nh,nw,nd, ps_hi, ps_wi, ps_di))
+            ps_w, ps_h, ps_d = self.patch_size
+            image = torch.from_numpy(file[0,...])
+            w,h,d = image.shape
+            if w%ps_w != 0:
+                print("H, W, D must be multiple of patch size")
+                exit(0)
+            nh, nw, nd = int(w/ps_w), int(h/ps_h), int(d/ps_d)
+            crop = torch.zeros(*(nh,nw,nd, self.patch_size[0], self.patch_size[1], self.patch_size[2]))
             pos = []
             for x in range(nh):
                 for y in range(nw):
                     for z in range(nd):
-                        crop[x,y,z,...] = image[:,xi*ps_hi:(xi+1)*ps_hi,yi*ps_wi:(yi+1)*ps_wi,zi*ps_di:(zi+1)*ps_di]
+                        crop[x,y,z,...] = image[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
                         pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
             pos = torch.cat(pos, dim=0)
             # image = torch.cat(crop, dim=1)            

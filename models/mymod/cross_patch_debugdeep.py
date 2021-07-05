@@ -223,28 +223,37 @@ class CrossPatch3DTr(nn.Module):
 
 
     def forward(self, X, pos, val=False, debug=False):
-        if self.do_cross:      
-            R = X[:,:,0 ,...]
-            A = X[:,:,1:,...]
-        else:
-            R = X
-
-        if self.enc_grad:
-            encoder_grad = torch.enable_grad
-        else:
-            encoder_grad = torch.no_grad
-        
-
-        if val:
-            encoder_grad = torch.no_grad
-
-        # Create PE
         ## Be carefull here if you change region size or bottleneck qpatial size you
         ## have to adapt the positionnal enccoding size.
         ## (Sh, Sw, Sd) is the spatial size of the bottleneck.
         ## (3,3,4) is the image size divided by the patch size.
         Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
+        if not val:
+            if self.do_cross:      
+                R = X[][:,:,0 ,...]
+                A = X[][:,:,1:,...]
+            else:
+                R = X[]
+
+            if self.enc_grad:
+                encoder_grad = torch.enable_grad
+            else:
+                encoder_grad = torch.no_grad
+            
+
+            
+
+
+            # Encode the interest region
+            with encoder_grad():
+                R, S = self.encoder(R, True, self.PE, posR)
+
+        else:
+            R, S = X[0], X[1:]
+            bs = X[0].shape[0]
+
+        # Create PE 
         bs = X.shape[0]
         if self.PE==None:
             z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
@@ -252,12 +261,7 @@ class CrossPatch3DTr(nn.Module):
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
 
-        # Encode the interest region
-        with encoder_grad():
-            R, S = self.encoder(R, True, self.PE, posR)
 
-        if debug:
-            return R, S
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
         c = c*2
