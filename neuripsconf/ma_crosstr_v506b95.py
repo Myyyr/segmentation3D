@@ -53,7 +53,7 @@ class ExpConfig():
         # torch.backends.cudnn.benchmark = False
 
         # Model
-        number_of_cross_heads = 1
+        number_of_cross_heads = 8
         number_of_self_heads = 8
         number_of_self_layer = 6
 
@@ -113,7 +113,7 @@ class ExpConfig():
         self.load_lr = False
         self.load_model()
         self.net.reinit_decoder()
-        self.net.reinit_crostrans(dim=d_model, depth=1, heads=number_of_cross_heads, dim_head=d_model, mlp_dim=1024, dropout = 0.1)
+        self.net.reinit_crostrans(dim=1024, depth=1, heads=number_of_cross_heads, dim_head=d_model, mlp_dim=1024, dropout = 0.1)
         self.optimizer = optim.SGD(self.net.parameters(), lr = self.lr_rate, weight_decay=3e-5, momentum=0.99, nesterov=True)
         self.optimizer.zero_grad()
         self.validate_every_k_epochs = 1
