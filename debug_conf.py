@@ -129,7 +129,8 @@ class ExpConfig():
         self.trainDataset = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataset.used_pids = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31]
         self.trainDataset.used_split = [6,17, 3,16,22,27,10,28, 7, 29, 23, 13,  1,  9,  5, 15, 11, 12, 24, 14,  8]
-
+        self.trainDataset.n_files = len(self.trainDataset.used_split)
+        
         self.testDataset  = PatchedMultiAtlasDataset(self, mode="test", n_iter=1, patch_size=self.patch_size, return_full_image=False, ds_scales=None, do_tr=False, return_pos=True)
         self.trainDataLoader = DataLoader(dataset=self.trainDataset, num_workers=2, batch_size=1, shuffle=False)
         self.testDataLoader = DataLoader(dataset=self.testDataset, num_workers=2, batch_size=1, shuffle=False)
