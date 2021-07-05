@@ -257,7 +257,7 @@ class CrossPatch3DTr(nn.Module):
             R, S = self.encoder(R, True, self.PE, posR)
 
         if debug:
-            return R
+            return R, S
         skip1, skip2, skip3, skip4 = S
         bs, c, h, w, d = skip4.shape
         c = c*2
