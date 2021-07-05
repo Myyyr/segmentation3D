@@ -248,6 +248,7 @@ class CrossPatch3DTr(nn.Module):
         else:
             R, S = X[0], X[1:]
             bs = X[0].shape[0]
+            print("We are right here !! ", len(S))
 
         # Create PE 
         bs = X.shape[0]
