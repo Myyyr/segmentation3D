@@ -17,8 +17,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
     def __init__(self, expConfig, mode="train", n_iter=250, patch_size=(192,192,48),n_reg = (4, 3, 3), return_full_image=False, ds_scales=(1, 0.5, 0.25), do_tr=True, return_pos=True):
         super(PatchedMultiAtlasDataset, self).__init__()
-        self.l_filePath = expConfig.datapath
-        self.d_filePath = expConfig.labelpath
+        self.l_filePath = expConfig.labelpath
+        self.d_filePath = expConfig.datapath
 
         # self.labelPath = expConfig.labelpath
         self.mode = mode
