@@ -248,7 +248,7 @@ class CrossPatch3DTr(nn.Module):
 
         else:
 
-            R, S = X[0], X[1:]
+            R, S = X[0][:,0,...], X[1:]
             bs = X[0].shape[0]
             # print("We are right here !! ", len(X))
 
@@ -261,8 +261,8 @@ class CrossPatch3DTr(nn.Module):
 
 
         skip4, skip3, skip2, skip1 = S
-        print(skip1.shape, skip2.shape, skip3.shape, skip4.shape)
-        print(R.shape)
+        # print(skip1.shape, skip2.shape, skip3.shape, skip4.shape)
+        # print(R.shape)
         bs, c, h, w, d = skip4.shape
         c = c*2
         h = h//2
