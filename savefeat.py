@@ -42,10 +42,10 @@ for i, data in tqdm(enumerate(testDataLoader), total = int(len(testDataLoader)))
                 in_pos = torch.cat(in_pos+[pos], dim=1)
                 out_xyz, S = exp.net(inputs[:,:,x,y,z,...], in_pos, True, True)
                 outputs[0][:, :, x*hwd[0][1]:(x+1)*hwd[0][1], y*hwd[0][2]:(y+1)*hwd[0][2], z*hwd[0][3]:(z+1)*hwd[0][3]] = out_xyz
-                outputs[1][:, :, x*hwd[1][1]:(x+1)*hwd[1][1], y*hwd[1][2]:(y+1)*hwd[1][2], z*hwd[1][3]:(z+1)*hwd[1][3]] = S[0]
-                outputs[2][:, :, x*hwd[2][1]:(x+1)*hwd[2][1], y*hwd[2][2]:(y+1)*hwd[2][2], z*hwd[2][3]:(z+1)*hwd[2][3]] = S[1]
-                outputs[3][:, :, x*hwd[3][1]:(x+1)*hwd[3][1], y*hwd[3][2]:(y+1)*hwd[3][2], z*hwd[3][3]:(z+1)*hwd[3][3]] = S[2]
-                outputs[4][:, :, x*hwd[4][1]:(x+1)*hwd[4][1], y*hwd[4][2]:(y+1)*hwd[4][2], z*hwd[4][3]:(z+1)*hwd[4][3]] = S[3]
+                outputs[1][:, :, x*hwd[1][1]:(x+1)*hwd[1][1], y*hwd[1][2]:(y+1)*hwd[1][2], z*hwd[1][3]:(z+1)*hwd[1][3]] = S[3]
+                outputs[2][:, :, x*hwd[2][1]:(x+1)*hwd[2][1], y*hwd[2][2]:(y+1)*hwd[2][2], z*hwd[2][3]:(z+1)*hwd[2][3]] = S[2]
+                outputs[3][:, :, x*hwd[3][1]:(x+1)*hwd[3][1], y*hwd[3][2]:(y+1)*hwd[3][2], z*hwd[3][3]:(z+1)*hwd[3][3]] = S[1]
+                outputs[4][:, :, x*hwd[4][1]:(x+1)*hwd[4][1], y*hwd[4][2]:(y+1)*hwd[4][2], z*hwd[4][3]:(z+1)*hwd[4][3]] = S[0]
 
 
 
