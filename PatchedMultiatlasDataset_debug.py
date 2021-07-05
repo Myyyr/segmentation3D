@@ -144,7 +144,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         n_classes = self.n_classes
 
         if self.mode == 'train':
-            w,h,d = image.shape
+            w,h,d = labels.shape
             ps_h, ps_w, ps_d = self.patch_size
 
             x = random.randint(0, h- ps_h)
