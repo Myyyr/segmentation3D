@@ -239,6 +239,7 @@ class CrossPatch3DTr(nn.Module):
             
 
             
+            bs = X.shape[0]
 
 
             # Encode the interest region
@@ -249,10 +250,9 @@ class CrossPatch3DTr(nn.Module):
 
             R, S = X[0], X[1:]
             bs = X[0].shape[0]
-            print("We are right here !! ", len(X))
+            # print("We are right here !! ", len(X))
 
         # Create PE 
-        bs = X.shape[0]
         if self.PE==None:
             z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
             self.PE = self.p_enc_3d(z)
