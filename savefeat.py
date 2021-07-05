@@ -3,7 +3,7 @@ from tqdm import tqdm
 import numpy as np
 import torch
 
-savepath = "/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/FEATURES/"
+savepath = "/local/DEEPLEARNING/MULTI_ATLAS/MULTI_ATLAS/FEATURES_AND_SKIPS/"
 
 
 exp = ExpConfig()
@@ -14,7 +14,7 @@ exp.net.float().to(device)
 exp.set_data()
 
 trainDataLoader = exp.trainDataLoader
-# testDataLoader = exp.testDataLoader
+testDataLoader = exp.testDataLoader
 
 
 exp.net.eval()
