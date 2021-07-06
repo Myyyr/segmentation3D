@@ -250,6 +250,8 @@ class CrossPatch3DTr(nn.Module):
         
         bs = R.shape[0]
         # Encode the interest region
+        posR = pos[:,0 ,...]
+        posA = pos[:,1:,...]
         with encoder_grad():
             R, S = self.encoder(R, True, self.PE, posR)
 
@@ -257,8 +259,6 @@ class CrossPatch3DTr(nn.Module):
         if self.PE==None:
             z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
             self.PE = self.p_enc_3d(z)
-        posR = pos[:,0 ,...]
-        posA = pos[:,1:,...]
 
 
         skip1, skip2, skip3, skip4 = S
