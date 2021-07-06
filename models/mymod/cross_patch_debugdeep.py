@@ -229,28 +229,29 @@ class CrossPatch3DTr(nn.Module):
         ## (3,3,4) is the image size divided by the patch size.
         Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
+
         if val:
             if self.do_cross:      
                 R = X[:,:,0 ,...]
                 A = X[:,:,1:,...]
             else:
                 R = X
-            encoder_grad = torch.no_grad
-            
-
-            
-            bs = X.shape[0]
-
-
-            # Encode the interest region
-            with encoder_grad():
-                R, S = self.encoder(R, True, self.PE, posR)
-
         else:
-
-            R, S = X[0][:,0,...], X[1:]
-            bs = X[0].shape[0]
-            # print("We are right here !! ", len(X))
+            if self.do_cross:      
+                R = X[0]
+                A = X[1]
+            else:
+                R = X
+            
+        if self.enc_grad:
+            encoder_grad = torch.enable_grad
+        else:
+            encoder_grad = torch.no_grad
+        
+        bs = R.shape[0]
+        # Encode the interest region
+        with encoder_grad():
+            R, S = self.encoder(R, True, self.PE, posR)
 
         # Create PE 
         if self.PE==None:
@@ -260,7 +261,7 @@ class CrossPatch3DTr(nn.Module):
         posA = pos[:,1:,...]
 
 
-        skip4, skip3, skip2, skip1 = S
+        skip1, skip2, skip3, skip4 = S
         # print(skip1.shape, skip2.shape, skip3.shape, skip4.shape)
         # print(R.shape)
         bs, c, h, w, d = skip4.shape
@@ -283,9 +284,10 @@ class CrossPatch3DTr(nn.Module):
             bs,_,na,_,_,_ = A.shape
             with torch.no_grad():
                 for ra in range(na):
-                    enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
+                    # enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
 
                     # Positional encodding
+                    enc = A[:,:,ra,...]
                     enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
                     # enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
                     enc = rearrange(enc, 'b c h w d -> b (h w d) c')

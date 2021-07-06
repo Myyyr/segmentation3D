@@ -72,11 +72,11 @@ class DebugAllTrain(Train):
             ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = ptc_input_1.to(self.device), ptc_input_2.to(self.device), ptc_input_3.to(self.device), ptc_input_4.to(self.device)
         else:
             labels =[l.to(self.device) for l in labels]
-            ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = ptc_input_1.to(self.device), ptc_input_2.to(self.device), ptc_input_3.to(self.device), ptc_input_4.to(self.device)
+            crop = crop.to(self.device)
             
 
         if pos != None:
-            outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4], pos)
+            outputs = expcf.net([inputs, crop], pos)
             del pos
         else:
             outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4])
@@ -163,11 +163,11 @@ class DebugAllTrain(Train):
                     inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = data
                     loss, total_loss = self.step(expcf, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss)
                 else:
-                    pos, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4 = data
-                    loss, total_loss = self.step(expcf, inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss, pos)
+                    pos, inputs, crop, labels = data
+                    loss, total_loss = self.step(expcf, inputs, crop, labels, total_loss, pos)
                     del pos
                 # self.tb.add_scalar("train_loss", loss.item(), epoch*int(len(self.trainDataLoader)) + i)
-                del inputs, labels,ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
+                del inputs, labels, crop
                 self.back_step(expcf, loss)
                 del loss
 

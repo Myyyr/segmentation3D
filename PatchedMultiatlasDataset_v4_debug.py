@@ -12,21 +12,6 @@ from utils.util import DownsampleSegForDSTransform2
 # from batchgenerators.dataloading.data_loader import DataLoaderBase
 from utils.transform import TransformData
 
-# class DataLoader(DataLoaderBase):
-#     def __init__(self, data, BATCH_SIZE=2, num_batches=None, seed=False):
-#         super(DataLoader, self).__init__(data, BATCH_SIZE, num_batches, seed) 
-#         # data is now stored in self._data.
-    
-#     def generate_train_batch(self):
-#         # usually you would now select random instances of your data. We only have one therefore we skip this
-#         img = self._data
-        
-#         # The camera image has only one channel. Our batch layout must be (b, c, x, y). Let's fix that
-#         img = np.tile(img[None, None], (self.BATCH_SIZE, 1, 1, 1))
-        
-#         # now construct the dictionary and return it. np.float32 cast because most networks take float
-#         return {'data':img.astype(np.float32), 'some_other_key':'some other value'}
-
 
 class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
     #mode must be trian, test or val
@@ -123,7 +108,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         index = self.used_pids[item_index]
 
         #load from hdf5 file
-        file = np.load(self.file[str(index)])
+        file = np.load(self.file[str(index)][0])
         # print(file.shape)
         file = self.pad_or_crop_image(file)
 
@@ -177,19 +162,21 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
             # ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))
             if self.return_full_image:
-                nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
+                ft_image = np.load(self.file[str(index)][1])
+                nh, nw, nd = (3,3,4)
+                ft_ps_h, ft_ps_w,ft_ps_d = (12,12,3)
                 crop = []
                 pos = [torch.from_numpy(np.array(idx))[None,...]]
                 for x in range(nh):
                     for y in range(nw):
                         for z in range(nd):
-                            crop.append(torch.from_numpy(image[None,x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]))
+                            crop.append(torch.from_numpy(ft_image[None,:,x*ft_ps_h:(x+1)*ft_ps_h,y*ft_ps_w:(y+1)*ft_ps_w,z*ft_ps_d:(z+1)*ft_ps_d]))
                             pos.append( torch.from_numpy(np.array((x,y,z)))[None,...] )
                 crop = torch.cat(crop, dim=0)
                 pos = torch.cat(pos, dim=0)
 
 
-                return pos, torch.cat([ptc_input[None,...], crop], 0)[None,...], labels
+                return pos, ptc_input[None,...], crop, labels
             if self.return_pos:
                 pos = torch.from_numpy(np.array(idx))[None,...]
                 return pos, ptc_input[None, ...], labels
