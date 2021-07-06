@@ -142,7 +142,8 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             y = random.randint(0, nw)
             z = random.randint(0, nd)
 
-            idx = (x,y,z)
+            idx = (x*ps_h,y*ps_w,z*ps_d)
+            print(idx)
 
             
 
@@ -185,7 +186,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
 
                 # print(ptc_input.shape)
                 print(ptc_input[None,...].shape, crop.shape)
-                
+                exit(0)
                 return pos, torch.cat([ptc_input[None,...], crop], 0)[None,...], labels
             if self.return_pos:
                 pos = torch.from_numpy(np.array(idx))[None,...]
