@@ -163,7 +163,6 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             # ptc_input = torch.reshape(ptc_input, (ps_h, ps_w, ps_d))
             if self.return_full_image:
                 ft_image = np.load(self.file[str(index)][1])[0,...]
-                print('ft_image',ft_image.shape)
                 nh, nw, nd = (3,3,4)
                 ft_ps_h, ft_ps_w,ft_ps_d = (12,12,3)
                 crop = []
