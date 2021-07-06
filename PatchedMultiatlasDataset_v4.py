@@ -147,10 +147,10 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             
 
             ptc_input = image[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
-            print(image.shape)
-            print(x,y,z)
-            print(idx)
-            print(ptc_input.shape)
+            print("--> ok 1 :",image.shape)
+            print("--> ok 2 :",x,y,z)
+            print("--> ok 3 :",idx)
+            print("--> ok 4 :",ptc_input.shape)
             # ptc_input = ptc_input[0,...]
             labels = labels[x*ps_h:(x+1)*ps_h,y*ps_w:(y+1)*ps_w,z*ps_d:(z+1)*ps_d]
 
@@ -187,7 +187,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
                 crop = torch.cat(crop, dim=0)
                 pos = torch.cat(pos, dim=0)
 
-                print(ptc_input.shape, crop.shape)
+                print("--> ok 5 :",ptc_input.shape, crop.shape)
                 if 0 in ptc_input.shape: exit(0)
 
                 return pos, torch.cat([ptc_input[None,...], crop], 0)[None,...], labels
