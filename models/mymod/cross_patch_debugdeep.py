@@ -57,11 +57,6 @@ class SelfTransEncoder(nn.Module):
         bs, c, h, w, d = x.shape   
         ret = torch.zeros(x.shape).float().cuda() 
         f = 16    
-        print(type(ret))
-        print(type(x))
-        print(type(pe))
-        print(type(pos))
-
         for i in range(bs):
             a,b,c = (pos[i,0]//f).item(), (pos[i,1]//f).item(), (pos[i,2]//f).item()
             ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
@@ -235,10 +230,6 @@ class CrossPatch3DTr(nn.Module):
         Sh,Sw,Sd = (12,12,3)
         c = self.filters[-1]
 
-        print(len(X))
-        print(X[0].shape)
-        print(X[1].shape)
-
         if val:
             if self.do_cross:      
                 R = X[:,:,0 ,...]
@@ -261,16 +252,14 @@ class CrossPatch3DTr(nn.Module):
         # Encode the interest region
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
-        print('posR',posR.shape)
-        print(posR)
-        print('R', R.shape)
-        with encoder_grad():
-            R, S = self.encoder(R, True, self.PE, posR)
 
         # Create PE 
         if self.PE==None:
             z = torch.zeros((bs,c,(Sh*3),(Sw*3),(Sd*4))).float().cuda()
             self.PE = self.p_enc_3d(z)
+        with encoder_grad():
+            R, S = self.encoder(R, True, self.PE, posR)
+
 
 
         skip1, skip2, skip3, skip4 = S
