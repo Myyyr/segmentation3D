@@ -257,7 +257,7 @@ class CrossPatch3DTr(nn.Module):
         posR = pos[:,0 ,...]
         posA = pos[:,1:,...]
         print('posR',posR.shape)
-        print(PosR)
+        print(posR)
         print('R', R.shape)
         with encoder_grad():
             R, S = self.encoder(R, True, self.PE, posR)
