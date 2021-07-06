@@ -282,13 +282,12 @@ class CrossPatch3DTr(nn.Module):
         
             # Encode all regions with no gradient
             YA = []
-            bs,_,na,_,_,_ = A.shape
+            bs,na,_,_,_,_ = A.shape
             with torch.no_grad():
                 for ra in range(na):
                     # enc = self.encoder(A[:,:,ra,...], False, self.PE, posA[:,ra,...])
 
                     # Positional encodding
-                    print(A.shape)
                     enc = A[:,ra,...]
                     enc = self.apply_positional_encoding(posA[:,ra,...], self.PE, enc)
                     # enc = rearrange(enc, 'b c (h p1) (w p2) (d p3) -> b (h w d) (p1 p2 p3 c)', p1=self.patch_size[0], p2=self.patch_size[1], p3=self.patch_size[2])
