@@ -65,7 +65,7 @@ class DebugAllTrain(Train):
         self.grdnorm = {'all':[], 'wq':[], 'wk':[], 'wv':[], 'ff':[]}
 
 
-    def step(self, expcf, inputs, labels, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4, total_loss, pos = None):
+    def step(self, expcf, inputs, crop, labels, total_loss, pos = None):
         inputs = inputs.to(self.device)
         if expcf.ds_scales == None:
             labels = labels.to(self.device)
