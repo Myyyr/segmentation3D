@@ -43,26 +43,26 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             if ".npy" in i:
                 pid = i.replace('.npy', '').replace('bcv_', '')
                 self.file[str(pid)] = [os.path.join(self.l_filePath, i)]
-        for i in os.listdir(self.d_filePath):
-            if "_0.npy" in i:
-                pid = i.replace('_0.npy', '')
-                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
-        for i in os.listdir(self.d_filePath):
-            if "_1.npy" in i:
-                pid = i.replace('_1.npy', '')
-                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
-        for i in os.listdir(self.d_filePath):
-            if "_2.npy" in i:
-                pid = i.replace('_2.npy', '')
-                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
-        for i in os.listdir(self.d_filePath):
-            if "_3.npy" in i:
-                pid = i.replace('_3.npy', '')
-                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
-        for i in os.listdir(self.d_filePath):
-            if "_4.npy" in i:
-                pid = i.replace('_4.npy', '')
-                self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        # for i in os.listdir(self.d_filePath):
+        #     if "_0.npy" in i:
+        #         pid = i.replace('_0.npy', '')
+        #         self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        # for i in os.listdir(self.d_filePath):
+        #     if "_1.npy" in i:
+        #         pid = i.replace('_1.npy', '')
+        #         self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        # for i in os.listdir(self.d_filePath):
+        #     if "_2.npy" in i:
+        #         pid = i.replace('_2.npy', '')
+        #         self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        # for i in os.listdir(self.d_filePath):
+        #     if "_3.npy" in i:
+        #         pid = i.replace('_3.npy', '')
+        #         self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
+        # for i in os.listdir(self.d_filePath):
+        #     if "_4.npy" in i:
+        #         pid = i.replace('_4.npy', '')
+        #         self.file[str(pid)] += [os.path.join(self.d_filePath, i)]
 
 
 
