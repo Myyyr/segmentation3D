@@ -57,6 +57,11 @@ class SelfTransEncoder(nn.Module):
         bs, c, h, w, d = x.shape   
         ret = torch.zeros(x.shape).float().cuda() 
         f = 16    
+        print(type(ret))
+        print(type(x))
+        print(type(pe))
+        print(type(pos))
+
         for i in range(bs):
             a,b,c = (pos[i,0]//f).item(), (pos[i,1]//f).item(), (pos[i,2]//f).item()
             ret[i, ...] = x[i,...] + pe[i, :, a:a+h, b:b+w, c:c+d]
