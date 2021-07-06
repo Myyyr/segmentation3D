@@ -310,17 +310,9 @@ class AllTrain(Train):
                                         outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] += out_xyz[0]
                                 else:
                                     inptc = inputs[:,:,x,y,z,...]
-                                    # pos = torch.from_numpy(np.array([x,y,z]))[None,...]
                                     in_pos = [torch.from_numpy(np.array((x,y,z)))[None, None, ...]]
                                     in_pos = torch.cat(in_pos+[pos], dim=1)
-
-                                    # inputs = torch.reshape(inputs, (b,c,nh*nw*nd,h,w,d))
-                                    # print(crop.shape, inptc.shape)  
-                                    # print(torch.cat([inptc, crop], 1).shape)
-                                    # print("OK")
                                     out_xyz = expcf.net(torch.cat([inptc, crop], 1)[:,None,...], in_pos, True) 
-
-                                    # print(out_xyz.shape)
                                     outputs[:, :, x*h:(x+1)*h, y*w:(y+1)*w, z*d:(z+1)*d] = out_xyz[0]
                     if vizonly:
                         np.save('./viz_pred.npy', F.softmax(outputs, dim=1).cpu().numpy())
