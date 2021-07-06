@@ -41,7 +41,7 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
         for i in os.listdir(self.filePath):
             if ".npy" in i:
                 pid = i.replace('.npy', '').replace('bcv_', '')
-                self.file[str(pid)] = os.path.join(self.filePath, i)
+                self.file[str(pid)] = [os.path.join(self.filePath, i)]
         for i in os.listdir(self.ft_filePath):
             if ".npy" in i:
                 pid = i.replace('.npy', '')
