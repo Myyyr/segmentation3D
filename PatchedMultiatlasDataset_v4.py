@@ -138,9 +138,9 @@ class PatchedMultiAtlasDataset(torch.utils.data.Dataset):
             ps_h, ps_w, ps_d = self.patch_size
             nh, nw, nd = int(h/ps_h), int(w/ps_w), int(d/ps_d)
 
-            x = random.randint(0, nh-1)
-            y = random.randint(0, nw-1)
-            z = random.randint(0, nd-1)
+            x = random.randint(0, nh)
+            y = random.randint(0, nw)
+            z = random.randint(0, nd)
 
             idx = (x*ps_h,y*ps_w,z*ps_d)
 
