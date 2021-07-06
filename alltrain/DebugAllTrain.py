@@ -145,7 +145,7 @@ class DebugAllTrain(Train):
         total_time = 0.0
         self.save_dict['first_batch_memory'] = ""
         min_loss = 1e10
-        # self.evaluate()
+        self.evaluate()
 
 
         for epoch in range(expcf.start_epoch, expcf.epoch):
