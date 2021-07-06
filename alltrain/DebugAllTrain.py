@@ -80,7 +80,7 @@ class DebugAllTrain(Train):
             del pos
         else:
             outputs = expcf.net([inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4])
-        del inputs, ptc_input_1, ptc_input_2, ptc_input_3, ptc_input_4
+        del inputs, crop
         loss = expcf.loss(outputs, labels)
         # print('#3', torch.cuda.memory_allocated()/(1024**3), 'GB')
         # print('#3', torch.cuda.max_memory_allocated()/(1024**3), 'GB')
