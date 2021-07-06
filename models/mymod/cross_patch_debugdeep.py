@@ -231,9 +231,9 @@ class CrossPatch3DTr(nn.Module):
         c = self.filters[-1]
 
         print(len(X))
-        print(type(X[0]))
-        print(type(X[1]))
-        
+        print(X[0].shape)
+        print(X[1].shape)
+
         if val:
             if self.do_cross:      
                 R = X[:,:,0 ,...]
