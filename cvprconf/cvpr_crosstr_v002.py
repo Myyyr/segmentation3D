@@ -4,7 +4,7 @@ import os
 from models.utils import get_scheduler
 import torch.optim as optim
 import alltrain.atlasUtils as atlasUtils
-from PatchedMultiatlasDataset_v3 import *
+from PatchedMultiatlasDataset_v5 import *
 from torch.utils.data import DataLoader
 import torch
 import torchio as tio
@@ -48,12 +48,12 @@ class ExpConfig():
         self.clip = False
         self.patched = True
         # GPU
-        self.gpu = '2'
+        self.gpu = '0'
         os.environ["CUDA_VISIBLE_DEVICES"] = self.gpu
         # torch.backends.cudnn.benchmark = False
 
         # Model
-        number_of_cross_heads = 1
+        number_of_cross_heads = 8
         number_of_self_heads = 8
         number_of_self_layer = 6
 
@@ -107,7 +107,7 @@ class ExpConfig():
         ################# END ###################
 
         self.batchsize = 2
-        self.lr_rate = 1e-1
+        self.lr_rate = 1e-2
         # self.final_lr_rate = 1e-5
         # self.optimizer = optim.Adam(self.net.parameters(), lr = self.lr_rate)
 
