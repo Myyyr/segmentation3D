@@ -21,12 +21,12 @@ def get_scheduler(optimizer, opt, lr, decay=None, max_epochs=None):
         def lambda_rule(epoch):
             #print(epoch)
             if epoch < 1100:
-                lr_l = 1e-3
+                lr_l = 1
             elif 1100 <= epoch < 1200:
-                lr_l = 5e-4
+                lr_l = 0.5
             elif 1200 <= epoch < 1500:
-                lr_l = 1e-4
-            return 1e-5
+                lr_l = 0.1
+            return 0.01
         scheduler = lr_scheduler.LambdaLR(optimizer, lr_lambda=lambda_rule) 
 
     if opt == "multistep":

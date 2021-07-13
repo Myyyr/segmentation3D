@@ -108,7 +108,7 @@ class ExpConfig():
         ################# END ###################
 
         self.batchsize = 2
-        self.lr_rate = 1e-4
+        self.lr_rate = 1e-3
 
         self.load_lr = False
         self.load_model()
